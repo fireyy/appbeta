@@ -8,9 +8,12 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "@geist-ui/core": "^2.3.4",
+    "@geist-ui/icons": "^1.0.1",
     "@next-auth/prisma-adapter": "1.0.1",
     "@prisma/client": "3.10.0",
     "next": "12.1.0",
