@@ -1,5 +1,5 @@
 import React from 'react'
-import { signOut, useSession } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import {
   Button,
   Keyboard,
@@ -15,12 +15,8 @@ import { usePrefers } from '../lib/use-prefers'
 
 const UserSettingsPop: React.FC = () => (
   <>
-    <Popover.Item title>
-      <span>User Settings</span>
-    </Popover.Item>
-    <Popover.Item line />
     <Popover.Item>
-      <Button auto type="abort" onClick={() => signOut()}>Logout</Button>
+      <Button auto h="28px" type="abort" onClick={() => signOut()}>Logout</Button>
     </Popover.Item>
   </>
 );
@@ -57,14 +53,14 @@ const Controls: React.FC<unknown> = React.memo(() => {
       }
       {
         !session && (
-          <Link href="/api/auth/signin">Log in</Link>
+          <Button aria-label="Log in" auto scale={0.5} px={0.6} type="abort" h="28px" onClick={() => signIn()}>Log in</Button>
         )
       }
       {
         session && (
           <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
             <button className="user-settings__button">
-              <Avatar text={session.user.name} />
+              <Avatar src={session.user.image} text={session.user.name} />
             </button>
           </Popover>
         )
@@ -79,6 +75,17 @@ const Controls: React.FC<unknown> = React.memo(() => {
           cursor: help;
           opacity: 0.75;
           border: none;
+        }
+        .user-settings__button {
+          border: none;
+          background: none;
+          padding: 0;
+          margin: 0;
+          appearance: none;
+          cursor: pointer;
+        }
+        :global(.user-settings__popover) {
+          width: 180px !important;
         }
       `}</style>
     </div>

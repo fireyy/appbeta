@@ -87,19 +87,19 @@ model Settings {
 }
 
 model Account {
-  id                Int     @id @default(autoincrement())
-  type              String
-  provider          String
-  providerAccountId String
-  refreshToken      String? @map("refresh_token")
-  accessToken       String? @map("access_token")
-  expiresAt         Int?    @map("expires_at")
-  tokenType         String? @map("token_type")
-  scope             String?
-  idToken           String?
-  sessionState      String? @map("session_state")
-  oauthTokenSecret  String? @map("oauth_token_secret")
-  oauthToken        String? @map("oauth_token")
+  id                 Int     @id @default(autoincrement())
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  idToken            String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int

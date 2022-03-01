@@ -61,7 +61,7 @@ const Menu: React.FC<unknown> = () => {
                     title="Logo"
                     alt="logo"
                   />
-                  YanYa
+                  AppBeta
                 </a>
               </NextLink>
             </div>

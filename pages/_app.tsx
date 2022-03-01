@@ -5,7 +5,7 @@ import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
 import Menu from '../components/menu'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>('dark')
 
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <GeistProvider themeType={themeType}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
