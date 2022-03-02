@@ -2,58 +2,57 @@
 CREATE TABLE "Apps" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
+    "icon" TEXT,
+    "platform" TEXT,
+    "lastVersion" TEXT,
+    "lastPkgSize" INTEGER,
+    "lastPkgId" INTEGER,
     "description" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "Apps_users" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" BIGINT NOT NULL,
-    "appId" BIGINT NOT NULL
+    "updatedAt" DATETIME NOT NULL,
+    "channelCount" INTEGER DEFAULT 0,
+    "packagesCount" INTEGER DEFAULT 0,
+    "userId" INTEGER NOT NULL,
+    "deletedAt" DATETIME,
+    "archived" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- CreateTable
 CREATE TABLE "Channels" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "schemeId" BIGINT,
     "name" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
-    "bundleId" TEXT NOT NULL DEFAULT '*',
+    "appId" INTEGER,
+    "packageName" TEXT,
+    "packagesCount" INTEGER DEFAULT 0,
+    "bundleId" TEXT,
     "deviceType" TEXT NOT NULL,
-    "gitUrl" TEXT,
+    "userId" INTEGER NOT NULL,
     "password" TEXT,
-    "key" TEXT
+    "sort" INTEGER DEFAULT 0,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
+    "deletedAt" DATETIME
 );
 
 -- CreateTable
-CREATE TABLE "Releases" (
+CREATE TABLE "Packages" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "channelId" BIGINT,
-    "bundleId" TEXT NOT NULL,
-    "version" INTEGER NOT NULL,
-    "releaseVersion" TEXT NOT NULL,
-    "buildVersion" TEXT NOT NULL,
-    "releseType" TEXT,
-    "source" TEXT,
-    "branch" TEXT,
-    "gitCommit" TEXT,
+    "appId" BIGINT,
+    "name" TEXT,
     "icon" TEXT,
-    "ciUrl" TEXT,
+    "channelId" INTEGER,
+    "channelName" TEXT,
+    "bundleId" TEXT,
+    "version" TEXT,
+    "buildVersion" TEXT,
     "changelog" TEXT,
     "file" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
-    "name" TEXT,
-    "deviceType" TEXT
-);
-
--- CreateTable
-CREATE TABLE "Schemes" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "appId" BIGINT NOT NULL,
-    "name" TEXT NOT NULL
+    "deletedAt" DATETIME,
+    "size" INTEGER DEFAULT 0,
+    "slug" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL
 );
 
 -- CreateTable
@@ -111,58 +110,16 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateIndex
-CREATE INDEX "index_apps_on_name" ON "Apps"("name");
+CREATE INDEX "index_apps_on_deleted_at" ON "Apps"("deletedAt");
 
 -- CreateIndex
-CREATE INDEX "index_apps_users_on_app_id_and_user_id" ON "Apps_users"("appId", "userId");
+CREATE INDEX "index_channels_on_deleted_at" ON "Channels"("deletedAt");
 
 -- CreateIndex
-CREATE INDEX "index_apps_users_on_user_id_and_app_id" ON "Apps_users"("userId", "appId");
+CREATE UNIQUE INDEX "Packages_slug_key" ON "Packages"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Channels_slug_key" ON "Channels"("slug");
-
--- CreateIndex
-CREATE INDEX "index_channels_on_bundle_id" ON "Channels"("bundleId");
-
--- CreateIndex
-CREATE INDEX "index_channels_on_device_type" ON "Channels"("deviceType");
-
--- CreateIndex
-CREATE INDEX "index_channels_on_name" ON "Channels"("name");
-
--- CreateIndex
-CREATE INDEX "index_channels_on_scheme_id_and_device_type" ON "Channels"("schemeId", "deviceType");
-
--- CreateIndex
-CREATE INDEX "index_channels_on_slug" ON "Channels"("slug");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_build_version" ON "Releases"("buildVersion");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_bundle_id" ON "Releases"("bundleId");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_channel_id_and_version" ON "Releases"("channelId", "version");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_release_type" ON "Releases"("releseType");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_release_version_and_build_version" ON "Releases"("releaseVersion", "buildVersion");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_source" ON "Releases"("source");
-
--- CreateIndex
-CREATE INDEX "index_releases_on_version" ON "Releases"("version");
-
--- CreateIndex
-CREATE INDEX "index_schemes_on_app_id" ON "Schemes"("appId");
-
--- CreateIndex
-CREATE INDEX "index_schemes_on_name" ON "Schemes"("name");
+CREATE INDEX "index_packages_on_deleted_at" ON "Packages"("deletedAt");
 
 -- CreateIndex
 CREATE INDEX "index_settings_on_key" ON "Settings"("key");

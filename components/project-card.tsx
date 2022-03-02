@@ -5,33 +5,26 @@ import {
   Card,
   useTheme,
 } from '@geist-ui/core'
+import Router from 'next/router'
+import { AppItem } from '../interfaces'
+import { timeAgo } from '../lib/utils'
 
 interface Props {
-  projectId: string
-  productionHostname?: string
-  icon: string
-  changelog?: string
-  updatedAt: string
+  data: AppItem
 }
 
-export type ProjectCardProps = Props
-
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  projectId,
-  productionHostname,
-  updatedAt,
-  changelog,
-  icon,
+const ProjectCard: React.FC<Props> = ({
+  data
 }) => {
   const theme = useTheme()
 
   return (
     <>
       <div className="project__wrapper">
-        <Card className="project__card" shadow>
+        <Card className="project__card" onClick={() => Router.push(`/apps/${data.id}`)}>
           <div className="project-title__wrapper">
             <Avatar
-              src={icon}
+              src={data.icon}
               height={1.25}
               width={1.25}
               marginRight={0.75}
@@ -42,7 +35,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 margin={0}
                 style={{ fontWeight: 500, lineHeight: '1.5rem' }}
               >
-                {projectId}
+                {data.name}
               </Text>
               <Text
                 margin={0}
@@ -52,17 +45,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   lineHeight: '1.25rem',
                 }}
               >
-                {productionHostname || `${projectId}.vercel.app`}
+                {data.slug}
               </Text>
             </div>
           </div>
-          {changelog && (
-            <div className="project-changelog">
+          {data.description && (
+            <div className="project-description">
               <Text
                 margin={0}
                 style={{ color: theme.palette.accents_6, fontWeight: 500 }}
               >
-                {changelog}
+                {data.description}
               </Text>
             </div>
           )}
@@ -71,7 +64,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             font="0.875rem"
             style={{ color: theme.palette.accents_5 }}
           >
-            {updatedAt} ago
+            {timeAgo(data.updatedAt)}
           </Text>
         </Card>
       </div>
@@ -80,14 +73,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           width: 100%;
         }
         .project__wrapper :global(.project__card) {
-          box-shadow: ${theme.type === 'dark'
-            ? theme.expressiveness.shadowSmall
-            : '0px 2px 4px rgba(0,0,0,0.1)'};
+          cursor: pointer;
         }
         .project__wrapper :global(.project__card):hover {
-          box-shadow: ${theme.type === 'dark'
-            ? `0 0 0 1px ${theme.palette.foreground}`
-            : '0px 4px 8px rgba(0,0,0,0.12)'};
+          border-color: ${theme.palette.foreground};
         }
         .project-title__wrapper {
           display: flex;
@@ -101,13 +90,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             ? `1px solid ${theme.palette.foreground}`
             : 'none'};
         }
-        .project-changelog {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+        .project-description {
           min-height: 3rem;
           margin: 1rem 0;
           font-size: 0.875rem;
+          overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
         }
       `}</style>
     </>

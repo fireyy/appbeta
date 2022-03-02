@@ -1,10 +1,16 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetServerSideProps } from 'next'
+import Router from 'next/router'
 import { Button, Grid, Input, useTheme } from '@geist-ui/core'
 import SearchIcon from '@geist-ui/icons/search'
 import CreateTeamIcon from '@geist-ui/icons/userPlus'
+import { AppItem } from '../interfaces'
 import ProjectCard from '../components/project-card'
 
-const Home: NextPage = () => {
+type Props = {
+  data: AppItem[]
+}
+
+const Home: NextPage<Props> = ({ data }) => {
   const theme = useTheme()
 
   return (
@@ -17,20 +23,24 @@ const Home: NextPage = () => {
             icon={<SearchIcon color={theme.palette.accents_5} />}
             placeholder="Search..."
           />
-          <Button auto type="secondary" marginLeft={1}>
+          <Button auto type="secondary" marginLeft={1} onClick={() => Router.push('/apps/new')}>
             New Project
           </Button>
           <Button iconRight={<CreateTeamIcon />} marginLeft={1} px={0} width="48px" />
         </div>
         <Grid.Container gap={2} marginTop={1} justify="flex-start">
-          <Grid xs={24} sm={12} md={8}>
-            <ProjectCard
-              projectId="test-project"
-              icon="https://raw.githubusercontent.com/vercel/vercel/main/packages/frameworks/logos/next.svg"
-              changelog={'test'}
-              updatedAt="4m"
-            />
-          </Grid>
+          {
+            (data && data.length > 0) && data.map((item, index) => {
+              return (
+                <Grid xs={24} sm={12} md={8}>
+                  <ProjectCard
+                    key={item.id}
+                    data={item}
+                  />
+                </Grid>
+              )
+            })
+          }
         </Grid.Container>
       </div>
       <style jsx>{`
@@ -57,6 +67,17 @@ const Home: NextPage = () => {
       `}</style>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const res = await fetch(`http://localhost:3000/api/apps`, {
+    method: 'GET',
+    headers: {
+      cookie: context.req.headers.cookie,
+    }
+  })
+  const data = await res.json()
+  return { props: { data } }
 }
 
 export default Home

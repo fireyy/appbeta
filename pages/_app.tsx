@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             min-height: calc(100vh - 108px);
             max-width: ${theme.layout.pageWidthWithMargin};
             margin: 0 auto;
-            padding: 0 ${theme.layout.gap};
+            padding: ${theme.layout.gap};
             box-sizing: border-box;
           }
         `}</style>
