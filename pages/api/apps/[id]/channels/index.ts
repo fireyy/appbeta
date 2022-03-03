@@ -42,5 +42,13 @@ async function handlePUT(data, res: NextApiResponse) {
   const result = await prisma.channels.create({
     data,
   })
+  await prisma.apps.update({
+    where: { id: Number(data.appId) },
+    data: {
+      channelCount: {
+        increment: 1
+      },
+    }
+  })
   res.json(result)
 }

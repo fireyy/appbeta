@@ -15,14 +15,14 @@ const AppPage: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
   const [packages, setPackages] = useState<PackageItem[]>([])
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await fetch(`http://localhost:3000/api/channels/${data.id}`)
-  //     const result = await res.json()
-  //     setPackages(result)
-  //   }
-  //   fetchData()
-  // }, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`http://localhost:3000/api/channels/${data.id}/packages`)
+      const result = await res.json()
+      setPackages(result)
+    }
+    fetchData()
+  }, [])
 
   const renderAction = (id: number, row: ChannelItem) => {
     return (
@@ -54,7 +54,10 @@ const AppPage: React.FC<Props> = ({ data }) => {
           </Fieldset>
           <Table data={packages}>
             <Table.Column prop="name" label="name" />
-            <Table.Column prop="slug" label="slug" />
+            <Table.Column prop="bundleId" label="bundleId" />
+            <Table.Column prop="version" label="version" />
+            <Table.Column prop="buildVersion" label="buildVersion" />
+            <Table.Column prop="updatedAt" label="updatedAt" />
             <Table.Column prop="id" label="action" render={renderAction} />
           </Table>
         </div>

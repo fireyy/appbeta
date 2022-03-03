@@ -32,12 +32,13 @@ const PackageNewPage: React.FC<unknown> = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
+    data.channelId = Number(id)
     await fetch(`http://localhost:3000/api/channels/${id}/packages`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    await Router.push('/')
+    await Router.push(`/channels/${id}`)
   }
 
   return (

@@ -11,15 +11,17 @@ export const config = {
   },
 }
 
-const parseFile = async (file: string) => {
-  const result: any = await parseApp(file)
+const parseFile = async (file) => {
+  const { filepath, size } = file
+  const result: any = await parseApp(filepath)
   const base64Data = result.icon.replace(/^data:image\/png;base64,/, '')
-  const name = crypto.createHash('md5').update(file).digest('hex') + '.png'
+  const name = crypto.createHash('md5').update(filepath).digest('hex') + '.png'
   fs.writeFile(path.join(process.env.ICON_PATH, name), base64Data, 'base64', function(err) {
     console.log(err)
   })
   result.icon = `/public/icons/${name}.png`
-  result.file = `/public/downloads/${path.basename(file)}`
+  result.file = `/public/downloads/${path.basename(filepath)}`
+  result.size = size
   return result
 }
 
@@ -40,7 +42,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       }
     })
     form.parse(req, async (err, fields, files) => {
-      const result = await parseFile(files.file[0].filepath)
+      const result = await parseFile(files.file[0])
       res.json(result)
     })
   } else {

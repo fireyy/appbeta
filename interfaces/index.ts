@@ -40,6 +40,7 @@ export type AppInfo = {
   version?: string
   buildVersion?: string
   file?: string
+  size?: string
 }
 
 export type PackageItem = {
