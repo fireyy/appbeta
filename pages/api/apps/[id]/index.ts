@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../../lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const appId = req.query.id
@@ -9,7 +9,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   } else if (req.method === 'DELETE') {
     handleDELETE(appId, res)
   } else if (req.method === 'PUT') {
-    handlePUT(appId, {}, res)
+    const { name, description, slug } = req.body
+    handlePUT(appId, {
+      name, description, slug
+    }, res)
   } else {
     throw new Error(
       `The HTTP ${req.method} method is not supported at this route.`
@@ -31,7 +34,11 @@ async function handleGET(appId, res: NextApiResponse) {
   const post = await prisma.apps.findUnique({
     where: { id: Number(appId) },
   })
-  res.json(post)
+  if (post) {
+    res.json(post)
+  } else {
+    res.json({})
+  }
 }
 
 // DELETE /api/apps/:id

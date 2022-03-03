@@ -32,3 +32,33 @@ export type ChannelItem = {
   updatedAt: string
   deletedAt?: string | null
 }
+
+export type AppInfo = {
+  platform?: string
+  name?: string
+  bundleName?: string
+  icon?: string
+  bundleId?: string
+  version?: string
+  buildVersion?: string
+  appLevel?: string
+}
+
+export type PackageItem = {
+  id: number
+  appId: number
+  name: string
+  icon?: string
+  channelId: number
+  channelName: string
+  bundleId?: string
+  version?: string
+  buildVersion?: string
+  changelog?: string
+  file?: string
+  createdAt: string
+  updatedAt: string
+  deletedAt: string | null
+  size?: number
+  userId: number
+}

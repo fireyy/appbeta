@@ -3,21 +3,14 @@ import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
 import { Text, Link, useTheme } from '@geist-ui/core'
-import { AppItem, ChannelItem } from '../../interfaces'
-import ProjectInfo from '../../components/project-info'
-import EventListItem from '../../components/activity-event'
-import OverviewProject from '../../components/overview-project'
+import { AppItem, ChannelItem } from '../../../interfaces'
+import ProjectInfo from '../../../components/project-info'
+import EventListItem from '../../../components/activity-event'
+import ChannelCard from '../../../components/channel-card'
 
 async function save(id: number): Promise<void> {
   await fetch(`http://localhost:3000/api/apps/${id}`, {
     method: 'PUT',
-  })
-  await Router.push('/')
-}
-
-async function destroy(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/api/apps/${id}`, {
-    method: 'DELETE',
   })
   await Router.push('/')
 }
@@ -44,48 +37,25 @@ const AppPage: React.FC<Props> = ({ data }) => {
       <ProjectInfo data={data} />
       <div className="page__wrapper">
         <div className="page__content">
-          <div className="projects">
+          <div className="channels">
             {
               channels && channels.length > 0 && channels.map((channel) => {
                 return (
-                  <OverviewProject
-                    projectId={channel.name}
-                    repo={channel.slug}
-                    createdAt={channel.createdAt}
+                  <ChannelCard
+                    key={channel.id}
+                    data={channel}
                   />
                 )
               })
             }
-            <NextLink href="/projects" passHref>
-              <Link className="view-all" color underline>
-                View All Projects
-              </Link>
-            </NextLink>
           </div>
           <div className="recent-activity">
             <Text h2 className="recent-activity__title">
               Recent Activity
             </Text>
-            <EventListItem username="ofekashery" avatar="/assets/avatar.png" createdAt="4m">
-              You deployed react-dashboard-design to <b>production</b>
+            <EventListItem username="fireyy" avatar="https://avatars.githubusercontent.com/u/66291?v=4" createdAt="4m">
+              You deployed iOS to <b>production</b>
             </EventListItem>
-            <EventListItem username="dependabot" avatar="/assets/dependabot.png" createdAt="2d">
-              Dependabot deployed docs to <b>docs-git-dependabot-npmelliptic-653.vercel.app</b>
-            </EventListItem>
-            <EventListItem username="ofekashery" avatar="/assets/avatar.png" createdAt="3d">
-              You deployed personal-website to <b>production</b>
-            </EventListItem>
-            <EventListItem username="ofekashery" avatar="/assets/avatar.png" createdAt="9d">
-              You deployed personal-website to <b>production</b>
-            </EventListItem>
-            <EventListItem username="ofekashery" avatar="/assets/avatar.png" createdAt="9d">
-              You created project <b>personal-website</b>
-            </EventListItem>
-            <NextLink href="/activity" passHref>
-              <Link className="view-all" color underline>
-                View All Activity
-              </Link>
-            </NextLink>
           </div>
         </div>
       </div>
@@ -102,12 +72,12 @@ const AppPage: React.FC<Props> = ({ data }) => {
           padding: 0 ${theme.layout.pageMargin};
           box-sizing: border-box;
         }
-        .projects {
+        .channels {
           width: 540px;
           max-width: 100%;
           margin-right: calc(4 * ${theme.layout.gap});
         }
-        .projects :global(.project__wrapper):not(:last-of-type) {
+        .channels :global(.channel__wrapper):not(:last-of-type) {
           margin-bottom: calc(1.5 * ${theme.layout.gap});
         }
         .recent-activity {
@@ -130,7 +100,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
             justify-content: flex-start;
             align-items: stretch;
           }
-          .projects {
+          .channels {
             width: 100%;
             margin-right: unset;
           }

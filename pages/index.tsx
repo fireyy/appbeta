@@ -32,9 +32,8 @@ const Home: NextPage<Props> = ({ data }) => {
           {
             (data && data.length > 0) && data.map((item, index) => {
               return (
-                <Grid xs={24} sm={12} md={8}>
+                <Grid xs={24} sm={12} md={8} key={item.id}>
                   <ProjectCard
-                    key={item.id}
                     data={item}
                   />
                 </Grid>

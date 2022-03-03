@@ -1,83 +1,74 @@
 import React from 'react'
+import NextLink from 'next/link'
 import { Button, Text, Link, Card, Dot, Tag, useTheme } from '@geist-ui/core'
+import { ChannelItem } from '../interfaces'
 
 interface Props {
-  projectId: string
-  createdAt: string
-  repo: string
+  data: ChannelItem
 }
 
-export type OverviewProjectProps = Props
+export type ChannelCardProps = Props
 
-const OverviewProject: React.FC<OverviewProjectProps> = ({
-  projectId,
-  createdAt,
-  repo,
-}) => {
+const ChannelCard: React.FC<ChannelCardProps> = ({ data }) => {
   const theme = useTheme()
 
   return (
     <>
-      <div className="project__wrapper">
-        <Card className="project__card" shadow>
-          <div className="project__title">
-            <Text h3>{projectId}</Text>
-            <Button className="project__visit-button" height={0.8} auto>
-              Visit
-            </Button>
+      <div className="channel__wrapper">
+        <Card className="channel__card" shadow>
+          <div className="channel__title">
+            <Text h3>{data.name} {data.deviceType}</Text>
+            <NextLink href={`/channels/${data.id}`} passHref>
+              <Button className="channel__visit-button" height={0.8} auto>
+                Detail
+              </Button>
+            </NextLink>
           </div>
           <div>
-            <Dot className="project__deployment" type="success">
-              <Link href="#">{projectId}.vercel.app</Link>
-              <Tag className="project__environment-tag" type="secondary">
+            <Dot className="channel__deployment" type="success">
+              <Link href="#">123</Link>
+              <Tag className="channel__environment-tag" type="secondary">
                 Production
               </Tag>
-              <span className="project__created-at">{createdAt}</span>
-            </Dot>
-            <Dot className="project__deployment" type="success">
-              <Link href="#">{projectId}-oa71gi2.vercel.app</Link>
-              <Tag className="project__environment-tag" type="secondary">
-                Latest
-              </Tag>
-              <span className="project__created-at">{createdAt}</span>
+              <span className="channel__created-at">22</span>
             </Dot>
           </div>
-          <Card.Footer className="project__footer">
-            <Text className="project__repo">{repo}</Text>
+          <Card.Footer className="channel__footer">
+            <Text className="channel__repo">{data.updatedAt}</Text>
           </Card.Footer>
         </Card>
       </div>
       <style jsx>{`
-        .project__wrapper :global(.project__card) {
+        .channel__wrapper :global(.channel__card) {
           padding: 0 !important;
         }
-        .project__title {
+        .channel__title {
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
           margin-bottom: ${theme.layout.gap};
         }
-        .project__title :global(h3) {
+        .channel__title :global(h3) {
           margin: 0;
         }
-        .project__wrapper :global(.project__deployment) {
+        .channel__wrapper :global(.channel__deployment) {
           display: flex;
           flex-direction: row;
           align-items: center;
           margin-top: ${theme.layout.gapQuarter};
         }
-        .project__wrapper :global(.project__deployment) :global(.icon) {
+        .channel__wrapper :global(.channel__deployment) :global(.icon) {
           background-color: #50e3c2;
         }
-        .project__wrapper :global(.project__deployment) :global(.label) {
+        .channel__wrapper :global(.channel__deployment) :global(.label) {
           display: flex;
           align-items: center;
           flex: 1;
           overflow: hidden;
           text-transform: unset;
         }
-        .project__wrapper :global(.project__deployment) :global(a) {
+        .channel__wrapper :global(.channel__deployment) :global(a) {
           font-size: 0.875rem;
           font-weight: 500;
           display: inline-block;
@@ -85,7 +76,7 @@ const OverviewProject: React.FC<OverviewProjectProps> = ({
           white-space: nowrap;
           text-overflow: ellipsis;
         }
-        .project__wrapper :global(.project__environment-tag) {
+        .channel__wrapper :global(.channel__environment-tag) {
           color: ${theme.palette.foreground};
           background: ${theme.palette.accents_1};
           border-color: ${theme.palette.accents_2};
@@ -96,24 +87,24 @@ const OverviewProject: React.FC<OverviewProjectProps> = ({
           font-weight: 500;
           margin-left: ${theme.layout.gapHalf};
         }
-        .project__wrapper :global(.project__created-at) {
+        .channel__wrapper :global(.channel__created-at) {
           color: ${theme.palette.accents_4};
           font-size: 0.875rem;
           text-align: right;
           margin: 0 0 0 ${theme.layout.gapHalf};
         }
-        .project__wrapper :global(.project__footer) {
+        .channel__wrapper :global(.channel__footer) {
           display: flex;
           align-items: center;
           font-weight: 500;
         }
-        .project__wrapper :global(.project__repo) {
+        .channel__wrapper :global(.channel__repo) {
           font-size: 0.875rem;
           font-weight: 500;
           margin-left: ${theme.layout.gapQuarter};
         }
         @media (max-width: ${theme.breakpoints.xs.max}) {
-          .project__wrapper :global(.project__visit-button) {
+          .channel__wrapper :global(.channel__visit-button) {
             display: none;
           }
         }
@@ -122,4 +113,4 @@ const OverviewProject: React.FC<OverviewProjectProps> = ({
   )
 }
 
-export default OverviewProject
+export default ChannelCard

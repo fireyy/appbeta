@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Router from 'next/router'
 import { Input, Button, Text, Grid, Textarea } from '@geist-ui/core'
 import { AppItem } from '../../interfaces'
@@ -6,19 +6,31 @@ import { AppItem } from '../../interfaces'
 const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<AppItem>(null)
   const [loading, setLoading] = useState(false)
+  const { id = 0 } = Router.query
+  const isEdit = id !== 0
 
   const handleChange = (e: any) => {
     setData({ ...data, [e.target.name]: e.target.value })
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`http://localhost:3000/api/apps/${id}`)
+      const result = await res.json()
+      setData(result)
+    }
+    isEdit && fetchData()
+  }, [id])
+
   const handleSubmit = async () => {
     setLoading(true)
-    await fetch('http://localhost:3000/api/apps', {
+    let url = isEdit ? `/${id}` : ''
+    await fetch('http://localhost:3000/api/apps' + url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    await Router.push('/')
+    await Router.push(isEdit ? `/apps/${id}` : '/')
   }
 
   return (

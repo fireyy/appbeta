@@ -1,17 +1,23 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Router from 'next/router'
-import { GetServerSideProps } from 'next'
 import { Input, Button, Text, Grid, Radio } from '@geist-ui/core'
 import { ChannelItem } from '../../../../interfaces'
 
-type Props = {
-  id: number
-}
-
-const AppNewPage: React.FC<Props> = ({ id }) => {
+const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<ChannelItem>(null)
   const [deviceType, setDeviceType] = useState('ios')
   const [loading, setLoading] = useState(false)
+  const { id = 0, cid = 0 } = Router.query
+  const isEdit = cid !== 0
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`http://localhost:3000/api/apps/${id}/channels/${cid}`)
+      const result = await res.json()
+      setData(result)
+    }
+    isEdit && fetchData()
+  }, [id])
 
   const handleChange = (e: any) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -23,12 +29,13 @@ const AppNewPage: React.FC<Props> = ({ id }) => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    await fetch(`http://localhost:3000/api/apps/${id}/channels`, {
+    const url = isEdit ? `/${cid}` : ''
+    await fetch(`http://localhost:3000/api/apps/${id}/channels` + url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...data, deviceType: deviceType }),
     })
-    await Router.push(`/apps/${id}`)
+    await Router.push(isEdit ? `/apps/${id}/channels/${cid}` : `/apps/${id}`)
   }
 
   return (
@@ -61,12 +68,6 @@ const AppNewPage: React.FC<Props> = ({ id }) => {
       </Grid.Container>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  return {
-    props: { id: params?.id },
-  }
 }
 
 export default AppNewPage

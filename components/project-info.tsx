@@ -1,6 +1,9 @@
 import React from 'react'
 import NextLink from 'next/link'
-import { Avatar, Button, Tag, Text, useTheme } from '@geist-ui/core'
+import Router from 'next/router'
+import { Avatar, Button, Tag, Text, useTheme, Modal, useModal } from '@geist-ui/core'
+import Edit from '@geist-ui/icons/edit'
+import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem } from '../interfaces'
 
 interface Props {
@@ -9,8 +12,16 @@ interface Props {
 
 export type HeadingProps = Props;
 
+async function destroy(id: number): Promise<void> {
+  await fetch(`http://localhost:3000/api/apps/${id}`, {
+    method: 'DELETE',
+  })
+  await Router.push('/')
+}
+
 const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
   const theme = useTheme()
+  const { visible, setVisible, bindings } = useModal()
 
   return (
     <>
@@ -26,10 +37,21 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
 
               <div className="heading__actions">
                 <NextLink href={`/apps/${data.id}/channels/new`} passHref>
-                  <Button type="secondary" auto>
+                  <Button type="secondary" auto scale={2/3}>
                     Add Channel
                   </Button>
                 </NextLink>
+                <NextLink href={`/apps/new?id=${data.id}`} passHref>
+                  <Button iconRight={<Edit />} auto scale={2/3} px={0.6} ml={1} />
+                </NextLink>
+                <Button type="error" iconRight={<Trash2 />} auto scale={2/3} px={0.6} ml={1} onClick={() => setVisible(true)} />
+                <Modal {...bindings}>
+                  <Modal.Content>
+                    <p>Are you sure you want to delete this item?</p>
+                  </Modal.Content>
+                  <Modal.Action passive onClick={() => setVisible(false)}>Cancel</Modal.Action>
+                  <Modal.Action onClick={() => destroy(data.id)}>OK</Modal.Action>
+                </Modal>
               </div>
             </div>
 
