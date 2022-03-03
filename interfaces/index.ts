@@ -34,14 +34,12 @@ export type ChannelItem = {
 }
 
 export type AppInfo = {
-  platform?: string
   name?: string
-  bundleName?: string
   icon?: string
   bundleId?: string
   version?: string
   buildVersion?: string
-  appLevel?: string
+  file?: string
 }
 
 export type PackageItem = {

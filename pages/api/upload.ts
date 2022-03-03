@@ -12,7 +12,6 @@ export const config = {
 }
 
 const parseFile = async (file: string) => {
-  console.log('file', file)
   const result: any = await parseApp(file)
   const base64Data = result.icon.replace(/^data:image\/png;base64,/, '')
   const name = crypto.createHash('md5').update(file).digest('hex') + '.png'
@@ -20,6 +19,7 @@ const parseFile = async (file: string) => {
     console.log(err)
   })
   result.icon = `/public/icons/${name}.png`
+  result.file = `/public/downloads/${path.basename(file)}`
   return result
 }
 

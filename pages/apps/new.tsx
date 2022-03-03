@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea } from '@geist-ui/core'
 import { AppItem } from '../../interfaces'
 
 const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<AppItem>(null)
   const [loading, setLoading] = useState(false)
-  const { id = 0 } = Router.query
+  const { query: { id = 0 } } = useRouter()
   const isEdit = id !== 0
 
   const handleChange = (e: any) => {

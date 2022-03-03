@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Radio } from '@geist-ui/core'
 import { ChannelItem } from '../../../../interfaces'
 
@@ -7,7 +7,7 @@ const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<ChannelItem>(null)
   const [deviceType, setDeviceType] = useState('ios')
   const [loading, setLoading] = useState(false)
-  const { id = 0, cid = 0 } = Router.query
+  const { query: { id = 0, cid = 0 } } = useRouter()
   const isEdit = cid !== 0
 
   useEffect(() => {

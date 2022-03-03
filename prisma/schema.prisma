@@ -47,7 +47,7 @@ model Channels {
 
 model Packages {
   id           Int     @id @default(autoincrement())
-  appId        BigInt?
+  appId        Int?
   name         String?
   icon         String?
   channelId    Int?

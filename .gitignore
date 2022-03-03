@@ -1,9 +1,11 @@
 node_modules/
 .next/
 .env
-downloads/*
-!downloads/.gitkeep
+public/downloads/*
+!public/downloads/.gitkeep
 test.js
 .DS_Store
 public/icons/*
 !public/icons/.gitkeep
+prisma/dev.db
+prisma/dev.db-*
