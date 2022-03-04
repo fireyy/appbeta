@@ -15,34 +15,13 @@ model Apps {
   lastPkgSize     Int?
   lastPkgId       Int?
   description     String?
+  deviceType      String
   slug            String @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  channelCount    Int? @default(0)
   packagesCount   Int? @default(0)
   userId          Int
-  deletedAt       DateTime?
   archived        Boolean @default(false)
-  @@index([deletedAt], name: "index_apps_on_deleted_at")
-}
-
-model Channels {
-  id             Int     @id @default(autoincrement())
-  name           String
-  slug           String
-  appId          Int?
-  packageName    String?
-  packagesCount  Int? @default(0)
-  bundleId       String?
-  deviceType     String
-  userId         Int
-  password       String?
-  sort           Int? @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  deletedAt      DateTime?
-  @@index([deletedAt], name: "index_channels_on_deleted_at")
-  @@unique([appId, slug, deviceType])
 }
 
 model Packages {
@@ -50,8 +29,6 @@ model Packages {
   appId        Int?
   name         String?
   icon         String?
-  channelId    Int?
-  channelName  String?
   bundleId     String?
   version      String?
   buildVersion String?
@@ -59,10 +36,8 @@ model Packages {
   file         String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  deletedAt    DateTime?
   size         Int? @default(0)
   userId       Int
-  @@index([deletedAt], name: "index_packages_on_deleted_at")
 }
 
 model Settings {
