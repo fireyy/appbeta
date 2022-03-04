@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
-import { Input, Button, Text, Grid, Textarea, Radio } from '@geist-ui/core'
-import { AppItem } from 'interfaces'
+import { Input, Button, Text, Grid, Textarea, Radio, useInput } from '@geist-ui/core'
 
 const AppNewPage: React.FC<unknown> = () => {
-  const [data, setData] = useState<AppItem>(null)
   const [deviceType, setDeviceType] = useState('ios')
+  const { state: name, setState: setName, bindings: nameBindings } = useInput('')
+  const { state: slug, setState: setSlug, bindings: slugBindings } = useInput('')
+  const { state: desc, setState: setDesc, bindings: descBindings } = useInput('')
   const [loading, setLoading] = useState(false)
   const { query: { id = 0 } } = useRouter()
   const isEdit = id !== 0
-
-  const handleChange = (e: any) => {
-    setData({ ...data, [e.target.name]: e.target.value })
-  }
 
   const handleDeviceType = (val: string) => {
     setDeviceType(val)
@@ -22,7 +19,10 @@ const AppNewPage: React.FC<unknown> = () => {
     const fetchData = async () => {
       const res = await fetch(`http://localhost:3000/api/apps/${id}`)
       const result = await res.json()
-      setData(result)
+      setName(result.name)
+      setSlug(result.slug)
+      setDesc(result.description)
+      setDeviceType(result.deviceType)
     }
     isEdit && fetchData()
   }, [id])
@@ -33,7 +33,12 @@ const AppNewPage: React.FC<unknown> = () => {
     await fetch('http://localhost:3000/api/apps' + url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        name,
+        slug,
+        description: desc,
+        deviceType,
+      }),
     })
     await Router.push(isEdit ? `/apps/${id}` : '/')
   }
@@ -43,15 +48,15 @@ const AppNewPage: React.FC<unknown> = () => {
       <Grid.Container gap={2} justify="center">
         <Grid xs={24} md={12} direction="column">
           <Text h6>Name:</Text>
-          <Input placeholder="Text" width="100%" name="name" onChange={handleChange} value={data?.name} />
+          <Input placeholder="Text" width="100%" {...nameBindings} />
         </Grid>
         <Grid xs={24} md={12} direction="column">
           <Text h6>Slug:</Text>
-          <Input placeholder="Text" width="100%" name="slug" onChange={handleChange} value={data?.slug} />
+          <Input placeholder="Text" width="100%" {...slugBindings} />
         </Grid>
         <Grid xs={24} direction="column">
           <Text h6>Device Type:</Text>
-          <Radio.Group value={data?.deviceType} useRow onChange={handleDeviceType}>
+          <Radio.Group value={deviceType} useRow onChange={handleDeviceType}>
             <Radio value="ios">
               iOS
               <Radio.Desc>For iPhone, iPad and iPod touch</Radio.Desc>
@@ -64,7 +69,7 @@ const AppNewPage: React.FC<unknown> = () => {
         </Grid>
         <Grid xs={24} direction="column">
           <Text h6>Description:</Text>
-          <Textarea placeholder="Text" width="100%" name="description" onChange={handleChange} value={data?.description} />
+          <Textarea placeholder="Text" width="100%" {...descBindings} />
         </Grid>
         <Grid xs justify="flex-end">
           <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>

@@ -4,6 +4,7 @@ import {
   Text,
   Card,
   useTheme,
+  Badge,
 } from '@geist-ui/core'
 import Router from 'next/router'
 import { AppItem } from '../interfaces'
@@ -35,7 +36,7 @@ const ProjectCard: React.FC<Props> = ({
                 margin={0}
                 style={{ fontWeight: 500, lineHeight: '1.5rem' }}
               >
-                {data.name}
+                {data.name} <Badge scale={0.5}>{data.deviceType}</Badge>
               </Text>
               <Text
                 margin={0}
