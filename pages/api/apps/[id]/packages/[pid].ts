@@ -2,22 +2,28 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { id, pid } = req.query
+  const {
+    query: { id, pid },
+    method,
+  } = req
 
-  if (req.method === 'GET') {
-    handleGET(pid, res)
-  } else if (req.method === 'DELETE') {
-    handleDELETE(id, pid, res)
-  } else if (req.method === 'PUT') {
-    // TODO: mod data
-    const { name, description, slug } = req.body
-    handlePUT(pid, {
-      name, description, slug
-    }, res)
-  } else {
-    throw new Error(
-      `The HTTP ${req.method} method is not supported at this route.`
-    )
+  switch (method) {
+    case 'GET':
+      handleGET(pid, res)
+      break
+    case 'PUT':
+      // TODO: mod data
+      const { name, description, slug } = req.body
+      handlePUT(pid, {
+        name, description, slug
+      }, res)
+      break
+    case 'DELETE':
+      handleDELETE(id, pid, res)
+      break
+    default:
+      res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
+      res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
 

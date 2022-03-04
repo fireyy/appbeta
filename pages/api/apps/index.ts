@@ -3,26 +3,25 @@ import { getSession } from 'next-auth/react'
 import prisma from 'lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { name, description, slug, deviceType } = req.body
+  const {
+    body: data,
+    method,
+  } = req
+
   const session = await getSession({ req })
-  if (session) {
-    if (req.method === 'GET') {
+  switch (method) {
+    case 'GET':
       handleGET(res)
-    } else if (req.method === 'PUT') {
+      break
+    case 'PUT':
       handlePUT({
-        name,
-        description,
-        slug,
-        deviceType,
+        ...data,
         userId: session.user.id,
       }, res)
-    } else {
-      throw new Error(
-        `The HTTP ${req.method} method is not supported at this route.`
-      )
-    }
-  } else {
-    res.status(401).send({ message: 'Unauthorized' })
+      break
+    default:
+      res.setHeader('Allow', ['GET', 'PUT'])
+      res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
 
