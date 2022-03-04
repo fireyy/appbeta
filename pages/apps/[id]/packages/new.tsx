@@ -29,7 +29,6 @@ const PackageNewPage: React.FC<unknown> = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    data.appId = Number(id)
     if(desc) data.changelog = desc
     await fetch(`http://localhost:3000/api/apps/${id}/packages`, {
       method: 'PUT',

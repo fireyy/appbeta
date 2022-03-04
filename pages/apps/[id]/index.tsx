@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
-import { Text, Link, useTheme, Table, Spacer, Display, Button } from '@geist-ui/core'
+import { Link, useTheme, Table, Spacer } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem, PackageItem } from 'interfaces'
@@ -70,8 +70,6 @@ const AppPage: React.FC<Props> = ({ data }) => {
         </div>
       </div>
       <style jsx>{`
-        .page__wrapper {
-        }
         .page__content {
           display: flex;
           flex-direction: row;
