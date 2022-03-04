@@ -33,12 +33,12 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
               <Text h2 className="headding__user-name">
                 {data?.name}
               </Text>
-              <Tag className="headding__user-role">tag</Tag>
+              <Tag className="headding__user-role">{data?.deviceType}</Tag>
 
               <div className="heading__actions">
-                <NextLink href={`/apps/${data.id}/channels/new`} passHref>
+                <NextLink href={`/apps/${data.id}/packages/new`} passHref>
                   <Button type="secondary" auto scale={2/3}>
-                    Add Channel
+                    Add Packages
                   </Button>
                 </NextLink>
                 <NextLink href={`/apps/new?id=${data.id}`} passHref>

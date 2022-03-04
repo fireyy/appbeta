@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
-import { Text, Link, useTheme, Table, Spacer } from '@geist-ui/core'
+import { Text, Link, useTheme, Table, Spacer, Display, Button } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem, PackageItem } from 'interfaces'
 import ProjectInfo from 'components/project-info'
-import EventListItem from 'components/activity-event'
-import ChannelCard from 'components/channel-card'
+import NoItem from 'components/no-item'
+import Title from 'components/title'
 
 async function save(id: number): Promise<void> {
   await fetch(`http://localhost:3000/api/apps/${id}`, {
@@ -50,6 +50,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
 
   return (
     <>
+      <Title value={data.name} />
       <ProjectInfo data={data} />
       <div className="page__wrapper">
         <div className="page__content">
@@ -61,6 +62,11 @@ const AppPage: React.FC<Props> = ({ data }) => {
             <Table.Column prop="updatedAt" label="updatedAt" />
             <Table.Column prop="id" label="action" render={renderAction} />
           </Table>
+          {
+            (!packages || packages.length === 0) && (
+              <NoItem link={`/apps/${data.id}/packages/new`} />
+            )
+          }
         </div>
       </div>
       <style jsx>{`

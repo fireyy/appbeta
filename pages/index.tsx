@@ -1,12 +1,12 @@
 import type { NextPage, GetServerSideProps } from 'next'
 import Router from 'next/router'
-import Head from 'next/head'
-import { Button, Grid, Input, useTheme, Display } from '@geist-ui/core'
+import { Button, Grid, Input, useTheme } from '@geist-ui/core'
 import SearchIcon from '@geist-ui/icons/search'
 import CreateTeamIcon from '@geist-ui/icons/userPlus'
-import Plus from '@geist-ui/icons/plus'
 import { AppItem } from '../interfaces'
 import ProjectCard from '../components/project-card'
+import NoItem from 'components/no-item'
+import Title from 'components/title'
 
 type Props = {
   data: AppItem[]
@@ -17,9 +17,7 @@ const Home: NextPage<Props> = ({ data }) => {
 
   return (
     <>
-      <Head>
-        <title>Home</title>
-      </Head>
+      <Title value="Home" />
       <div className="page__content">
         <div className="actions-stack">
           <Input
@@ -48,9 +46,7 @@ const Home: NextPage<Props> = ({ data }) => {
           {
             (!data || data.length === 0) && (
               <Grid xs={24}>
-                <Display caption="Nothing to see here. Press 'New' button to start.">
-                  <Button auto icon={<Plus />} onClick={() => Router.push('/apps/new')}>New</Button>
-                </Display>
+                <NoItem link={'/apps/new'} />
               </Grid>
             )
           }

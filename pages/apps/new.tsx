@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea, Radio, useInput } from '@geist-ui/core'
+import Title from 'components/title'
 
 const AppNewPage: React.FC<unknown> = () => {
   const [deviceType, setDeviceType] = useState('ios')
@@ -45,6 +46,7 @@ const AppNewPage: React.FC<unknown> = () => {
 
   return (
     <>
+      <Title value="New App" />
       <Grid.Container gap={2} justify="center">
         <Grid xs={24} md={12} direction="column">
           <Text h6>Name:</Text>
