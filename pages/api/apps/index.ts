@@ -9,12 +9,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   } = req
 
   const session = await getSession({ req })
+
   switch (method) {
     case 'GET':
-      handleGET(res)
+      await handleGET(res)
       break
     case 'PUT':
-      handlePUT({
+      await handlePUT({
         ...data,
         userId: session.user.id,
       }, res)

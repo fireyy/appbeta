@@ -9,17 +9,17 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
   switch (method) {
     case 'GET':
-      handleGET(pid, res)
+      await handleGET(pid, res)
       break
     case 'PUT':
       // TODO: mod data
       const { name, description, slug } = req.body
-      handlePUT(pid, {
+      await handlePUT(pid, {
         name, description, slug
       }, res)
       break
     case 'DELETE':
-      handleDELETE(id, pid, res)
+      await handleDELETE(id, pid, res)
       break
     default:
       res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])

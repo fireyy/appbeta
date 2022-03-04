@@ -7,8 +7,9 @@ import {
   Badge,
 } from '@geist-ui/core'
 import Router from 'next/router'
-import { AppItem } from '../interfaces'
-import { timeAgo } from '../lib/utils'
+import { AppItem } from 'interfaces'
+import { timeAgo } from 'lib/utils'
+import DeviceType from 'components/device-type'
 
 interface Props {
   data: AppItem
@@ -36,7 +37,7 @@ const ProjectCard: React.FC<Props> = ({
                 margin={0}
                 style={{ fontWeight: 500, lineHeight: '1.5rem' }}
               >
-                {data.name} <Badge scale={0.5}>{data.deviceType}</Badge>
+                {data.name} <DeviceType type={data.deviceType} />
               </Text>
               <Text
                 margin={0}

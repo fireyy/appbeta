@@ -13,10 +13,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   // res.status(401).send({ message: 'Unauthorized' })
   switch (method) {
     case 'GET':
-      handleGET(id, res)
+      await handleGET(id, res)
       break
     case 'PUT':
-      handlePUT({...data, appId: Number(id), userId: session.user.id}, res)
+      await handlePUT({...data, appId: Number(id), userId: session.user.id}, res)
       break
     default:
       res.setHeader('Allow', ['GET', 'PUT'])

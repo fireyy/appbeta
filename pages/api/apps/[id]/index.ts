@@ -10,13 +10,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
   switch (method) {
     case 'GET':
-      handleGET(Number(id), res)
+      await handleGET(Number(id), res)
       break
     case 'PUT':
-      handlePUT(Number(id), data, res)
+      await handlePUT(Number(id), data, res)
       break
     case 'DELETE':
-      handleDELETE(Number(id), res)
+      await handleDELETE(Number(id), res)
       break
     default:
       res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
