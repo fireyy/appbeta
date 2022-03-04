@@ -3,7 +3,7 @@ import { getSession } from 'next-auth/react'
 import prisma from 'lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { name, description, slug } = req.body
+  const { name, description, slug, deviceType } = req.body
   const session = await getSession({ req })
   if (session) {
     if (req.method === 'GET') {
@@ -13,6 +13,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         name,
         description,
         slug,
+        deviceType,
         userId: session.user.id,
       }, res)
     } else {
@@ -32,17 +33,9 @@ async function handleGET(res: NextApiResponse) {
 }
 
 // PUT /api/apps
-// Required fields in body: name, slug
-// Optional fields in body: description
 async function handlePUT(data, res: NextApiResponse) {
-  const { name, description, slug, userId } = data
   const result = await prisma.apps.create({
-    data: {
-      name,
-      slug,
-      description,
-      userId,
-    },
+    data,
   })
   res.json(result)
 }

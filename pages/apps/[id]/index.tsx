@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
-import { Text, Link, useTheme } from '@geist-ui/core'
-import { AppItem, ChannelItem } from 'interfaces'
+import { Text, Link, useTheme, Table, Spacer } from '@geist-ui/core'
+import Edit from '@geist-ui/icons/edit'
+import Trash2 from '@geist-ui/icons/trash2'
+import { AppItem, PackageItem } from 'interfaces'
 import ProjectInfo from 'components/project-info'
 import EventListItem from 'components/activity-event'
 import ChannelCard from 'components/channel-card'
@@ -21,42 +23,44 @@ type Props = {
 
 const AppPage: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
-  const [channels, setChannels] = useState<ChannelItem[]>([])
+  const [packages, setPackages] = useState<PackageItem[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`http://localhost:3000/api/apps/${data.id}/channels`)
+      const res = await fetch(`http://localhost:3000/api/apps/${data.id}/packages`)
       const result = await res.json()
-      setChannels(result)
+      setPackages(result)
     }
     fetchData()
   }, [])
+
+  const renderAction = (id: number, row: PackageItem) => {
+    return (
+      <>
+        <NextLink href={`/apps/${row.appId}/packages/new?id=${id}`}>
+          <Link><Edit size={14} /></Link>
+        </NextLink>
+        <Spacer inline w={0.5} />
+        <NextLink href={`/apps/${id}/packages/new`}>
+          <Link><Trash2 size={14} /></Link>
+        </NextLink>
+      </>
+    )
+  }
 
   return (
     <>
       <ProjectInfo data={data} />
       <div className="page__wrapper">
         <div className="page__content">
-          <div className="channels">
-            {
-              channels && channels.length > 0 && channels.map((channel) => {
-                return (
-                  <ChannelCard
-                    key={channel.id}
-                    data={channel}
-                  />
-                )
-              })
-            }
-          </div>
-          <div className="recent-activity">
-            <Text h2 className="recent-activity__title">
-              Recent Activity
-            </Text>
-            <EventListItem username="fireyy" avatar="https://avatars.githubusercontent.com/u/66291?v=4" createdAt="4m">
-              You deployed iOS to <b>production</b>
-            </EventListItem>
-          </div>
+          <Table data={packages}>
+            <Table.Column prop="name" label="name" />
+            <Table.Column prop="bundleId" label="bundleId" />
+            <Table.Column prop="version" label="version" />
+            <Table.Column prop="buildVersion" label="buildVersion" />
+            <Table.Column prop="updatedAt" label="updatedAt" />
+            <Table.Column prop="id" label="action" render={renderAction} />
+          </Table>
         </div>
       </div>
       <style jsx>{`
@@ -72,37 +76,11 @@ const AppPage: React.FC<Props> = ({ data }) => {
           padding: 0 ${theme.layout.pageMargin};
           box-sizing: border-box;
         }
-        .channels {
-          width: 540px;
-          max-width: 100%;
-          margin-right: calc(4 * ${theme.layout.gap});
-        }
-        .channels :global(.channel__wrapper):not(:last-of-type) {
-          margin-bottom: calc(1.5 * ${theme.layout.gap});
-        }
-        .recent-activity {
-          flex: 1;
-        }
-        .recent-activity :global(.recent-activity__title) {
-          font-size: 0.875rem;
-          font-weight: 700;
-          margin: 0 0 calc(3 * ${theme.layout.gapHalf});
-        }
-        .page__content :global(.view-all) {
-          font-size: 0.875rem;
-          font-weight: 700;
-          margin: calc(1.5 * ${theme.layout.gap}) 0;
-          text-align: center;
-        }
         @media (max-width: ${theme.breakpoints.sm.max}) {
           .page__content {
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
-          }
-          .channels {
-            width: 100%;
-            margin-right: unset;
           }
         }
       `}</style>

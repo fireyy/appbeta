@@ -4,13 +4,13 @@ import prisma from 'lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const data = req.body
-  const cid = req.query.id
+  const id = req.query.id
   const session = await getSession({ req })
   if (session) {
     if (req.method === 'GET') {
-      handleGET(cid, res)
+      handleGET(id, res)
     } else if (req.method === 'PUT') {
-      handlePUT({...data, userId: session.user.id}, res)
+      handlePUT({...data, appId: id, userId: session.user.id}, res)
     } else {
       throw new Error(
         `The HTTP ${req.method} method is not supported at this route.`
@@ -21,32 +21,21 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   }
 }
 
-// GET /api/channels/:id/packages
+// GET /api/apps/:id/packages
 async function handleGET(id, res: NextApiResponse) {
   const post = await prisma.packages.findMany({
-    where: { channelId: Number(id) }
+    where: { appId: Number(id) }
   })
   res.json(post)
 }
 
-// PUT /api/channels/:id/packages
+// PUT /api/apps/:id/packages
 async function handlePUT(data, res: NextApiResponse) {
-  const channel = await prisma.channels.findUnique({
-    where: { id: Number(data.channelId) },
-  })
   const result = await prisma.packages.create({
-    data: { ...data, channelName: channel.name, appId: channel.appId },
-  })
-  await prisma.channels.update({
-    where: { id: Number(data.channelId) },
-    data: {
-      packagesCount: {
-        increment: 1
-      },
-    }
+    data,
   })
   await prisma.apps.update({
-    where: { id: Number(channel.appId) },
+    where: { id: Number(data.appId) },
     data: {
       packagesCount: {
         increment: 1
