@@ -3,10 +3,10 @@ import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
 import { Text, Link, useTheme } from '@geist-ui/core'
-import { AppItem, ChannelItem } from '../../../interfaces'
-import ProjectInfo from '../../../components/project-info'
-import EventListItem from '../../../components/activity-event'
-import ChannelCard from '../../../components/channel-card'
+import { AppItem, ChannelItem } from 'interfaces'
+import ProjectInfo from 'components/project-info'
+import EventListItem from 'components/activity-event'
+import ChannelCard from 'components/channel-card'
 
 async function save(id: number): Promise<void> {
   await fetch(`http://localhost:3000/api/apps/${id}`, {

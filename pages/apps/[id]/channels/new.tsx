@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Radio } from '@geist-ui/core'
-import { ChannelItem } from '../../../../interfaces'
+import { ChannelItem } from 'interfaces'
 
 const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<ChannelItem>(null)

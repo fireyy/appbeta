@@ -5,7 +5,7 @@ import NextLink from 'next/link'
 import { Link, Table, useTheme, Spacer, Fieldset, Button, Text } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
-import { ChannelItem, PackageItem } from '../../../interfaces'
+import { ChannelItem, PackageItem } from 'interfaces'
 
 type Props = {
   data: ChannelItem

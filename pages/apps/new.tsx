@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea } from '@geist-ui/core'
-import { AppItem } from '../../interfaces'
+import { AppItem } from 'interfaces'
 
 const AppNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<AppItem>(null)

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea, Display, Code } from '@geist-ui/core'
 import Upload from '@geist-ui/icons/upload'
-import { PackageItem } from '../../../../interfaces'
+import { PackageItem } from 'interfaces'
 
 const PackageNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<PackageItem>(null)

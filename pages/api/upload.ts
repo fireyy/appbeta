@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import getConfig from 'next/config'
 import formidable from 'formidable'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import parseApp from '../../lib/parse-app'
+import parseApp from 'lib/parse-app'
 
 export const config = {
   api: {
@@ -11,16 +12,18 @@ export const config = {
   },
 }
 
+const { serverRuntimeConfig: { pkgPath, iconPath } } = getConfig()
+
 const parseFile = async (file) => {
   const { filepath, size } = file
   const result: any = await parseApp(filepath)
   const base64Data = result.icon.replace(/^data:image\/png;base64,/, '')
   const name = crypto.createHash('md5').update(filepath).digest('hex') + '.png'
-  fs.writeFile(path.join(process.env.ICON_PATH, name), base64Data, 'base64', function(err) {
+  fs.writeFile(path.join(iconPath, name), base64Data, 'base64', function(err) {
     console.log(err)
   })
-  result.icon = `/public/icons/${name}.png`
-  result.file = `/public/downloads/${path.basename(filepath)}`
+  result.icon = `${name}.png`
+  result.file = path.basename(filepath)
   result.size = size
   return result
 }
@@ -35,7 +38,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
     const form = formidable({
-      uploadDir: process.env.UPLOAD_PATH,
+      uploadDir: pkgPath,
       keepExtensions: true,
       filename (name, ext, part, form) {
         return `${name}_${Date.now()}${ext}`
