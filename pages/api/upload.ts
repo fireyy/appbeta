@@ -22,7 +22,7 @@ const parseFile = async (file) => {
   fs.writeFile(path.join(iconPath, name), base64Data, 'base64', function(err) {
     console.log(err)
   })
-  result.icon = `${name}.png`
+  result.icon = name
   result.file = path.basename(filepath)
   result.size = size
   return result
