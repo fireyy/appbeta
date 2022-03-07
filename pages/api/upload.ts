@@ -28,7 +28,7 @@ const parseFile = async (file) => {
   return result
 }
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {
     const options = {
       filter: function ({name, originalFilename, mimetype}) {
@@ -44,13 +44,20 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         return `${name}_${Date.now()}${ext}`
       }
     })
-    form.parse(req, async (err, fields, files) => {
-      const result = await parseFile(files.file[0])
-      res.json(result)
+    // TODO: fix type
+    const files: any = await new Promise((resolve, reject) => {
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve(files)
+      })
     })
+    const result = await parseFile(files.file[0])
+    res.json(result)
   } else {
-    throw new Error(
-      `The HTTP ${req.method} method is not supported at this route.`
-    )
+    res.setHeader('Allow', ['PUT'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }

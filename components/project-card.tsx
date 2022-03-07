@@ -25,13 +25,15 @@ const ProjectCard: React.FC<Props> = ({
       <div className="project__wrapper">
         <Card className="project__card" onClick={() => Router.push(`/apps/${data.id}`)}>
           <div className="project-title__wrapper">
-            <Avatar
-              src={data.icon}
-              height={1.25}
-              width={1.25}
-              marginRight={0.75}
-              className="project-icon"
-            />
+            <Badge.Anchor placement="bottomRight">
+              <Badge scale={0.5}>{data.packagesCount}</Badge>
+              <Avatar
+                src={data.icon}
+                height={1.25}
+                width={1.25}
+                className="project-icon"
+              />
+            </Badge.Anchor>
             <div className="project-title__content">
               <Text
                 margin={0}
@@ -63,10 +65,10 @@ const ProjectCard: React.FC<Props> = ({
           )}
           <Text
             marginBottom={0}
-            font="0.875rem"
+            font="12px"
             style={{ color: theme.palette.accents_5 }}
           >
-            {timeAgo(data.updatedAt)}
+            {timeAgo(data.updatedAt)} ago.
           </Text>
         </Card>
       </div>
@@ -85,12 +87,12 @@ const ProjectCard: React.FC<Props> = ({
           flex-direction: row;
           align-items: center;
         }
+        .project-title__content {
+          margin-left: ${theme.layout.gap};
+        }
         .project-title__wrapper :global(.project-icon) {
-          background: #fff;
+          background: ${theme.palette.accents_2};
           border-radius: 50%;
-          border: ${theme.type === 'dark'
-            ? `1px solid ${theme.palette.foreground}`
-            : 'none'};
         }
         .project-description {
           min-height: 3rem;
