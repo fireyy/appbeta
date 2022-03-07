@@ -9,6 +9,7 @@ import { AppItem, PackageItem } from 'interfaces'
 import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
+import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 
 async function save(id: number): Promise<void> {
   await fetch(`http://localhost:3000/api/apps/${id}`, {
@@ -24,6 +25,7 @@ type Props = {
 const AppPage: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
   const [packages, setPackages] = useState<PackageItem[]>([])
+  const { visible, setVisible, bindings } = usePopConfirm()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +36,12 @@ const AppPage: React.FC<Props> = ({ data }) => {
     fetchData()
   }, [])
 
+  const handleDelete = async (pid: number) => {
+    await fetch(`http://localhost:3000/api/apps/${data.id}/packages/${pid}`, {
+      method: 'DELETE',
+    })
+  }
+
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
@@ -41,9 +49,9 @@ const AppPage: React.FC<Props> = ({ data }) => {
           <Link><Edit size={14} /></Link>
         </NextLink>
         <Spacer inline w={0.5} />
-        <NextLink href={`/apps/${id}/packages/new`}>
-          <Link><Trash2 size={14} /></Link>
-        </NextLink>
+        <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
+          <Trash2 size={14} />
+        </PopConfirm>
       </>
     )
   }

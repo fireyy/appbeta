@@ -53,6 +53,8 @@ async function handleDELETE(id, pid, res: NextApiResponse) {
   const post = await prisma.packages.delete({
     where: { id: Number(pid) },
   })
+  console.log('post', post)
+  // TODO：删除文件 icon、download
   await prisma.apps.update({
     where: { id: Number(id) },
     data: {
