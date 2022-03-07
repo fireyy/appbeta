@@ -40,6 +40,7 @@ async function handlePUT(data, res: NextApiResponse) {
   await prisma.apps.update({
     where: { id: Number(data.appId) },
     data: {
+      icon: data.icon,
       packagesCount: {
         increment: 1
       },

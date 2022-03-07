@@ -27,19 +27,21 @@ const AppPage: React.FC<Props> = ({ data }) => {
   const [packages, setPackages] = useState<PackageItem[]>([])
   const { visible, setVisible, bindings } = usePopConfirm()
 
+  const fetchPackages = async () => {
+    const res = await fetch(`http://localhost:3000/api/apps/${data.id}/packages`)
+    const result = await res.json()
+    setPackages(result)
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`http://localhost:3000/api/apps/${data.id}/packages`)
-      const result = await res.json()
-      setPackages(result)
-    }
-    fetchData()
+    fetchPackages()
   }, [])
 
   const handleDelete = async (pid: number) => {
     await fetch(`http://localhost:3000/api/apps/${data.id}/packages/${pid}`, {
       method: 'DELETE',
     })
+    fetchPackages()
   }
 
   const renderAction = (id: number, row: PackageItem) => {

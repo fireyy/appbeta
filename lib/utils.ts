@@ -1,3 +1,5 @@
+import getConfig from 'next/config'
+
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
   const full = color.replace(
@@ -54,3 +56,11 @@ function pluralize (time: number, label: string) {
   }
   return time + label + 's'
 }
+
+export const getStatic = (file: string = 'default.png', type = 'icons') => {
+  const { publicRuntimeConfig: { staticFolder } } = getConfig()
+  return `${staticFolder}${type}/${file}`
+}
+
+export const getIconPath = (file: string) => getStatic(file, 'icons')
+export const getPkgPath = (file: string) => getStatic(file, 'downloads')

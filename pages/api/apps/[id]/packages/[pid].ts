@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import fs from 'fs'
-import path from 'path'
-import getConfig from 'next/config'
 import prisma from 'lib/prisma'
+import removeFile from 'lib/remove-file'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -56,10 +54,9 @@ async function handleDELETE(id, pid, res: NextApiResponse) {
   const post = await prisma.packages.delete({
     where: { id: Number(pid) },
   })
-  const { serverRuntimeConfig: { pkgPath, iconPath } } = getConfig()
   // 删除文件 post.icon、post.file
-  fs.unlinkSync(path.join(iconPath, post.icon))
-  fs.unlinkSync(path.join(pkgPath, post.file))
+  removeFile(post.icon, 'icons')
+  removeFile(post.file, 'downloads')
   // 更新 packagesCount
   await prisma.apps.update({
     where: { id: Number(id) },
