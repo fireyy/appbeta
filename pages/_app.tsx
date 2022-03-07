@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
 import Menu from '../components/menu'
+import Search from '../components/search'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
@@ -28,6 +29,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
           <Menu />
+          <Search />
           <div className="layout">
             <Component {...pageProps} />
           </div>
