@@ -4,7 +4,9 @@ import Router from 'next/router'
 import { Avatar, Button, Tag, Text, useTheme, Modal, useModal } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
-import { AppItem } from '../interfaces'
+import { AppItem } from 'interfaces'
+import { getIconPath } from 'lib/utils'
+import DeviceType from 'components/device-type'
 
 interface Props {
   data: AppItem
@@ -27,13 +29,13 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
     <>
       <div className="heading__wrapper">
         <div className="heading">
-          <Avatar alt="Your Avatar" className="heading__user-avatar" src={data?.icon} />
+          <Avatar alt="Your Avatar" className="heading__user-avatar" src={getIconPath(data?.icon)} />
           <div className="heading__name">
             <div className="heading__title">
               <Text h2 className="headding__user-name">
                 {data?.name}
               </Text>
-              <Tag className="headding__user-role">{data?.deviceType}</Tag>
+              <Tag className="headding__user-role"><DeviceType size={12} type={data.deviceType} /></Tag>
 
               <div className="heading__actions">
                 <NextLink href={`/apps/${data.id}/packages/new`} passHref>

@@ -8,7 +8,7 @@ import {
 } from '@geist-ui/core'
 import Router from 'next/router'
 import { AppItem } from 'interfaces'
-import { timeAgo } from 'lib/utils'
+import { timeAgo, getIconPath } from 'lib/utils'
 import DeviceType from 'components/device-type'
 
 interface Props {
@@ -28,7 +28,7 @@ const ProjectCard: React.FC<Props> = ({
             <Badge.Anchor placement="bottomRight">
               <Badge scale={0.5}>{data.packagesCount}</Badge>
               <Avatar
-                src={data.icon}
+                src={getIconPath(data.icon)}
                 height={1.25}
                 width={1.25}
                 className="project-icon"
@@ -39,7 +39,7 @@ const ProjectCard: React.FC<Props> = ({
                 margin={0}
                 style={{ fontWeight: 500, lineHeight: '1.5rem' }}
               >
-                {data.name} <DeviceType type={data.deviceType} />
+                {data.name} <DeviceType size={12} type={data.deviceType} />
               </Text>
               <Text
                 margin={0}

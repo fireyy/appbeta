@@ -2,6 +2,8 @@ import React from 'react'
 
 type Props = {
   type: string
+  size?: number
+  color?: string
 }
 
 const typeIcon = {
@@ -11,15 +13,17 @@ const typeIcon = {
 
 const DeviceType: React.FC<Props> = ({
   type,
+  size = 24,
+  color = 'currentColor',
 }) => {
   return (
     <>
       <svg
-        width="24"
-        height="24"
+        width={size}
+        height={size}
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
+        fill={color}
       >
         <path d={typeIcon[type]} />
       </svg>
