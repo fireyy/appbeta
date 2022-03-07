@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import NextLink from 'next/link'
-import { Link, useTheme, Table, Spacer } from '@geist-ui/core'
+import { Link, useTheme, Table, Spacer, Button, Modal, useModal, Textarea, useInput } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem, PackageItem } from 'interfaces'
@@ -11,13 +11,6 @@ import NoItem from 'components/no-item'
 import Title from 'components/title'
 import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 
-async function save(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/api/apps/${id}`, {
-    method: 'PUT',
-  })
-  await Router.push('/')
-}
-
 type Props = {
   data: AppItem
 }
@@ -25,12 +18,36 @@ type Props = {
 const AppPage: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
   const [packages, setPackages] = useState<PackageItem[]>([])
-  const { visible, setVisible, bindings } = usePopConfirm()
+  const { bindings } = usePopConfirm()
+  const [loading, setLoading] = useState(false)
+  const [editId, setEditId] = useState(0)
+  const { setVisible: setEditVisible, bindings: editBindings } = useModal()
+  const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
 
   const fetchPackages = async () => {
     const res = await fetch(`http://localhost:3000/api/apps/${data.id}/packages`)
     const result = await res.json()
     setPackages(result)
+  }
+
+  const saveEdit = async (e): Promise<void> => {
+    setLoading(true)
+    await fetch(`http://localhost:3000/api/apps/${data.id}/packages/${editId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        changelog
+      })
+    })
+    setEditVisible(false)
+    setLoading(false)
+    await fetchPackages()
+  }
+
+  const setEditIdAndVisible = (id: number, row: PackageItem) => {
+    setEditId(id)
+    setChangelog(row.changelog || '')
+    setEditVisible(true)
   }
 
   useEffect(() => {
@@ -47,12 +64,9 @@ const AppPage: React.FC<Props> = ({ data }) => {
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
-        <NextLink href={`/apps/${row.appId}/packages/new?id=${id}`}>
-          <Link><Edit size={14} /></Link>
-        </NextLink>
-        <Spacer inline w={0.5} />
+        <Button type="abort" iconRight={<Edit size={14} />} auto scale={2/3} px={0.5} onClick={() => setEditIdAndVisible(id, row)} />
         <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
-          <Trash2 size={14} />
+          <Button type="abort" iconRight={<Trash2 size={14} />} auto scale={2/3} px={0.5} />
         </PopConfirm>
       </>
     )
@@ -72,6 +86,14 @@ const AppPage: React.FC<Props> = ({ data }) => {
             <Table.Column prop="updatedAt" label="updatedAt" />
             <Table.Column prop="id" label="action" render={renderAction} />
           </Table>
+          <Modal {...editBindings}>
+            <Modal.Title>Edit Changelog</Modal.Title>
+            <Modal.Content>
+              <Textarea placeholder="Text" width="100%" height="100%" {...changelogBindings} />
+            </Modal.Content>
+            <Modal.Action passive onClick={() => setEditVisible(false)}>Cancel</Modal.Action>
+            <Modal.Action loading={loading} onClick={saveEdit}>OK</Modal.Action>
+          </Modal>
           {
             (!packages || packages.length === 0) && (
               <NoItem link={`/apps/${data.id}/packages/new`} />

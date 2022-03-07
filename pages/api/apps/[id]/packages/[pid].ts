@@ -13,10 +13,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       await handleGET(pid, res)
       break
     case 'PUT':
-      // TODO: mod data
-      const { name, description, slug } = req.body
+      const { changelog } = req.body
       await handlePUT(pid, {
-        name, description, slug
+        changelog
       }, res)
       break
     case 'DELETE':
