@@ -12,23 +12,7 @@ export const search = async (keyword: string): Promise<SearchResults> => {
     method: 'GET'
   })
   const result = await res.json()
-  const data = result.map(item => (
-    {
-      name: item.name,
-      icon: item.icon,
-      url: `/apps/${item.id}`,
-      group: item.deviceType
-    }
-  ))
-    .slice(0, 10)
-    .sort(seed => {
-      const startsWithName = seed.name.toLowerCase().startsWith(keyword)
-      const startsWithGroup = seed.group?.toLowerCase().startsWith(keyword)
-      if (startsWithName) return -1
-      if (startsWithGroup) return 0
-      return 1
-    })
-  return data
+  return result
 }
 
 export const groupResults = (data: SearchResults) => {

@@ -35,7 +35,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
               <Text h2 className="headding__user-name">
                 {data?.name}
               </Text>
-              <Tag className="headding__user-role"><DeviceType size={12} type={data.deviceType} /></Tag>
+              <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
 
               <div className="heading__actions">
                 <NextLink href={`/apps/${data.id}/packages/new`} passHref>
