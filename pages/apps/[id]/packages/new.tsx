@@ -4,6 +4,7 @@ import { Input, Button, Text, Grid, Textarea, Display, Code, useInput } from '@g
 import Upload from '@geist-ui/icons/upload'
 import { PackageItem } from 'interfaces'
 import Title from 'components/title'
+import NavLink from 'components/nav-link'
 
 const PackageNewPage: React.FC<unknown> = () => {
   const [data, setData] = useState<PackageItem>(null)
@@ -41,6 +42,7 @@ const PackageNewPage: React.FC<unknown> = () => {
   return (
     <>
       <Title value="New Package" />
+      <NavLink href={`/apps/${id}`}>Back</NavLink>
       <Grid.Container gap={2} justify="center">
         <Grid xs={24}>
           <Display caption="Upload ipa or apk">

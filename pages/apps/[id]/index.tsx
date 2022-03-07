@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
-import Router from 'next/router'
-import NextLink from 'next/link'
-import { Link, useTheme, Table, Spacer, Button, Modal, useModal, Textarea, useInput } from '@geist-ui/core'
+import { useTheme, Table, Button, Modal, useModal, Textarea, useInput } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem, PackageItem } from 'interfaces'
@@ -10,6 +8,7 @@ import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
 import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
+import NavLink from 'components/nav-link'
 
 type Props = {
   data: AppItem
@@ -75,6 +74,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Title value={data.name} />
+      <NavLink href="/">Back to Home</NavLink>
       <ProjectInfo data={data} />
       <div className="page__wrapper">
         <div className="page__content">
