@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
 import Menu from '../components/menu'
 import Search from '../components/search'
+import { getAutoTheme } from 'lib/utils'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>()
-
-  const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
+  const geistTheme = useMemo(() => getAutoTheme(themeType), [themeType])
 
   useEffect(() => {
     document.documentElement.removeAttribute('style')
@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <SessionProvider session={session}>
-      <GeistProvider themeType={getAutoTheme(themeType)}>
+      <GeistProvider themeType={geistTheme}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
           <Menu />

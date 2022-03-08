@@ -64,3 +64,5 @@ export const getStatic = (file: string = 'default.svg', type = 'icons') => {
 
 export const getIconPath = (file: string) => getStatic(file, 'icons')
 export const getPkgPath = (file: string) => getStatic(file, 'downloads')
+
+export const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
