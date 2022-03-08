@@ -8,14 +8,15 @@ import Search from '../components/search'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
-  const [themeType, setThemeType] = useState<ThemeType>('dark')
+  const [themeType, setThemeType] = useState<ThemeType>()
 
   useEffect(() => {
     document.documentElement.removeAttribute('style')
     document.body.removeAttribute('style')
 
     const theme = window.localStorage.getItem('theme') as ThemeType
-    if (themes.includes(theme)) setThemeType(theme)
+    if (theme !== 'dark') return
+    setThemeType('dark')
   }, [])
 
   const switchTheme = useCallback((theme: ThemeType) => {
