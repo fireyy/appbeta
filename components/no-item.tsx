@@ -4,7 +4,7 @@ import { Display, Button } from '@geist-ui/core'
 import Plus from '@geist-ui/icons/plus'
 
 type Props = {
-  link: string
+  link?: string
   message?: string
 }
 
@@ -14,7 +14,7 @@ const NoItem: React.FC<Props> = ({
 }) => {
   return (
     <Display caption={message}>
-      <Button auto icon={<Plus />} onClick={() => Router.push(link)}>New</Button>
+      { link && <Button auto icon={<Plus />} onClick={() => Router.push(link)}>New</Button> }
     </Display>
   )
 }
