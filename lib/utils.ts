@@ -57,9 +57,9 @@ function pluralize (time: number, label: string) {
   return time + label + 's'
 }
 
-export const getStatic = (file: string = 'default.png', type = 'icons') => {
+export const getStatic = (file: string = 'default.svg', type = 'icons') => {
   const { publicRuntimeConfig: { staticFolder } } = getConfig()
-  return `${staticFolder}${type}/${file}`
+  return `${staticFolder}${type}/${file || 'default.svg'}`
 }
 
 export const getIconPath = (file: string) => getStatic(file, 'icons')

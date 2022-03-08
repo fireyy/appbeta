@@ -6,6 +6,6 @@ public/downloads/*
 test.js
 .DS_Store
 public/icons/*
-!public/icons/.gitkeep
+!public/icons/default.svg
 prisma/dev.db
 prisma/dev.db-*
