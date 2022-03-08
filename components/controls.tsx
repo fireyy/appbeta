@@ -52,6 +52,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
       /> */}
       <Spacer w={0.75} />
       <Select
+        disableMatchWidth
         scale={0.5}
         h="28px"
         pure
@@ -78,20 +79,20 @@ const Controls: React.FC<unknown> = React.memo(() => {
       {
         status === 'loading' && <Loading />
       }
-      {
-        (!session && status !== 'loading') && (
-          <Button aria-label="Log in" auto scale={0.5} px={0.6} type="abort" h="28px" onClick={() => signIn()}>Log in</Button>
-        )
-      }
-      {
-        session && (
-          <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
-            <button className="user-settings__button">
-              <Avatar src={session.user.image} text={session.user.name} />
+      <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
+        {
+          (!session && status !== 'loading') && (
+            <button className="user-settings__button" onClick={() => signIn()}>
+              <Avatar text="Log in" />
             </button>
-          </Popover>
-        )
-      }
+          )
+        }
+        { session && (
+          <button className="user-settings__button">
+            <Avatar src={session.user.image} text={session.user.name} />
+          </button>
+        )}
+      </Popover>
       <style jsx>{`
         .wrapper {
           display: flex;
@@ -104,8 +105,8 @@ const Controls: React.FC<unknown> = React.memo(() => {
           border: none;
         }
         .wrapper :global(.select) {
-          width: 50px;
-          min-width: 50px;
+          width: 20px;
+          min-width: 20px;
         }
         .select-content {
           width: auto;
@@ -113,6 +114,9 @@ const Controls: React.FC<unknown> = React.memo(() => {
           display: flex;
           justify-content: space-between;
           align-items: center;
+        }
+        .wrapper :global(.select .value .select-content) {
+          font-size: 0;
         }
         .wrapper :global(.select .value) {
           margin-right: 0;
