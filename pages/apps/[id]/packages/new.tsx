@@ -6,7 +6,6 @@ import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem } from 'interfaces'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
-import DeviceType from 'components/device-type'
 
 type Props = {
   app: AppItem
@@ -47,11 +46,10 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   return (
     <>
       <Title value="New Package" />
-      <NavLink href={`/apps/${app.id}`}>Back</NavLink>
+      <NavLink href={`/apps/${app.id}`} parent={app.name}>New Package</NavLink>
       <Grid.Container gap={2} justify="center">
         <Grid xs={24}>
           <Display caption={`Upload ${app.deviceType === 'ios' ? '.ipa' : '.apk'} file`}>
-            <Text h4>{app.name} <DeviceType size={14} type={app.deviceType} /></Text>
             <input type="file" ref={hiddenFileInput} onChange={handleFile} accept={app.deviceType === 'ios' ? '.ipa' : 'application/vnd.android.package-archive'} style={{ display: 'none' }} />
             <Button auto icon={<Upload />} onClick={() => hiddenFileInput.current.click()}>Upload</Button>
           </Display>

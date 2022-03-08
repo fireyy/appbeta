@@ -48,8 +48,10 @@ const AppNewPage: React.FC<unknown> = () => {
   return (
     <>
       <Title value="New App" />
-      <NavLink href={`/`}>Back to Home</NavLink>
-      <Grid.Container gap={2} justify="center">
+      {
+        isEdit ? <NavLink href={`/apps/${id}`} parent={name}>Edit</NavLink> : <NavLink>New App</NavLink>
+      }
+      <Grid.Container gap={4} justify="center">
         <Grid xs={24} md={12} direction="column">
           <Text h6>Name:</Text>
           <Input placeholder="Text" width="100%" {...nameBindings} />

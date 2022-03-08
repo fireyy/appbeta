@@ -1,38 +1,40 @@
 import React from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { Link, useTheme, Spacer } from '@geist-ui/core'
+import { Link, useTheme, Breadcrumbs } from '@geist-ui/core'
 import ChevronLeft from '@geist-ui/icons/chevronLeft'
 
 type Props = {
   href?: string
+  parent?: string
 }
 
 const NavLink: React.FC<Props> = ({
   href = '',
+  parent = '',
   children,
 }) => {
   const theme = useTheme()
   const router = useRouter()
 
   return (
-    <div className="nav-link-back">
-      <NextLink href={href}>
-        <Link><ChevronLeft size={16} /><Spacer w={0.2} />{children}</Link>
-      </NextLink>
+    <div className="nav-breadcrumbs">
+      <Breadcrumbs>
+        <NextLink href="/" passHref>
+          <Breadcrumbs.Item nextLink>Home</Breadcrumbs.Item>
+        </NextLink>
+        {
+          parent && (
+            <NextLink href={href} passHref>
+              <Breadcrumbs.Item nextLink>{parent}</Breadcrumbs.Item>
+            </NextLink>
+          )
+        }
+        <Breadcrumbs.Item>{children}</Breadcrumbs.Item>
+      </Breadcrumbs>
       <style jsx>{`
-        .nav-link-back {
-          color: ${theme.palette.accents_4};
-        }
-        .nav-link-back :global(.link) {
-          display: flex;
-          align-items: center;
-        }
-        .nav-link-back :global(.link:hover) {
-          color: ${theme.palette.accents_6};
-        }
-        .nav-link-back :global(svg) {
-          vertical-align: middle;
+        .nav-breadcrumbs {
+          padding-bottom: ${theme.layout.gapHalf};
         }
       `}</style>
     </div>

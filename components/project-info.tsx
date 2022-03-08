@@ -38,12 +38,12 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
               <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
 
               <div className="heading__actions">
-                <NextLink href={`/apps/${data.id}/packages/new`} passHref>
+                <NextLink href={`/apps/${data.id}/packages/new`}>
                   <Button type="secondary" auto scale={2/3}>
                     Add Packages
                   </Button>
                 </NextLink>
-                <NextLink href={`/apps/new?id=${data.id}`} passHref>
+                <NextLink href={`/apps/new?id=${data.id}`}>
                   <Button iconRight={<Edit />} auto scale={2/3} px={0.6} ml={1} />
                 </NextLink>
                 <Button type="error" iconRight={<Trash2 />} auto scale={2/3} px={0.6} ml={1} onClick={() => setVisible(true)} />

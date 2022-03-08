@@ -74,7 +74,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Title value={data.name} />
-      <NavLink href="/">Back to Home</NavLink>
+      <NavLink>{data.name}</NavLink>
       <ProjectInfo data={data} />
       <div className="page__wrapper">
         <div className="page__content">
