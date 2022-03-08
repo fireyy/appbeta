@@ -7,10 +7,12 @@ import {
   Loading,
   Popover,
   Avatar,
-  Link,
+  Spacer,
+  Select,
 } from '@geist-ui/core'
 import MoonIcon from '@geist-ui/icons/moon'
 import SunIcon from '@geist-ui/icons/sun'
+import RefreshCw from '@geist-ui/icons/refreshCw'
 import { usePrefers } from '../lib/use-prefers'
 
 const UserSettingsPop: React.FC = () => (
@@ -24,7 +26,7 @@ const UserSettingsPop: React.FC = () => (
 const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
   const theme = useTheme()
-  const { switchTheme } = usePrefers()
+  const { switchTheme, themeType } = usePrefers()
 
   return (
     <div className="wrapper">
@@ -36,7 +38,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
         title="Command + K to search.">
         K
       </Keyboard>
-      <Button
+      {/* <Button
         aria-label="Toggle Dark mode"
         auto
         scale={0.5}
@@ -47,12 +49,37 @@ const Controls: React.FC<unknown> = React.memo(() => {
           switchTheme(theme.type === 'dark' ? 'light' : 'dark')
         }
         iconRight={theme.type === 'dark' ? <SunIcon size={14} /> : <MoonIcon size={14} />}
-      />
+      /> */}
+      <Spacer w={0.75} />
+      <Select
+        scale={0.5}
+        h="28px"
+        pure
+        onChange={switchTheme}
+        value={themeType}
+        title={'Switch Themes'}>
+        <Select.Option value="auto">
+          <span className="select-content">
+            <RefreshCw size={12} /> {'Auto'}
+          </span>
+        </Select.Option>
+        <Select.Option value="light">
+          <span className="select-content">
+            <SunIcon size={12} /> {'Light'}
+          </span>
+        </Select.Option>
+        <Select.Option value="dark">
+          <span className="select-content">
+            <MoonIcon size={12} /> {'Dark'}
+          </span>
+        </Select.Option>
+      </Select>
+      <Spacer w={0.75} />
       {
         status === 'loading' && <Loading />
       }
       {
-        !session && (
+        (!session && status !== 'loading') && (
           <Button aria-label="Log in" auto scale={0.5} px={0.6} type="abort" h="28px" onClick={() => signIn()}>Log in</Button>
         )
       }
@@ -75,6 +102,23 @@ const Controls: React.FC<unknown> = React.memo(() => {
           cursor: help;
           opacity: 0.75;
           border: none;
+        }
+        .wrapper :global(.select) {
+          width: 50px;
+          min-width: 50px;
+        }
+        .select-content {
+          width: auto;
+          height: 18px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .wrapper :global(.select .value) {
+          margin-right: 0;
+        }
+        .select-content :global(svg) {
+          margin: 0 2px;
         }
         .user-settings__button {
           border: none;

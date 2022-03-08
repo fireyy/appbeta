@@ -10,13 +10,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>()
 
+  const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
+
   useEffect(() => {
     document.documentElement.removeAttribute('style')
     document.body.removeAttribute('style')
 
     const theme = window.localStorage.getItem('theme') as ThemeType
-    if (theme !== 'dark') return
-    setThemeType('dark')
+    setThemeType(theme)
   }, [])
 
   const switchTheme = useCallback((theme: ThemeType) => {
@@ -26,7 +27,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <SessionProvider session={session}>
-      <GeistProvider themeType={themeType}>
+      <GeistProvider themeType={getAutoTheme(themeType)}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
           <Menu />
