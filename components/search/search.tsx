@@ -26,6 +26,7 @@ const Search: React.FC<unknown> = () => {
   const { bindings, setVisible, visible } = useModal(false)
   const { bindings: inputBindings, setState: setInput, state: input } = useInput('')
   const debouncedSearchTerm: string = useDebounce<string>(input, 500)
+  const [onComposition, setOnComposition] = useState<boolean>(false)
 
   const cleanAfterModalClose = () => {
     setVisible(false)
@@ -36,6 +37,14 @@ const Search: React.FC<unknown> = () => {
       setPreventHover(true)
       window.clearTimeout(timer)
     }, 400)
+  }
+
+  const handleComposition = (e) => {
+    if (e.type === 'compositionend') {
+      setOnComposition(false)
+    } else {
+      setOnComposition(true)
+    }
   }
 
   useKeyboard(() => {
@@ -54,7 +63,7 @@ const Search: React.FC<unknown> = () => {
   // }, [input])
   useEffect(
     () => {
-      if (debouncedSearchTerm) {
+      if (debouncedSearchTerm && !onComposition) {
         setPreventHover(true)
         search(input).then(results => {
           setState(results)
@@ -122,6 +131,9 @@ const Search: React.FC<unknown> = () => {
           placeholder="Search a component"
           className="search-input"
           clearable
+          onCompositionStart={handleComposition}
+          onCompositionUpdate={handleComposition}
+          onCompositionEnd={handleComposition}
           {...inputBindings}
         />
         {state.length > 0 && (
