@@ -1,9 +1,10 @@
 import React from 'react'
 import { Avatar, Text, useTheme } from '@geist-ui/core'
+import { timeAgo, getIconPath } from 'lib/utils'
 
 interface Props {
-  username: string
-  avatar: string
+  name: string
+  icon: string
   createdAt: string
   children: string | React.ReactNode
 }
@@ -11,8 +12,8 @@ interface Props {
 export type ActivityEventProps = Props
 
 const ActivityEvent: React.FC<ActivityEventProps> = ({
-  username,
-  avatar,
+  name,
+  icon,
   createdAt,
   children,
 }) => {
@@ -20,22 +21,25 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
 
   return (
     <>
-      <div className="activity-event">
+      <li className="activity-event">
         <Avatar
           className="activity-event__avatar"
-          src={avatar}
-          alt={`${username} Avatar`}
+          src={getIconPath(icon)}
+          alt={name}
         />
         <Text className="activity-event__message">{children}</Text>
-        <Text className="activity-event__created-at">{createdAt}</Text>
-      </div>
+        <Text className="activity-event__created-at">{timeAgo(createdAt)}</Text>
+      </li>
       <style jsx>{`
         .activity-event {
           display: flex;
           align-items: center;
           font-size: 0.875rem;
           padding: ${theme.layout.gapHalf} 0;
-          border-bottom: 1px solid ${theme.palette.border};
+          margin-left: -1rem;
+        }
+        .activity-event:before {
+          color: ${theme.palette.border};
         }
         .activity-event :global(.activity-event__avatar) {
           width: 2rem;

@@ -3,6 +3,7 @@ import Router from 'next/router'
 import { Button, Grid, useTheme } from '@geist-ui/core'
 import { AppItem } from '../interfaces'
 import ProjectCard from '../components/project-card'
+import Plus from '@geist-ui/icons/plus'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
 
@@ -18,7 +19,7 @@ const Home: NextPage<Props> = ({ data }) => {
       <Title value="Home" />
       <div className="page__content">
         <div className="actions-stack">
-          <Button auto type="secondary" onClick={() => Router.push('/apps/new')}>
+          <Button auto type="secondary" icon={<Plus />} onClick={() => Router.push('/apps/new')}>
             New Project
           </Button>
         </div>
