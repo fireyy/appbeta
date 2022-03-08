@@ -2,37 +2,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import Controls from './controls'
-import { useBodyScroll, useTheme, Image, useMediaQuery, Tabs } from '@geist-ui/core'
+import { useTheme, Image, Tabs } from '@geist-ui/core'
 import { addColorAlpha } from '../lib/utils'
 
 const Menu: React.FC<unknown> = () => {
   const router = useRouter()
   const theme = useTheme()
-  const [expanded, setExpanded] = useState<boolean>(false)
-  const [, setBodyHidden] = useBodyScroll(null, { scrollLayer: true })
-  const isMobile = useMediaQuery('xs', { match: 'down' })
 
   const names = router.pathname.split('/').filter(r => !!r)
-  const currentUrlTabValue = names[1] || ''
-
-  useEffect(() => {
-    setBodyHidden(expanded)
-  }, [expanded])
-
-  useEffect(() => {
-    if (!isMobile) {
-      setExpanded(false)
-    }
-  }, [isMobile])
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setExpanded(false)
-    }
-
-    router.events.on('routeChangeComplete', handleRouteChange)
-    return () => router.events.off('routeChangeComplete', handleRouteChange)
-  }, [router.events])
+  const currentUrlTabValue = names[0] || ''
 
   const handleTabChange = useCallback(
     (tab: string) => {
@@ -76,6 +54,7 @@ const Menu: React.FC<unknown> = () => {
                 hideBorder
                 onChange={handleTabChange}>
                 <Tabs.Item font="14px" label={'Home'} value="" />
+                <Tabs.Item font="14px" label={'Activity'} value="activity" />
               </Tabs>
             </div>
 
@@ -137,11 +116,6 @@ const Menu: React.FC<unknown> = () => {
         }
         .tabs :global(.content) {
           display: none;
-        }
-        @media only screen and (max-width: ${theme.breakpoints.xs.max}) {
-          .tabs {
-            display: none;
-          }
         }
         .controls {
           flex: 1 1;
