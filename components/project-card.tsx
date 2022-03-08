@@ -29,8 +29,9 @@ const ProjectCard: React.FC<Props> = ({
               <Badge scale={0.5}>{data.packagesCount}</Badge>
               <Avatar
                 src={getIconPath(data.icon)}
-                height={1.25}
-                width={1.25}
+                height={1.5}
+                width={1.5}
+                isSquare
                 className="project-icon"
               />
             </Badge.Anchor>
@@ -92,7 +93,6 @@ const ProjectCard: React.FC<Props> = ({
         }
         .project-title__wrapper :global(.project-icon) {
           background: ${theme.palette.accents_2};
-          border-radius: 50%;
         }
         .project-description {
           min-height: 3rem;

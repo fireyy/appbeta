@@ -29,7 +29,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
     <>
       <div className="heading__wrapper">
         <div className="heading">
-          <Avatar alt="Your Avatar" className="heading__user-avatar" src={getIconPath(data?.icon)} />
+          <Avatar alt={data?.name} className="heading__user-avatar" src={getIconPath(data?.icon)} isSquare />
           <div className="heading__name">
             <div className="heading__title">
               <Text h2 className="headding__user-name">
