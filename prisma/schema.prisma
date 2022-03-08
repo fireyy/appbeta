@@ -22,7 +22,7 @@ model Apps {
   packagesCount   Int? @default(0)
   userId          Int
   archived        Boolean @default(false)
-  @@unique([slug, deviceType])
+  @@unique([slug, deviceType], name: "slug_device_type_unique")
 }
 
 model Packages {

@@ -22,7 +22,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 async function handleGET(slug: string, deviceType: string, res: NextApiResponse) {
   const app = await prisma.apps.findUnique({
     where: {
-      'slug_deviceType': {
+      'slug_device_type_unique': {
         slug,
         deviceType,
       }
