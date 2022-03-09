@@ -6,8 +6,8 @@ export const getElementOffset = (el?: HTMLElement | null | undefined) => {
       top: 0,
       left: 0,
     }
-  const { top, left } = el.getBoundingClientRect()
-  return { top, left }
+  const { top, left, width, height } = el.getBoundingClientRect()
+  return { top, left, width, height }
 }
 
 export interface ReactiveDomReact {
