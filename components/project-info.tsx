@@ -1,7 +1,7 @@
 import React from 'react'
 import NextLink from 'next/link'
 import Router from 'next/router'
-import { Avatar, Button, Tag, Text, useTheme, Modal, useModal } from '@geist-ui/core'
+import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem } from 'interfaces'
@@ -33,7 +33,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
           <div className="heading__name">
             <div className="heading__title">
               <Text h2 className="headding__user-name">
-                {data?.name}
+                <Link href={`/${data.slug}?pid=${data.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
               </Text>
               <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
 

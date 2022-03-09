@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
-import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Radio } from '@geist-ui/core'
+import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import Checkbox from '@geist-ui/icons/checkbox'
 import CheckboxFill from '@geist-ui/icons/checkboxFill'
+import Download from '@geist-ui/icons/download'
 import { AppItem, PackageItem } from 'interfaces'
 import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
@@ -88,6 +89,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
+        <Link href={`/${data.slug}?pid=${id}`} target="_blank" px={0.5}><Download size={14} /></Link>
         <Button type="abort" iconRight={<Edit size={14} />} auto scale={2/3} px={0.5} onClick={() => setEditIdAndVisible(id, row)} />
         <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
           <Button type="abort" iconRight={<Trash2 size={14} />} auto scale={2/3} px={0.5} />
