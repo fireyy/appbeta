@@ -10,10 +10,11 @@ import NoItem from 'components/no-item'
 import bytesUtil from 'bytes-util'
 
 type Props = {
-  data: AppItem
+  data: AppItem,
+  isFront: boolean,
 }
 
-const AppGetPage: NextPage<Props> = ({ data }) => {
+const AppGetPage: NextPage<Props> = ({ data, isFront }) => {
   const [packages, setPackages] = useState<PackageItem[]>([])
   const router = useRouter()
   const theme = useTheme()
@@ -55,7 +56,7 @@ const AppGetPage: NextPage<Props> = ({ data }) => {
           {
             packages && packages.map(item => {
               return (
-                <Dot type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesUtil.stringify(item.size)}, {item.createdAt}</Dot>
+                <Dot key={item.id} type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesUtil.stringify(item.size)}, {item.createdAt}</Dot>
               )
             })
           }
@@ -75,6 +76,9 @@ const AppGetPage: NextPage<Props> = ({ data }) => {
         }
         .page__appget__packages :global(.dot:hover) {
           background-color: ${theme.palette.accents_2};
+        }
+        #react-qrcode-logo {
+          display: block;
         }
       `}</style>
     </div>
@@ -99,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  return { props: { data } }
+  return { props: { data, isFront: true } }
 }
 
 export default AppGetPage

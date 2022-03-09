@@ -7,7 +7,7 @@ import Menu from '../components/menu'
 import Search from '../components/search'
 import { getAutoTheme } from 'lib/utils'
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>()
   const geistTheme = useMemo(() => getAutoTheme(themeType), [themeType])
@@ -26,12 +26,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   }, [])
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
       <GeistProvider themeType={geistTheme}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
-          <Menu />
-          <Search />
+          {
+            !pageProps.isFront && (
+              <>
+                <Menu />
+                <Search />
+              </>
+            )
+          }
           <div className="layout">
             <Component {...pageProps} />
           </div>
