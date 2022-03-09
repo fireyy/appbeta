@@ -4,7 +4,7 @@ import Router, { useRouter } from 'next/router'
 import { Text, Image, Grid, Display, Dot, useTheme } from '@geist-ui/core'
 import { AppItem, PackageItem } from 'interfaces'
 import Title from 'components/title'
-import { getIconPath, getPkgPath } from 'lib/utils'
+import { getIconPath, getPkgPath, getItmsServices } from 'lib/utils'
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import bytesUtil from 'bytes-util'
@@ -37,7 +37,7 @@ const AppGetPage: NextPage<Props> = ({ data }) => {
     })
   }
 
-  const downloadUrl = data.deviceType === 'ios' ? `itms-services://?action=download-manifest&url=http://localhost:3000/api/plist/${pid}` : getPkgPath(packages.find(item => item.id === +pid)?.file)
+  const downloadUrl = data.deviceType === 'ios' ? getItmsServices(pid) : getPkgPath(packages.find(item => item.id === +pid)?.file)
 
   return (
     <div className="page__appget">

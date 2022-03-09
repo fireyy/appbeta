@@ -8,6 +8,7 @@ const nextConfig = {
     iconPath: path.resolve(__dirname, 'public', 'icons')
   },
   publicRuntimeConfig: {
+    baseUrl: process.env.NEXTAUTH_URL || 'http://localhost:3000',
     staticFolder: '/'
   }
 }

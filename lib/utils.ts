@@ -58,11 +58,21 @@ function pluralize (time: number, label: string) {
 }
 
 export const getStatic = (file: string = 'default.svg', type = 'icons') => {
-  const { publicRuntimeConfig: { staticFolder } } = getConfig()
-  return `${staticFolder}${type}/${file || 'default.svg'}`
+  const { publicRuntimeConfig: { staticFolder, baseUrl } } = getConfig()
+  return `${baseUrl}${staticFolder}${type}/${file || 'default.svg'}`
 }
 
 export const getIconPath = (file: string) => getStatic(file, 'icons')
 export const getPkgPath = (file: string) => getStatic(file, 'downloads')
 
 export const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
+
+export const getBaseUrl = () => {
+  const { publicRuntimeConfig: { baseUrl } } = getConfig()
+  return baseUrl
+}
+
+export const getItmsServices = (pid: string) => {
+  const { publicRuntimeConfig: { baseUrl } } = getConfig()
+  return `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}`
+}
