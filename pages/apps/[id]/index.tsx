@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
-import { useTheme, Table, Button, Modal, useModal, Textarea, useInput } from '@geist-ui/core'
+import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Radio } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
+import Checkbox from '@geist-ui/icons/checkbox'
+import CheckboxFill from '@geist-ui/icons/checkboxFill'
 import { AppItem, PackageItem } from 'interfaces'
 import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
 import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 import NavLink from 'components/nav-link'
+import { bytesStr } from 'lib/utils'
 
 type Props = {
   data: AppItem
@@ -22,6 +25,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
   const [editId, setEditId] = useState(0)
   const { setVisible: setEditVisible, bindings: editBindings } = useModal()
   const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
+  const [current, setCurrent] = useState(data.lastPkgId)
 
   const fetchPackages = async () => {
     const res = await fetch(`http://localhost:3000/api/apps/${data.id}/packages`)
@@ -60,6 +64,27 @@ const AppPage: React.FC<Props> = ({ data }) => {
     fetchPackages()
   }
 
+  const handleCheck = async (row: PackageItem) => {
+    setLoading(true)
+    await fetch(`http://localhost:3000/api/apps/${data.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        lastPkgId: row.id,
+        lastPkgSize: row.size,
+        lastVersion: row.version,
+      })
+    })
+    setCurrent(row.id)
+    setLoading(false)
+  }
+
+  const renderCurrent = (icon: string, row: PackageItem) => {
+    return (
+      <Button type="abort" iconRight={current === row.id ? <CheckboxFill size={14} /> : <Checkbox size={14} />} auto loading={loading} onClick={() => handleCheck(row)} />
+    )
+  }
+
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
@@ -79,10 +104,11 @@ const AppPage: React.FC<Props> = ({ data }) => {
       <div className="page__wrapper">
         <div className="page__content">
           <Table data={packages}>
+            <Table.Column prop="icon" label="current" render={renderCurrent} />
             <Table.Column prop="name" label="name" />
-            <Table.Column prop="bundleId" label="bundleId" />
             <Table.Column prop="version" label="version" />
             <Table.Column prop="buildVersion" label="buildVersion" />
+            <Table.Column prop="size" label="size" render={(size) => (<>{bytesStr(size)}</>)} />
             <Table.Column prop="updatedAt" label="updatedAt" />
             <Table.Column prop="id" label="action" render={renderAction} />
           </Table>

@@ -26,9 +26,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
 // PUT /api/apps/:id
 async function handlePUT(id: number, data, res: NextApiResponse) {
+  console.log('data', data)
   const post = await prisma.apps.update({
     where: { id },
-    data: data,
+    data,
   })
   res.json(post)
 }

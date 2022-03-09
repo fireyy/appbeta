@@ -1,4 +1,5 @@
 import getConfig from 'next/config'
+import bytesUtil from 'bytes-util'
 
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
@@ -76,3 +77,5 @@ export const getItmsServices = (pid: string) => {
   const { publicRuntimeConfig: { baseUrl } } = getConfig()
   return `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}`
 }
+
+export const bytesStr = bytesUtil.stringify

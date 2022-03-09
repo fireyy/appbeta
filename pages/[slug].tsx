@@ -4,10 +4,9 @@ import Router, { useRouter } from 'next/router'
 import { Text, Image, Grid, Display, Dot, useTheme } from '@geist-ui/core'
 import { AppItem, PackageItem } from 'interfaces'
 import Title from 'components/title'
-import { getIconPath, getPkgPath, getItmsServices } from 'lib/utils'
+import { getIconPath, getPkgPath, getItmsServices, bytesStr } from 'lib/utils'
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
-import bytesUtil from 'bytes-util'
 
 type Props = {
   data: AppItem,
@@ -56,7 +55,7 @@ const AppGetPage: NextPage<Props> = ({ data, isFront }) => {
           {
             packages && packages.map(item => {
               return (
-                <Dot key={item.id} type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesUtil.stringify(item.size)}, {item.createdAt}</Dot>
+                <Dot key={item.id} type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesStr(item.size)}, {item.createdAt}</Dot>
               )
             })
           }

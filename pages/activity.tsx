@@ -5,7 +5,7 @@ import { useTheme, Link } from '@geist-ui/core'
 import NoItem from 'components/no-item'
 import ActivityEvent from 'components/activity-event'
 import Title from 'components/title'
-import bytesUtil from 'bytes-util'
+import { bytesStr } from 'lib/utils'
 
 type Props = {
   data: any
@@ -44,7 +44,7 @@ const ActivityPage: NextPage<Props> = ({ data = [] }) => {
                 createdAt={item.createdAt}
               >
                 <NextLink href="/" passHref>
-                  <Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesUtil.stringify(item.size)} by {item.userId}</Link>
+                  <Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link>
                 </NextLink>
               </ActivityEvent>
             ))}

@@ -8,7 +8,7 @@ import {
 } from '@geist-ui/core'
 import Router from 'next/router'
 import { AppItem } from 'interfaces'
-import { timeAgo, getIconPath } from 'lib/utils'
+import { timeAgo, getIconPath, bytesStr } from 'lib/utils'
 import DeviceType from 'components/device-type'
 
 interface Props {
@@ -69,7 +69,7 @@ const ProjectCard: React.FC<Props> = ({
             font="12px"
             style={{ color: theme.palette.accents_5 }}
           >
-            {timeAgo(data.updatedAt)} ago.
+            Version: {data.lastVersion || '-'}, {bytesStr(data.lastPkgSize || 0)}, {timeAgo(data.updatedAt)} ago.
           </Text>
         </Card>
       </div>

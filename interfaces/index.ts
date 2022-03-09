@@ -8,8 +8,8 @@ export type AppItem = {
   createdAt: string
   updatedAt: string
   id: number
-  lastPkgId?: string | null
-  lastPkgSize?: string | null
+  lastPkgId?: number | null
+  lastPkgSize?: number | null
   lastVersion?: string | null
   packagesCount?: number
   userId: number
