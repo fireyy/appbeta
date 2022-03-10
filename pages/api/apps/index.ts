@@ -9,6 +9,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   } = req
 
   const session = await getSession({ req })
+  console.log(session)
 
   switch (method) {
     case 'GET':
@@ -46,6 +47,7 @@ async function handlePOST(data, res: NextApiResponse) {
 }
 
 // PUT /api/apps
+// TODO: 权限控制
 async function handlePUT(data, res: NextApiResponse) {
   const result = await prisma.apps.create({
     data,

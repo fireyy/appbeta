@@ -18,11 +18,13 @@ const options: NextAuthOptions = {
   callbacks: {
     async session({ session, user, token }) {
       session.user.id = token?.uid
+      session.user.role = token?.role
       return session
     },
     async jwt({ user, token }) {
       if (user) {
         token.uid = user?.id
+        token.role = user?.role
       }
       return token
     },
