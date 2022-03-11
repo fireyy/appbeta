@@ -82,7 +82,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
         .page__appget__packages :global(.dot:hover) {
           background-color: ${theme.palette.accents_2};
         }
-        #react-qrcode-logo {
+        :global(#react-qrcode-logo) {
           display: block;
         }
       `}</style>

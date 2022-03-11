@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import {
   Button,
@@ -12,8 +12,8 @@ import {
 } from '@geist-ui/core'
 import MoonIcon from '@geist-ui/icons/moon'
 import SunIcon from '@geist-ui/icons/sun'
-import RefreshCw from '@geist-ui/icons/refreshCw'
-import { usePrefers } from '../lib/use-prefers'
+import { usePrefers } from 'lib/use-prefers'
+import { getAutoTheme } from 'lib/utils'
 
 const UserSettingsPop: React.FC = () => (
   <>
@@ -25,8 +25,12 @@ const UserSettingsPop: React.FC = () => (
 
 const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
+  const [autoTheme, setAutoTheme] = useState('dark')
   const theme = useTheme()
   const { switchTheme, themeType } = usePrefers()
+  useEffect(() => {
+    setAutoTheme(getAutoTheme('auto'))
+  }, [])
 
   return (
     <div className="wrapper">
@@ -38,18 +42,6 @@ const Controls: React.FC<unknown> = React.memo(() => {
         title="Command + K to search.">
         K
       </Keyboard>
-      {/* <Button
-        aria-label="Toggle Dark mode"
-        auto
-        scale={0.5}
-        px={0.6}
-        h="28px"
-        type="abort"
-        onClick={() =>
-          switchTheme(theme.type === 'dark' ? 'light' : 'dark')
-        }
-        iconRight={theme.type === 'dark' ? <SunIcon size={14} /> : <MoonIcon size={14} />}
-      /> */}
       <Spacer w={0.75} />
       <Select
         disableMatchWidth
@@ -61,7 +53,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
         title={'Switch Themes'}>
         <Select.Option value="auto">
           <span className="select-content">
-            <RefreshCw size={12} /> {'Auto'}
+            {autoTheme === 'light' ? <SunIcon size={12} /> : <MoonIcon size={12} />} {'Auto'}
           </span>
         </Select.Option>
         <Select.Option value="light">

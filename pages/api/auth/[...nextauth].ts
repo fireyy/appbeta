@@ -31,8 +31,8 @@ const options: NextAuthOptions = {
   },
   theme: {
     colorScheme: "auto",
-    logo: "/images/logo.png",
-    brandColor: "#1786fb",
+    logo: "/images/logo.svg",
+    brandColor: "#000000",
   },
 }
 

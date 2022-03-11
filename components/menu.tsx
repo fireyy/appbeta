@@ -31,13 +31,13 @@ const Menu: React.FC<unknown> = () => {
               <NextLink href={`/`}>
                 <a aria-label="Go Home">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/logo.svg"
                     width="20px"
                     height="20px"
                     mr={0.5}
                     draggable={false}
-                    title="Logo"
-                    alt="logo"
+                    title="AppBeta"
+                    alt="AppBeta"
                   />
                   AppBeta
                 </a>
