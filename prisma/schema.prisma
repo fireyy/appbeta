@@ -79,5 +79,7 @@ model User {
   image         String?
   phone         String?
   role          String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   accounts      Account[]
 }
