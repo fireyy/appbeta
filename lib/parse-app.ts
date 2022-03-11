@@ -1,5 +1,5 @@
 import AppInfoParser from 'app-info-parser'
-import { AppInfo } from '../interfaces'
+import { AppInfo } from 'lib/interfaces'
 
 export default function parseApp(path: string) {
   const parser = new AppInfoParser(path)

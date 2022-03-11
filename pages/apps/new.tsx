@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea, Radio, useInput } from '@geist-ui/core'
+import useSWR from 'swr'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
 
@@ -17,22 +18,21 @@ const AppNewPage: React.FC<unknown> = () => {
     setDeviceType(val)
   }
 
+  const { data: app, error } = useSWR(id && `/api/apps/${id}`)
+
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`http://localhost:3000/api/apps/${id}`)
-      const result = await res.json()
-      setName(result.name)
-      setSlug(result.slug)
-      setDesc(result.description)
-      setDeviceType(result.deviceType)
+    if (app) {
+      setName(app.name)
+      setSlug(app.slug)
+      setDesc(app.description)
+      setDeviceType(app.deviceType)
     }
-    isEdit && fetchData()
-  }, [id])
+  }, [app])
 
   const handleSubmit = async () => {
     setLoading(true)
     let url = isEdit ? `/${id}` : ''
-    await fetch('http://localhost:3000/api/apps' + url, {
+    await fetch('/api/apps' + url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

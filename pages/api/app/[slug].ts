@@ -3,13 +3,12 @@ import prisma from 'lib/prisma'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
-    query: { slug },
+    query: { slug, deviceType },
     method,
   } = req
 
   switch (method) {
     case 'GET':
-      const deviceType = req.headers['xdevice']
       await handleGET(String(slug), String(deviceType), res)
       break
     default:
@@ -29,7 +28,13 @@ async function handleGET(slug: string, deviceType: string, res: NextApiResponse)
     },
   })
   if (app) {
-    res.json(app)
+    const packages = await prisma.packages.findMany({
+      where: { appId: Number(app.id) }
+    })
+    res.json({
+      app,
+      packages
+    })
   } else {
     res.json({})
   }

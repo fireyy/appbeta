@@ -4,7 +4,7 @@ import Router from 'next/router'
 import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link } from '@geist-ui/core'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
-import { AppItem } from 'interfaces'
+import { AppItem } from 'lib/interfaces'
 import { getIconPath } from 'lib/utils'
 import DeviceType from 'components/device-type'
 
@@ -15,7 +15,7 @@ interface Props {
 export type HeadingProps = Props;
 
 async function destroy(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/api/apps/${id}`, {
+  await fetch(`/api/apps/${id}`, {
     method: 'DELETE',
   })
   await Router.push('/')

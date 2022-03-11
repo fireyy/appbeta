@@ -7,7 +7,7 @@ import {
   Badge,
 } from '@geist-ui/core'
 import Router from 'next/router'
-import { AppItem } from 'interfaces'
+import { AppItem } from 'lib/interfaces'
 import { timeAgo, getIconPath, bytesStr } from 'lib/utils'
 import DeviceType from 'components/device-type'
 

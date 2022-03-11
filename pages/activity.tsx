@@ -1,15 +1,12 @@
 import { useMemo } from 'react'
-import type { NextPage, GetServerSideProps } from 'next'
+import type { NextPage } from 'next'
 import NextLink from 'next/link'
 import { useTheme, Link } from '@geist-ui/core'
-import NoItem from 'components/no-item'
+import useSWR from 'swr'
 import ActivityEvent from 'components/activity-event'
 import Title from 'components/title'
+import MaskLoading from 'components/mask-loading'
 import { bytesStr } from 'lib/utils'
-
-type Props = {
-  data: any
-}
 
 const groupResults = (data) => {
   return data.reduce((acc, item) => {
@@ -24,13 +21,15 @@ const groupResults = (data) => {
   }, []).sort((a, b) => new Date(b.title).getTime() - new Date(a.title).getTime())
 }
 
-const ActivityPage: NextPage<Props> = ({ data = [] }) => {
+const ActivityPage: NextPage<unknown> = () => {
   const theme = useTheme()
+  const { data = [], isValidating } = useSWR('/api/activity')
   const grouppedResults = useMemo(() => groupResults(data), [data])
 
   return (
     <div className="page__activity">
       <Title value="Activity" />
+      <MaskLoading loading={isValidating} />
       <ul className="page__activity__list">
       {grouppedResults.map((group) => (
         <li role="presentation" key={group.title}>
@@ -52,11 +51,6 @@ const ActivityPage: NextPage<Props> = ({ data = [] }) => {
         </li>
       ))}
       </ul>
-      {
-        (!data || data.length === 0) && (
-          <NoItem message = 'Nothing to see here.' />
-        )
-      }
       <style jsx>{`
         .page__activity ul {
           padding: 0;
@@ -93,14 +87,6 @@ const ActivityPage: NextPage<Props> = ({ data = [] }) => {
       `}</style>
     </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/activity`, {
-    method: 'GET'
-  })
-  const data = await res.json()
-  return { props: { data } }
 }
 
 export default ActivityPage

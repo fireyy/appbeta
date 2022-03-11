@@ -1,4 +1,4 @@
-import { Seed, Seeds } from 'interfaces'
+import { Seed, Seeds } from 'lib/interfaces'
 
 export type SeedType = Seed
 export type SearchResults = Seeds
@@ -8,7 +8,7 @@ export type SearchResultGroup = {
 }
 
 export const search = async (keyword: string): Promise<SearchResults> => {
-  const res = await fetch(`http://localhost:3000/api/search?s=${keyword}`, {
+  const res = await fetch(`/api/search?s=${keyword}`, {
     method: 'GET'
   })
   const result = await res.json()

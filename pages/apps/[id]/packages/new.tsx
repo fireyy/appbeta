@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import { Input, Button, Text, Grid, Textarea, Display, Code, useInput } from '@geist-ui/core'
 import Upload from '@geist-ui/icons/upload'
-import { AppItem, PackageItem } from 'interfaces'
+import { AppItem, PackageItem } from 'lib/interfaces'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
 
@@ -22,7 +22,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
       const i = event.target.files[0]
       const formData = new FormData()
       formData.append('file', i)
-      const res = await fetch('http://localhost:3000/api/upload', {
+      const res = await fetch('/api/upload', {
         method: 'PUT',
         body: formData
       })
@@ -35,7 +35,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   const handleSubmit = async () => {
     setLoading(true)
     if(desc) data.changelog = desc
-    await fetch(`http://localhost:3000/api/apps/${app.id}/packages`, {
+    await fetch(`/api/apps/${app.id}/packages`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -73,7 +73,11 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`http://localhost:3000/api/apps/${context.params.id}`)
+  const res = await fetch(`http://localhost:3000/api/apps/${context.params.id}`, {
+    headers: {
+      'cookie': context.req.headers.cookie,
+    }
+  })
   const data = await res.json()
   return { props: { app: data } }
 }

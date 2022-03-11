@@ -1,11 +1,14 @@
 import React from 'react'
-import { Loading } from '@geist-ui/core'
+import { Loading, useTheme } from '@geist-ui/core'
+import { addColorAlpha } from 'lib/utils'
 
 type Props = {
   loading: boolean,
 }
 
 const MaskLoading: React.FC<Props> = ({ loading, children }) => {
+  const theme = useTheme()
+
   return (
     <div className="mask-loading-container">
       {
@@ -21,6 +24,7 @@ const MaskLoading: React.FC<Props> = ({ loading, children }) => {
       <style jsx>{`
         .mask-loading-container {
           position: relative;
+          width: 100%;
         }
         .mask-loading {
           position: absolute;
@@ -28,7 +32,7 @@ const MaskLoading: React.FC<Props> = ({ loading, children }) => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(255, 255, 255, 0.5);
+          background-color: ${addColorAlpha(theme.palette.background, 0.8)};
         }
       `}</style>
     </div>

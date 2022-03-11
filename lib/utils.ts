@@ -1,6 +1,8 @@
 import getConfig from 'next/config'
 import bytesUtil from 'bytes-util'
 
+const { publicRuntimeConfig: { staticFolder, baseUrl } } = getConfig()
+
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
   const full = color.replace(
@@ -59,7 +61,6 @@ function pluralize (time: number, label: string) {
 }
 
 export const getStatic = (file: string = 'default.svg', type = 'icons') => {
-  const { publicRuntimeConfig: { staticFolder, baseUrl } } = getConfig()
   return `${baseUrl}${staticFolder}${type}/${file || 'default.svg'}`
 }
 
@@ -69,13 +70,11 @@ export const getPkgPath = (file: string) => getStatic(file, 'downloads')
 export const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
 
 export const getBaseUrl = () => {
-  const { publicRuntimeConfig: { baseUrl } } = getConfig()
   return baseUrl
 }
 
-export const getItmsServices = (pid: string) => {
-  const { publicRuntimeConfig: { baseUrl } } = getConfig()
-  return `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}`
-}
+export const getItmsServices = (pid: string) => `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}`
+
+export const getApkDownload = (pid: string) => `${baseUrl}/api/apk/${pid}`
 
 export const bytesStr = bytesUtil.stringify

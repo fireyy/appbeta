@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
+import { SWRConfig } from 'swr'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
 import Menu from '../components/menu'
 import Search from '../components/search'
 import { getAutoTheme } from 'lib/utils'
+import fetcher from 'lib/fetcher'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>()
   const geistTheme = useMemo(() => getAutoTheme(themeType), [themeType])
@@ -26,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <GeistProvider themeType={geistTheme}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
@@ -39,7 +41,13 @@ function MyApp({ Component, pageProps }: AppProps) {
             )
           }
           <div className="layout">
-            <Component {...pageProps} />
+            <SWRConfig
+              value={{
+                fetcher,
+              }}
+            >
+              <Component {...pageProps} />
+            </SWRConfig>
           </div>
         </PrefersContext.Provider>
         <style global jsx>{`
