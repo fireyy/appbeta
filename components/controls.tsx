@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import {
-  Button,
+  Link,
   Keyboard,
   useTheme,
   Loading,
@@ -18,7 +18,7 @@ import { getAutoTheme } from 'lib/utils'
 const UserSettingsPop: React.FC = () => (
   <>
     <Popover.Item>
-      <Button auto h="28px" type="abort" onClick={() => signOut()}>Logout</Button>
+      <span onClick={() => signOut()}>Logout</span>
     </Popover.Item>
   </>
 );
@@ -126,6 +126,11 @@ const Controls: React.FC<unknown> = React.memo(() => {
         }
         :global(.user-settings__popover) {
           width: 180px !important;
+        }
+        @media (max-width: ${theme.breakpoints.xs.max}) {
+          .wrapper :global(kbd.shortcuts) {
+            display: none;
+          }
         }
       `}</style>
     </div>

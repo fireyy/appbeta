@@ -15,10 +15,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       await handleGET(res)
       break
     case 'PUT':
-      await handlePUT({
-        ...data,
-        userId: session.user.id,
-      }, res)
+      await handlePUT(data, res)
       break
     default:
       res.setHeader('Allow', ['GET', 'PUT'])
@@ -26,16 +23,15 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   }
 }
 
-// GET /api/apps
+// GET /api/settings
 async function handleGET(res: NextApiResponse) {
-  const post = await prisma.apps.findMany()
+  const post = await prisma.settings.findMany()
   res.json(post)
 }
 
-// PUT /api/apps
-// TODO: 权限控制
+// PUT /api/settings
 async function handlePUT(data, res: NextApiResponse) {
-  const result = await prisma.apps.create({
+  const result = await prisma.settings.create({
     data,
   })
   res.json(result)

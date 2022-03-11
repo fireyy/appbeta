@@ -55,6 +55,7 @@ const Menu: React.FC<unknown> = () => {
                 onChange={handleTabChange}>
                 <Tabs.Item font="14px" label={'Home'} value="" />
                 <Tabs.Item font="14px" label={'Activity'} value="activity" />
+                <Tabs.Item font="14px" label={'Settings'} value="account" />
               </Tabs>
             </div>
 

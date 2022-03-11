@@ -21,7 +21,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <body>
+        <body style={{ overflow: 'unset' }}>
           <script
             dangerouslySetInnerHTML={{
               __html: `

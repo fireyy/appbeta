@@ -62,6 +62,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             background-color: ${theme.palette.accents_2};
             border-radius: ${theme.layout.radius};
           }
+          #__next {
+            overflow: visible !important;
+          }
           .layout {
             min-height: calc(100vh - 108px);
             max-width: ${theme.layout.pageWidthWithMargin};
