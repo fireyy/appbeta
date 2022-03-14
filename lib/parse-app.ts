@@ -1,8 +1,8 @@
-import AppInfoParser from 'app-info-parser'
 import { AppInfo } from 'lib/interfaces'
 
 export default function parseApp(path: string) {
-  const parser = new AppInfoParser(path)
+  // dirty fix
+  const parser = new (window as any).AppInfoParser(path)
 
   return new Promise((resolve, reject) => {
     parser.parse().then(result => {
@@ -15,17 +15,6 @@ export default function parseApp(path: string) {
         info.buildVersion = result.CFBundleVersion
         info.version = result.CFBundleShortVersionString
         info.icon = result.icon
-        // try {
-        //   const environment = result.mobileProvision.Entitlements['aps-environment']
-        //   const active = result.mobileProvision.Entitlements['beta-reports-active']
-        //   if (environment == 'production') {
-        //       info.appLevel = active ? 'appstore' : 'enterprise'
-        //   } else {
-        //       info.appLevel = 'develop'
-        //   }
-        // } catch (e) {
-        //   info.appLevel = 'develop'
-        // }
       } else if (result.package) { // Android
         let label
 

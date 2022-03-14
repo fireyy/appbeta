@@ -4,7 +4,6 @@ import formidable from 'formidable'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import parseApp from 'lib/parse-app'
 
 export const config = {
   api: {
@@ -14,19 +13,19 @@ export const config = {
 
 const { serverRuntimeConfig: { pkgPath, iconPath } } = getConfig()
 
-const parseFile = async (file) => {
-  const { filepath, size } = file
-  const result: any = await parseApp(filepath)
-  const base64Data = result.icon.replace(/^data:image\/png;base64,/, '')
-  const name = crypto.createHash('md5').update(filepath).digest('hex') + '.png'
-  fs.writeFile(path.join(iconPath, name), base64Data, 'base64', function(err) {
-    console.log(err)
-  })
-  result.icon = name
-  result.file = path.basename(filepath)
-  result.size = size
-  return result
-}
+// const parseFile = async (file) => {
+//   const { filepath, size } = file
+//   const result: any = await parseApp(filepath)
+//   const base64Data = result.icon.replace(/^data:image\/png;base64,/, '')
+//   const name = crypto.createHash('md5').update(filepath).digest('hex') + '.png'
+//   fs.writeFile(path.join(iconPath, name), base64Data, 'base64', function(err) {
+//     console.log(err)
+//   })
+//   result.icon = name
+//   result.file = path.basename(filepath)
+//   result.size = size
+//   return result
+// }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'PUT') {
@@ -54,8 +53,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         resolve(files)
       })
     })
-    const result = await parseFile(files.file[0])
-    res.json(result)
+    // const result = await parseFile(files.file[0])
+    res.json({ files })
   } else {
     res.setHeader('Allow', ['PUT'])
     res.status(405).end(`Method ${req.method} Not Allowed`)
