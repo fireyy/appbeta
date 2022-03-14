@@ -6,6 +6,7 @@ import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
+import { baseUrl } from 'lib/contants'
 
 type Props = {
   app: AppItem
@@ -73,7 +74,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`http://localhost:3000/api/apps/${context.params.id}`, {
+  const res = await fetch(`${baseUrl}/api/apps/${context.params.id}`, {
     headers: {
       'cookie': context.req.headers.cookie,
     }

@@ -1,7 +1,5 @@
-import getConfig from 'next/config'
 import bytesUtil from 'bytes-util'
-
-const { publicRuntimeConfig: { staticFolder, baseUrl } } = getConfig()
+import { staticFolder, baseUrl } from './contants'
 
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i

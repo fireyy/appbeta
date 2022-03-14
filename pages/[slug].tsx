@@ -10,6 +10,7 @@ import { getIconPath, getPkgPath, getItmsServices, bytesStr, getApkDownload } fr
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
+import { baseUrl } from 'lib/contants'
 
 type AppAndPackages = {
   app: AppItem,
@@ -103,7 +104,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isIOS = context.req.headers['user-agent'].match(/iPhone|iPad|iPod/i)
   const deviceType = isIOS ? 'ios' : 'android'
   const slug = context.params.slug
-  const res = await fetch(`http://localhost:3000/api/app/${slug}?deviceType=${deviceType}`, {
+  const res = await fetch(`${baseUrl}/api/app/${slug}?deviceType=${deviceType}`, {
     method: 'GET'
   })
   const data = await res.json()

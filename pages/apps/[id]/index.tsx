@@ -15,6 +15,7 @@ import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 import NavLink from 'components/nav-link'
 import { bytesStr } from 'lib/utils'
 import MaskLoading from 'components/mask-loading'
+import { baseUrl } from 'lib/contants'
 
 type Props = {
   data: AppItem
@@ -153,7 +154,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`http://localhost:3000/api/apps/${context.params.id}`, {
+  const res = await fetch(`${baseUrl}/api/apps/${context.params.id}`, {
     headers: {
       'cookie': context.req.headers.cookie,
     }
