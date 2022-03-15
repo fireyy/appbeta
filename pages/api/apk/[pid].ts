@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
-import { getPkgPath } from 'lib/utils'
+import { staticPath } from 'lib/contants'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -26,7 +26,7 @@ async function handleGET(pid: number, res: NextApiResponse) {
     },
   })
   if (app) {
-    const apkUrl = getPkgPath(app.file)
+    const apkUrl = staticPath + app.file
     res.redirect(apkUrl)
   } else {
     res.json({})
