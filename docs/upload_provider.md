@@ -1,3 +1,5 @@
+```javascript
+// s3.ts
 import {
   S3Client,
   PutObjectCommand,
@@ -72,3 +74,4 @@ export default {
     }
   },
 }
+```
