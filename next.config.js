@@ -6,12 +6,11 @@ const nextConfig = async (phase, { defaultConfig }) => {
   const nextConfig = {
     reactStrictMode: true,
     serverRuntimeConfig: {
-      pkgPath: phase === PHASE_DEVELOPMENT_SERVER ? path.resolve(__dirname, 'public', 'downloads') : path.resolve(__dirname, 'downloads'),
-      iconPath: phase === PHASE_DEVELOPMENT_SERVER ? path.resolve(__dirname, 'public', 'icons') : path.resolve(__dirname, 'icons')
+      uploadDir: phase === PHASE_DEVELOPMENT_SERVER ? path.resolve(__dirname, 'public', 'uploads') : path.resolve(__dirname, 'uploads'),
     },
     publicRuntimeConfig: {
       baseUrl: process.env.NEXTAUTH_URL || 'http://localhost:3000',
-      staticFolder: '/'
+      staticPath: process.env.STORAGE_PROVIDER === 'local' ? '/' : process.env.QINIU_BASEURL
     }
   }
   return nextConfig

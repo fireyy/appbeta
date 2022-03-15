@@ -6,11 +6,11 @@ import useSWR, { SWRConfig } from 'swr'
 import type { SWRConfiguration } from 'swr'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import Title from 'components/title'
-import { getIconPath, getPkgPath, getItmsServices, bytesStr, getApkDownload } from 'lib/utils'
+import { getItmsServices, bytesStr, getApkDownload } from 'lib/utils'
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
-import { baseUrl } from 'lib/contants'
+import { baseUrl, staticPath } from 'lib/contants'
 
 type AppAndPackages = {
   app: AppItem,
@@ -51,7 +51,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
         <Grid xs={24} md={12} direction="column" alignItems="center">
           <Text h3>{app.name}</Text>
           <Display shadow caption="Scan the QR code with your mobile device.">
-            <QRCode value={downloadUrl} logoImage={getIconPath(app.icon)} />
+            <QRCode value={downloadUrl} logoImage={`${staticPath}${app.icon}`} />
           </Display>
         </Grid>
         <Grid xs={24} md={12} direction="column">

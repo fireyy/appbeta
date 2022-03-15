@@ -1,6 +1,7 @@
 import React from 'react'
 import { Avatar, Text, useTheme } from '@geist-ui/core'
-import { timeAgo, getIconPath } from 'lib/utils'
+import { timeAgo } from 'lib/utils'
+import { staticPath } from 'lib/contants'
 
 interface Props {
   name: string
@@ -24,7 +25,7 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
       <li className="activity-event">
         <Avatar
           className="activity-event__avatar"
-          src={getIconPath(icon)}
+          src={`${staticPath}${icon}`}
           alt={name}
         />
         <Text className="activity-event__message">{children}</Text>

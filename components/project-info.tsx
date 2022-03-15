@@ -5,7 +5,7 @@ import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link } from '@gei
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
 import { AppItem } from 'lib/interfaces'
-import { getIconPath } from 'lib/utils'
+import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
 
 interface Props {
@@ -29,7 +29,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
     <>
       <div className="heading__wrapper">
         <div className="heading">
-          <Avatar alt={data?.name} className="heading__user-avatar" src={getIconPath(data?.icon)} isSquare />
+          <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
           <div className="heading__name">
             <div className="heading__title">
               <Text h2 className="headding__user-name">

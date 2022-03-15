@@ -1,5 +1,5 @@
 import bytesUtil from 'bytes-util'
-import { staticFolder, baseUrl } from './contants'
+import { staticPath, baseUrl } from './contants'
 
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
@@ -57,13 +57,6 @@ function pluralize (time: number, label: string) {
   }
   return time + label + 's'
 }
-
-export const getStatic = (file: string = 'default.svg', type = 'icons') => {
-  return `${baseUrl}${staticFolder}${type}/${file || 'default.svg'}`
-}
-
-export const getIconPath = (file: string) => getStatic(file, 'icons')
-export const getPkgPath = (file: string) => getStatic(file, 'downloads')
 
 export const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
 

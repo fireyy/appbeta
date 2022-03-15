@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
-import { getIconPath, getPkgPath } from 'lib/utils'
+import { staticPath } from 'lib/contants'
 
 const genPlist = ({ name, file, size, icon, bundleId, version }) => `
 <?xml version="1.0" encoding="UTF-8"?>
@@ -73,8 +73,8 @@ async function handleGET(pid: number, res: NextApiResponse) {
   if (app) {
     const plistStr = genPlist({
       ...app,
-      file: getPkgPath(app.file),
-      icon: getIconPath(app.icon),
+      file: staticPath + app.file,
+      icon: staticPath + app.icon,
     })
     res.setHeader('Content-Type', 'text/xml; charset=utf-8')
     res.setHeader('Access-Control-Allow-Origin', '*')

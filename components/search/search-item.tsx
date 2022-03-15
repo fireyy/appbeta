@@ -1,7 +1,7 @@
 import React, { MouseEvent, FocusEvent } from 'react'
 import { SearchResults } from './helper'
 import { Text, useTheme, Image } from '@geist-ui/core'
-import { timeAgo, getIconPath } from 'lib/utils'
+import { staticPath } from 'lib/contants'
 
 export type SearchItemProps = {
   data: SearchResults[number]
@@ -32,7 +32,7 @@ const SearchItem: React.FC<SearchItemProps> = ({
         onFocus={onFocus}
         onBlur={onBlur}
         data-search-item>
-        <Image width="16px" height="16px" src={getIconPath(data.icon)} />
+        <Image width="16px" height="16px" src={`${staticPath}${data.icon}`} />
         <Text pl="12px" font="14px" className="value" span>
           {data.name}
         </Text>
