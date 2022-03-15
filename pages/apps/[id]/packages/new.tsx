@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import Script from 'next/script'
-import { Input, Button, Text, Grid, Textarea, Display, Code, useInput, Avatar, Badge } from '@geist-ui/core'
+import { Input, Button, Text, Grid, Textarea, Display, Code, useInput, Avatar } from '@geist-ui/core'
 import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem, AppInfo } from 'lib/interfaces'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
 import { baseUrl } from 'lib/contants'
 import parseApp from 'lib/parse-app'
+import base64ToFile from 'lib/base64-file'
 
 type Props = {
   app: AppItem
@@ -16,6 +17,7 @@ type Props = {
 
 const PackageNewPage: React.FC<Props> = ({ app }) => {
   const [data, setData] = useState<PackageItem>(null)
+  const [file, setFile] = useState(null)
   const {state: desc, setState: setDesc, bindings: descBindings} = useInput('')
   const [loading, setLoading] = useState(false)
   const hiddenFileInput = useRef(null)
@@ -23,21 +25,48 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   const handleFile= async (event: any) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0]
+      setFile(i)
       const result: any = await parseApp(i)
-      const formData = new FormData()
-      formData.append('file', i)
-      const res = await fetch('/api/upload', {
-        method: 'PUT',
-        body: formData
-      })
-      console.log('res', await res.json())
       event.target.value = ''
       setData(result)
     }
   }
 
+  const handleSetAsCover = async () => {
+    setLoading(true)
+    const formData = new FormData()
+    const base64Data = data.icon.replace(/^data:image\/png;base64,/, '')
+    formData.append('file', base64ToFile(base64Data, app.slug + '.png', 'image/png'))
+    const res = await fetch('/api/upload', {
+      method: 'PUT',
+      body: formData
+    })
+    const result = await res.json()
+    setData({
+      ...data,
+      icon: result.name
+    })
+    await fetch(`/api/apps/${app.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        icon: result.name
+      }),
+    })
+    setLoading(false)
+  }
+
   const handleSubmit = async () => {
     setLoading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch('/api/upload', {
+      method: 'PUT',
+      body: formData
+    })
+    const result = await res.json()
+    data.file = result.name
+    data.size = result.size
     if(desc) data.changelog = desc
     await fetch(`/api/apps/${app.id}/packages`, {
       method: 'PUT',
@@ -57,10 +86,13 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
           <Display caption={`Upload ${app.deviceType === 'ios' ? '.ipa' : '.apk'} file`}>
             {
               data && data.icon && (
-                <Badge.Anchor>
-                  <Badge type="error" scale={0.5} onClick={() => setData(null)}>X</Badge>
+                <>
                   <Avatar src={data.icon} width="86px" height="86px" alt="name" isSquare />
-                </Badge.Anchor>
+                  <p>
+                    <Button auto scale={1/4} onClick={handleSetAsCover} loading={loading}>Set As Cover</Button>
+                    <Button auto scale={1/4} onClick={() => setData(null)} ml={0.5}>Reset</Button>
+                  </p>
+                </>
               )
             }
             {

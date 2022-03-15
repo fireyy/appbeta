@@ -9,10 +9,10 @@ const {
 } = process.env
 
 if (
-  QINIU_ACCESS_KEY === 'YOUR QINIU AK' ||
-  QINIU_SECRET_KEY === 'YOUR QINIU SK' ||
-  QINIU_BUCKET === 'YOUR QINIU BUCKET' ||
-  QINIU_BASEURL === 'YOUR QINIU URL'
+  QINIU_ACCESS_KEY === 'YOUR AK' ||
+  QINIU_SECRET_KEY === 'YOUR SK' ||
+  QINIU_BUCKET === 'YOUR BUCKET' ||
+  QINIU_BASEURL === 'YOUR URL'
   ) {
   throw new Error(
     ` Qiniu config parameters has not define , please define the parameters in .env file in the project root path.`
@@ -61,8 +61,7 @@ export default {
       delete(file) {
         return new Promise((resolve, reject) => {
           const bucketManager = new qiniu.rs.BucketManager(mac, conf)
-          const key = file.url.replace(QINIU_BASEURL, '')
-          bucketManager.delete(QINIU_BUCKET, key, function (err, respBody, respInfo) {
+          bucketManager.delete(QINIU_BUCKET, file, function (err, respBody, respInfo) {
             if (err) {
               console.error(err)
               reject(undefined)

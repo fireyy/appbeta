@@ -5,6 +5,26 @@ import {
 } from '@aws-sdk/client-s3'
 import { PassThrough } from 'stream'
 
+const {
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_KEY,
+  AWS_REGION,
+  AWS_BUCKET,
+  AWS_BASEURL,
+} = process.env
+
+if (
+  AWS_ACCESS_KEY_ID === 'YOUR AK' ||
+  AWS_SECRET_KEY === 'YOUR SK' ||
+  AWS_REGION === 'YOUR REGION' ||
+  AWS_BUCKET === 'YOUR BUCKET' ||
+  AWS_BASEURL === 'YOUR URL'
+  ) {
+  throw new Error(
+    ` AWS S3 config parameters has not define , please define the parameters in .env file in the project root path.`
+  )
+}
+
 const conf = {
   region: process.env.AWS_REGION,
   credentials: {
@@ -33,18 +53,13 @@ export default {
 
         try {
           await S3.send(uploadCommand)
-
-          file.url = `https://${bucketName}.s3.${conf.region}.amazonaws.com/${keyName}`
         } catch (err) {
           console.error(err)
         }
       },
       async delete(file) {
-        const path = file.path ? `${file.path}/` : ''
-        const keyName = `${path}${file.hash}${file.ext}`
-
         const deleteCommand = new DeleteObjectCommand({
-          Key: keyName,
+          Key: file,
           Bucket: bucketName
         })
 

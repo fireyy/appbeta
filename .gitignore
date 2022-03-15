@@ -1,11 +1,9 @@
 node_modules/
 .next/
 .env
-public/downloads/*
-!public/downloads/.gitkeep
 test.js
 .DS_Store
-public/icons/*
-!public/icons/default.svg
+public/uploads/*
+!public/uploads/default.svg
 prisma/dev.db
 prisma/dev.db-*

@@ -5,7 +5,7 @@ import local from './providers/local'
 
 const { serverRuntimeConfig: { uploadDir } } = getConfig()
 
-const provider = process.env.PROVIDER
+const provider = process.env.STORAGE_PROVIDER
 let config = {
   keepExtensions: true,
   filename (name, ext, part, form) {
@@ -28,11 +28,10 @@ if (provider === 'local') {
   }
 }
 
-const form = formidable(config)
-
 export default {
   upload(req) {
     return new Promise((resolve, reject) => {
+      const form = formidable(config)
       form.parse(req, async (err, fields, files) => {
         console.log('todo', err, fields, files)
         if (err) {

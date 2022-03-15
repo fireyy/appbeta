@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
-import removeFile from 'lib/remove-file'
+import storage from 'lib/upload'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -54,8 +54,8 @@ async function handleDELETE(id, pid, res: NextApiResponse) {
     where: { id: Number(pid) },
   })
   // 删除文件 post.icon、post.file
-  removeFile(post.icon, 'icons')
-  removeFile(post.file, 'downloads')
+  storage.delete(post.icon)
+  storage.delete(post.file)
   // 更新 packagesCount
   await prisma.apps.update({
     where: { id: Number(id) },
