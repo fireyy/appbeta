@@ -23,7 +23,6 @@ type Props = {
 
 const AppPage: React.FC<Props> = ({ data }) => {
   const theme = useTheme()
-  // const [packages, setPackages] = useState<PackageItem[]>([])
   const { bindings } = usePopConfirm()
   const [loading, setLoading] = useState(false)
   const [editId, setEditId] = useState(0)
@@ -58,10 +57,10 @@ const AppPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleDelete = async (pid: number) => {
+    mutate(packages.filter((item) => item.id !== pid))
     await fetch(`/api/apps/${data.id}/packages/${pid}`, {
       method: 'DELETE',
     })
-    mutate(packages.filter((item) => item.id !== pid))
   }
 
   const handleCheck = async (row: PackageItem) => {

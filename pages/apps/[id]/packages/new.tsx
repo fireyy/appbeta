@@ -7,7 +7,7 @@ import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem, AppInfo } from 'lib/interfaces'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
-import { baseUrl } from 'lib/contants'
+import { baseUrl, staticPath } from 'lib/contants'
 import parseApp from 'lib/parse-app'
 import base64ToFile from 'lib/base64-file'
 
@@ -87,7 +87,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
             {
               data && data.icon && (
                 <>
-                  <Avatar src={data.icon} width="86px" height="86px" alt="name" isSquare />
+                  <Avatar src={data.icon.includes('data:image/png;base64') ? data.icon : `${staticPath}${data.icon}`} width="100px" height="100px" alt="name" isSquare />
                   <p>
                     <Button auto scale={1/4} onClick={handleSetAsCover} loading={loading}>Set As Cover</Button>
                     <Button auto scale={1/4} onClick={() => setData(null)} ml={0.5}>Reset</Button>
