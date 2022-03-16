@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import type { NextPage, GetServerSideProps } from 'next'
-import Router, { useRouter } from 'next/router'
-import { Text, Image, Grid, Display, Dot, useTheme } from '@geist-ui/core'
+import { useRouter } from 'next/router'
+import { Text, Grid, Display, Dot, useTheme, Tag, useMediaQuery, Link } from '@geist-ui/core'
 import useSWR, { SWRConfig } from 'swr'
 import type { SWRConfiguration } from 'swr'
 import { AppItem, PackageItem } from 'lib/interfaces'
@@ -11,6 +11,7 @@ import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
 import { baseUrl, staticPath } from 'lib/contants'
+import DeviceType from 'components/device-type'
 
 type AppAndPackages = {
   app: AppItem,
@@ -31,6 +32,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
   const router = useRouter()
   const theme = useTheme()
 
+  const isMobile = useMediaQuery('xs', { match: 'down' })
   const { pid, slug } = router.query as { pid: string; slug: string }
   const pathname = router.pathname
   const { data: { app, packages }, error, isValidating } = useSWR<AppAndPackages>(`/api/app/${slug}?deviceType=${deviceType}`)
@@ -49,7 +51,10 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
       <Title value={app.name} />
       <Grid.Container gap={2} marginTop={1} justify="flex-start">
         <Grid xs={24} md={12} direction="column" alignItems="center">
-          <Text h3>{app.name}</Text>
+          <Text h3>{app.name} <Tag><DeviceType size={14} type={app.deviceType} /></Tag></Text>
+          <div className="download-area">
+            <Link block href={downloadUrl} download>Download</Link>
+          </div>
           <Display shadow caption="Scan the QR code with your mobile device.">
             <QRCode value={downloadUrl} logoImage={`${staticPath}${app.icon}`} />
           </Display>
@@ -85,6 +90,14 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
         }
         :global(#react-qrcode-logo) {
           display: block;
+        }
+        .download-area {
+          display: none;
+        }
+        @media (max-width: ${theme.breakpoints.xs.max}) {
+          .download-area {
+            display: block;
+          }
         }
       `}</style>
     </div>
