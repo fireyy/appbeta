@@ -13,7 +13,7 @@ const links = [
     href: '/account/login-connections',
   },
   {
-    name: 'System Management',
+    name: 'System',
     href: '/account/system-management',
   }
 ]

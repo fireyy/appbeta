@@ -1,9 +1,8 @@
 import React from 'react'
 import NextLink from 'next/link'
 import Router from 'next/router'
-import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link } from '@geist-ui/core'
-import Edit from '@geist-ui/icons/edit'
-import Trash2 from '@geist-ui/icons/trash2'
+import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown } from '@geist-ui/core'
+import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
@@ -34,19 +33,14 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
             <div className="heading__title">
               <Text h2 className="headding__user-name">
                 <Link href={`/${data.slug}?pid=${data.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
+                <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
               </Text>
-              <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
-
               <div className="heading__actions">
-                <NextLink href={`/apps/${data.id}/packages/new`}>
-                  <Button type="secondary" auto scale={2/3}>
-                    Add Packages
-                  </Button>
-                </NextLink>
-                <NextLink href={`/apps/new?id=${data.id}`}>
-                  <Button iconRight={<Edit />} auto scale={2/3} px={0.6} ml={1} />
-                </NextLink>
-                <Button type="error" iconRight={<Trash2 />} auto scale={2/3} px={0.6} ml={1} onClick={() => setVisible(true)} />
+                <ButtonDropdown auto icon={<MoreVertical />}>
+                  <ButtonDropdown.Item onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>New</ButtonDropdown.Item>
+                  <ButtonDropdown.Item onClick={() => Router.push(`/apps/new?id=${data.id}`)}>Edit</ButtonDropdown.Item>
+                  <ButtonDropdown.Item type="error" onClick={() => setVisible(true)}>Delete</ButtonDropdown.Item>
+                </ButtonDropdown>
                 <Modal {...bindings}>
                   <Modal.Content>
                     <p>Are you sure you want to delete this item?</p>
@@ -74,7 +68,6 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
         .heading {
           display: flex;
           flex-direction: row;
-          width: ${theme.layout.pageWidthWithMargin};
           max-width: 100%;
           margin: 0 auto;
           padding: calc(${theme.layout.gap} * 2) ${theme.layout.pageMargin};
@@ -114,6 +107,14 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
         .heading__actions {
           margin-left: auto;
         }
+        .heading__actions :global(.btn-dropdown) {
+          border: 0;
+        }
+        .heading__actions :global(.btn-dropdown .content) {
+          width: 100px;
+          left: auto;
+          right: 0;
+        }
         .heading__integration :global(.heading__integration-title) {
           color: ${theme.palette.accents_5} !important;
           font-size: 0.75rem;
@@ -130,6 +131,9 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
           margin-right: ${theme.layout.gapQuarter};
         }
         @media (max-width: ${theme.breakpoints.xs.max}) {
+          .heading {
+            padding: ${theme.layout.gap} 0;
+          }
           .heading :global(.heading__user-avatar) {
             width: 80px !important;
             height: 80px !important;
@@ -138,7 +142,6 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
             font-size: 1.5rem;
           }
           .heading__actions {
-            display: none !important;
           }
         }
       `}</style>

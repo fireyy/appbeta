@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { SWRConfig } from 'swr'
@@ -32,6 +33,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <GeistProvider themeType={geistTheme}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
+          <Head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          </Head>
           {
             !pageProps.isFront && (
               <>
@@ -71,6 +75,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             margin: 0 auto;
             padding: ${theme.layout.gap};
             box-sizing: border-box;
+          }
+          @media (max-width: ${theme.breakpoints.sm.max}) {
+            .layout {
+              padding: ${theme.layout.gapHalf};
+            }
           }
         `}</style>
       </GeistProvider>

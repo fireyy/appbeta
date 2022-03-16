@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import NextLink from 'next/link'
 import {
   Link,
   Keyboard,
@@ -17,6 +18,15 @@ import { getAutoTheme } from 'lib/utils'
 
 const UserSettingsPop: React.FC = () => (
   <>
+    <Popover.Item title>
+      <span>User Settings</span>
+    </Popover.Item>
+    <Popover.Item>
+      <NextLink href="/account" passHref>
+        <Link>Settings</Link>
+      </NextLink>
+    </Popover.Item>
+    <Popover.Item line />
     <Popover.Item>
       <span onClick={() => signOut()}>Logout</span>
     </Popover.Item>

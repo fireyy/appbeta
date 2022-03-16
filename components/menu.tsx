@@ -55,7 +55,6 @@ const Menu: React.FC<unknown> = () => {
                 onChange={handleTabChange}>
                 <Tabs.Item font="14px" label={'Home'} value="" />
                 <Tabs.Item font="14px" label={'Activity'} value="activity" />
-                <Tabs.Item font="14px" label={'Settings'} value="account" />
               </Tabs>
             </div>
 
@@ -130,6 +129,11 @@ const Menu: React.FC<unknown> = () => {
           min-width: 40px;
           height: 40px;
           padding: 0;
+        }
+        @media (max-width: ${theme.breakpoints.sm.max}) {
+          .logo a {
+            font-size: 0;
+          }
         }
       `}</style>
     </>

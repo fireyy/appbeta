@@ -26,7 +26,6 @@ const Home: NextPage<unknown> = () => {
       <div className="page__content">
         <div className="actions-stack">
           <div>
-            DeviceType:
             <Select placeholder="Choose one" value={deviceType} disabled={isValidating} width="150px" ml={0.5} disableMatchWidth onChange={handleChange}>
               <Select.Option value="all">All</Select.Option>
               <Select.Option value="ios">iOS</Select.Option>
@@ -81,6 +80,11 @@ const Home: NextPage<unknown> = () => {
           font-size: 14px;
           align-items: center;
           justify-content: space-between;
+        }
+        @media (max-width: ${theme.breakpoints.sm.max}) {
+          .page__content {
+            padding: ${theme.layout.unit};
+          }
         }
       `}</style>
     </>

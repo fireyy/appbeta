@@ -139,12 +139,14 @@ const AppPage: React.FC<Props> = ({ data }) => {
           margin: 0 auto;
           padding: 0 ${theme.layout.pageMargin};
           box-sizing: border-box;
+          overflow-x: auto;
         }
         @media (max-width: ${theme.breakpoints.sm.max}) {
           .page__content {
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
+            padding: 0;
           }
         }
       `}</style>
