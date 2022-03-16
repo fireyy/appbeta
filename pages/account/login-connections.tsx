@@ -16,7 +16,6 @@ const ProviderIcons = {
 const LoginConnections: NextPage = () => {
   const theme = useTheme()
   const { data: session } = useSession()
-  console.log('session', session)
 
   const { data: providers } = useSWR('/api/auth/providers')
   const { data: accounts } = useSWR(session?.user.id && `/api/account/${session.user.id}`)

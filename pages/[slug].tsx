@@ -104,6 +104,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isIOS = context.req.headers['user-agent'].match(/iPhone|iPad|iPod/i)
   const deviceType = isIOS ? 'ios' : 'android'
   const slug = context.params.slug
+  console.log(deviceType, slug)
   const res = await fetch(`${baseUrl}/api/app/${slug}?deviceType=${deviceType}`, {
     method: 'GET'
   })

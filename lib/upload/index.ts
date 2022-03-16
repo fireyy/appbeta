@@ -33,7 +33,6 @@ export default {
     return new Promise((resolve, reject) => {
       const form = formidable(config)
       form.parse(req, async (err, fields, files) => {
-        console.log('todo', err, fields, files)
         if (err) {
           reject(err)
           return

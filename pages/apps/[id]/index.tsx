@@ -106,9 +106,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
           <MaskLoading loading={isValidating}>
             <Table data={packages}>
               <Table.Column prop="icon" label="current" render={renderCurrent} />
-              <Table.Column prop="name" label="name" />
-              <Table.Column prop="version" label="version" />
-              <Table.Column prop="buildVersion" label="buildVersion" />
+              <Table.Column prop="version" label="version" render={(version, row: PackageItem) => (<>{version}({row.buildVersion})</>)} />
               <Table.Column prop="size" label="size" render={(size) => (<>{bytesStr(size)}</>)} />
               <Table.Column prop="updatedAt" label="updatedAt" />
               <Table.Column prop="id" label="action" render={renderAction} />
