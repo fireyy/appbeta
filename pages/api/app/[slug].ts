@@ -19,15 +19,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
 // GET /api/app/:slug
 async function handleGET(slug: string, deviceType: string, res: NextApiResponse) {
-  const app = await prisma.apps.findUnique({
+  const result = await prisma.apps.findMany({
     where: {
-      'slug_device_type_unique': {
-        slug,
-        deviceType,
-      }
+      slug,
     },
   })
-  if (app) {
+  if (result && result.length > 0) {
+    const app = result.find(r => r.deviceType === deviceType) || result[0]
     const packages = await prisma.packages.findMany({
       where: { appId: Number(app.id) }
     })
