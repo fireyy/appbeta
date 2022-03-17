@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { SWRConfig } from 'swr'
@@ -14,6 +15,29 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
   const [themeType, setThemeType] = useState<ThemeType>()
   const geistTheme = useMemo(() => getAutoTheme(themeType), [themeType])
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleStart = (url, { shallow }) => {
+      console.log(`Loading: ${url}, ${shallow}`)
+    }
+    const handleStop = (url, { shallow }) => {
+      console.log(`Loaded: ${url}, ${shallow}`)
+    }
+    const handleError = (err, url, { shallow }) => {
+      console.log(`error: ${err}, ${url}, ${shallow}`)
+    }
+
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleError)
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleError)
+    }
+  }, [router])
 
   useEffect(() => {
     document.documentElement.removeAttribute('style')
@@ -57,6 +81,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <style global jsx>{`
           html {
             --geist-page-nav-height: 64px;
+            --accent-1: ${theme.palette.accents_1};
+            --accent-2: ${theme.palette.accents_2};
           }
           body::-webkit-scrollbar {
             width: 0;

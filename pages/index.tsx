@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Button, Grid, useTheme, Select } from '@geist-ui/core'
@@ -8,7 +8,7 @@ import ProjectCard from '../components/project-card'
 import Plus from '@geist-ui/icons/plus'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
-import MaskLoading from 'components/mask-loading'
+import Skeleton from 'components/skeleton'
 
 const Home: NextPage<unknown> = () => {
   const theme = useTheme()
@@ -36,28 +36,27 @@ const Home: NextPage<unknown> = () => {
             New Project
           </Button>
         </div>
-        <MaskLoading loading={isValidating}>
-          <Grid.Container gap={2} marginTop={1} justify="flex-start">
-            {
-              apps.length > 0 && apps.map((item, index) => {
-                return (deviceType === 'all' || item.deviceType === deviceType) && (
-                  <Grid xs={24} sm={12} md={8} key={item.id}>
-                    <ProjectCard
-                      data={item}
-                    />
-                  </Grid>
-                )
-              })
-            }
-            {
-              apps.length === 0 && !isValidating && (
-                <Grid xs={24}>
-                  <NoItem link={'/apps/new'} />
+        <Skeleton width={160} />
+        <Grid.Container gap={2} marginTop={1} justify="flex-start">
+          {
+            apps.length > 0 && apps.map((item, index) => {
+              return (deviceType === 'all' || item.deviceType === deviceType) && (
+                <Grid xs={24} sm={12} md={8} key={item.id}>
+                  <ProjectCard
+                    data={item}
+                  />
                 </Grid>
               )
-            }
-          </Grid.Container>
-        </MaskLoading>
+            })
+          }
+          {
+            apps.length === 0 && !isValidating && (
+              <Grid xs={24}>
+                <NoItem link={'/apps/new'} />
+              </Grid>
+            )
+          }
+        </Grid.Container>
       </div>
       <style jsx>{`
         .page__content {

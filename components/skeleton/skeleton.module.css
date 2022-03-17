@@ -1,0 +1,81 @@
+.skeleton {
+  display: block;
+  border-radius: 5px;
+  &:not(.wrapper):not(.loaded) {
+    background-image: linear-gradient(
+      270deg,
+      var(--accent-1),
+      var(--accent-2),
+      var(--accent-2),
+      var(--accent-1)
+    );
+    background-size: 400% 100%;
+    animation: loading 8s ease-in-out infinite;
+  }
+  &:not(.wrapper):not(.show) {
+    display: none;
+  }
+  &&.loaded {
+    width: unset !important;
+  }
+}
+
+.inline {
+  display: inline-block !important;
+}
+
+.wrapper {
+  display: block;
+  position: relative;
+
+  &:not(.show)::before {
+    content: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 5px;
+    z-index: 100;
+    background-image: linear-gradient(
+      270deg,
+      var(--accent-1),
+      var(--accent-2),
+      var(--accent-2),
+      var(--accent-1)
+    );
+    background-size: 400% 100%;
+    animation: loading 8s ease-in-out infinite;
+  }
+  &&.squared::before {
+    border-radius: 0;
+  }
+  &&.rounded::before {
+    border-radius: 50%;
+  }
+}
+
+.show {
+  border-radius: 0;
+}
+
+.squared {
+  border-radius: 0;
+}
+
+.rounded {
+  border-radius: 50%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
