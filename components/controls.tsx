@@ -36,19 +36,26 @@ const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
         Theme
         <Select
           disableMatchWidth
+          height="28px"
           onChange={switchTheme}
           value={themeType}
           title={'Switch Themes'}
           ml={0.5}
           style={{ minWidth: '7em' }}>
           <Select.Option value="auto">
-            <Display size={12} /> {'Auto'}
+            <span className="select-content">
+              <Display size={12} /> {'System'}
+            </span>
           </Select.Option>
           <Select.Option value="light">
-            <SunIcon size={12} /> {'Light'}
+            <span className="select-content">
+              <SunIcon size={12} /> {'Light'}
+            </span>
           </Select.Option>
           <Select.Option value="dark">
-            <MoonIcon size={12} /> {'Dark'}
+            <span className="select-content">
+              <MoonIcon size={12} /> {'Dark'}
+            </span>
           </Select.Option>
         </Select>
       </Popover.Item>
@@ -58,6 +65,19 @@ const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
           <Link>Logout</Link>
         </NextLink>
       </Popover.Item>
+      <style jsx>{`
+        .select-content {
+            width: auto;
+            height: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .select-content :global(svg) {
+            margin-right: 5px;
+            margin-left: 2px;
+          }
+      `}</style>
     </>
   )
 }
