@@ -86,6 +86,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             --accent-1: ${theme.palette.accents_1};
             --accent-2: ${theme.palette.accents_2};
             --geist-foreground: ${theme.palette.foreground};
+            --geist-background: ${theme.palette.background};
           }
           body {
             background-color: ${theme.palette.background};

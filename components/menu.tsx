@@ -30,15 +30,9 @@ const Menu: React.FC<unknown> = () => {
             <div className="logo">
               <NextLink href={`/`}>
                 <a aria-label="Go Home">
-                  <Image
-                    src="/images/logo.svg"
-                    width="20px"
-                    height="20px"
-                    mr={0.5}
-                    draggable={false}
-                    title="AppBeta"
-                    alt="AppBeta"
-                  />
+                  <svg aria-label="logo" height="20" viewBox="0 0 140 150" stroke={theme.palette.foreground} stroke-width="20">
+                    <path d="M85.0816 5L13.7609 140.636M57.3181 14.6834L127.318 145M0 94.9724H140" />
+                  </svg>
                   AppBeta
                 </a>
               </NextLink>
@@ -101,14 +95,13 @@ const Menu: React.FC<unknown> = () => {
           display: inline-flex;
           flex-direction: row;
           align-items: center;
-          font-size: 1.125rem;
+          font-size: 1rem;
           font-weight: 500;
           color: inherit;
           height: 28px;
         }
-        .logo :global(.image) {
-          border: 1px solid ${theme.palette.border};
-          border-radius: 2rem;
+        .logo svg {
+          margin-right: 5px;
         }
         .tabs {
           flex: 1 1;
