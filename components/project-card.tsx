@@ -11,12 +11,15 @@ import { AppItem } from 'lib/interfaces'
 import { timeAgo, bytesStr } from 'lib/utils'
 import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
+import Skeleton from 'components/skeleton'
 
 interface Props {
+  isLoading: boolean
   data: AppItem
 }
 
 const ProjectCard: React.FC<Props> = ({
+  isLoading = false,
   data
 }) => {
   const theme = useTheme()
@@ -26,52 +29,77 @@ const ProjectCard: React.FC<Props> = ({
       <div className="project__wrapper">
         <Card className="project__card" onClick={() => Router.push(`/apps/${data.id}`)}>
           <div className="project-title__wrapper">
-            <Badge.Anchor placement="bottomRight">
-              <Badge scale={0.5}>{data.packagesCount}</Badge>
-              <Avatar
-                src={`${staticPath}${data.icon}`}
-                height={1.5}
-                width={1.5}
-                isSquare
-                className="project-icon"
-              />
-            </Badge.Anchor>
+            {
+              isLoading ? <Skeleton height={40} width={40} /> :
+              (
+                <Badge.Anchor placement="bottomRight">
+                  <Badge scale={0.5}>{data.packagesCount}</Badge>
+                  <Avatar
+                    src={`${staticPath}${data.icon}`}
+                    height={1.5}
+                    width={1.5}
+                    isSquare
+                    className="project-icon"
+                  />
+                </Badge.Anchor>
+              )
+            }
             <div className="project-title__content">
-              <Text
-                margin={0}
-                style={{ fontWeight: 500, lineHeight: '1.5rem' }}
-              >
-                {data.name} <DeviceType size={12} type={data.deviceType} />
-              </Text>
-              <Text
-                margin={0}
-                font="0.875rem"
-                style={{
-                  color: theme.palette.accents_6,
-                  lineHeight: '1.25rem',
-                }}
-              >
-                {data.slug}
-              </Text>
+              {
+                isLoading ? (
+                  <>
+                    <Skeleton width={150} boxHeight={24} />
+                    <Skeleton width={100} />
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      margin={0}
+                      style={{ fontWeight: 500, lineHeight: '1.5rem' }}
+                    >
+                      {data.name} <DeviceType size={12} type={data.deviceType} />
+                    </Text>
+                    <Text
+                      margin={0}
+                      font="0.875rem"
+                      style={{
+                        color: theme.palette.accents_6,
+                        lineHeight: '1.25rem',
+                      }}
+                    >
+                      {data.slug}
+                    </Text>
+                  </>
+                )
+              }
             </div>
           </div>
-          {data.description && (
-            <div className="project-description">
-              <Text
-                margin={0}
-                style={{ color: theme.palette.accents_6, fontWeight: 500 }}
-              >
-                {data.description}
-              </Text>
-            </div>
-          )}
-          <Text
+          <div className="project-description">
+            {
+              isLoading ? (
+                <>
+                  <Skeleton width={270} boxHeight={24} />
+                  <Skeleton width={250} />
+                </>
+              ) : (
+                <Text
+                  margin={0}
+                  style={{ color: theme.palette.accents_6, fontWeight: 500 }}
+                >
+                  {data.description}
+                </Text>
+              )
+            }
+          </div>
+          {
+            isLoading ? <Skeleton width={200} /> : <Text
             marginBottom={0}
             font="12px"
             style={{ color: theme.palette.accents_5 }}
           >
             Version: {data.lastVersion || '-'}, {bytesStr(data.lastPkgSize || 0)}, {timeAgo(data.updatedAt)} ago.
           </Text>
+          }
         </Card>
       </div>
       <style jsx>{`

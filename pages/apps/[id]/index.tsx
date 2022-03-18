@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link } from '@geist-ui/core'
 import useSWR from 'swr'
 import Edit from '@geist-ui/icons/edit'
@@ -21,16 +22,20 @@ type Props = {
   data: AppItem
 }
 
-const AppPage: React.FC<Props> = ({ data }) => {
+const AppPage: React.FC<unknown> = () => {
   const theme = useTheme()
   const { bindings } = usePopConfirm()
   const [loading, setLoading] = useState(false)
   const [editId, setEditId] = useState(0)
   const { setVisible: setEditVisible, bindings: editBindings } = useModal()
   const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
-  const [current, setCurrent] = useState(data.lastPkgId)
+  const router = useRouter()
 
-  const { data: packages = [], isValidating, mutate } = useSWR<PackageItem[]>(`/api/apps/${data.id}/packages`)
+  const { data, isValidating: isLoading } = useSWR<AppItem>(`/api/apps/${router.query.id}`)
+
+  const [current, setCurrent] = useState(data?.lastPkgId)
+
+  const { data: packages = [], isValidating, mutate } = useSWR<PackageItem[]>(data?.id && `/api/apps/${data.id}/packages`)
 
   const saveEdit = async (e): Promise<void> => {
     setLoading(true)
@@ -98,12 +103,12 @@ const AppPage: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <Title value={data.name} />
-      <NavLink>{data.name}</NavLink>
-      <ProjectInfo data={data} />
+      <Title value={data?.name} />
+      <NavLink>{data?.name}</NavLink>
+      <ProjectInfo data={data} isLoading={isLoading && !data} />
       <div className="page__wrapper">
         <div className="page__content">
-          <MaskLoading loading={isValidating}>
+          <MaskLoading loading={isValidating && packages.length === 0}>
             <Table data={packages}>
               <Table.Column prop="icon" label="current" render={renderCurrent} />
               <Table.Column prop="version" label="version" render={(version, row: PackageItem) => (<>{version}({row.buildVersion})</>)} />
@@ -122,7 +127,7 @@ const AppPage: React.FC<Props> = ({ data }) => {
           </Modal>
           {
             packages.length === 0 && !isValidating && (
-              <NoItem link={`/apps/${data.id}/packages/new`} />
+              <NoItem link={`/apps/${data?.id}/packages/new`} />
             )
           }
         </div>

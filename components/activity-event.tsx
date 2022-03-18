@@ -2,8 +2,10 @@ import React from 'react'
 import { Avatar, Text, useTheme } from '@geist-ui/core'
 import { timeAgo } from 'lib/utils'
 import { staticPath } from 'lib/contants'
+import Skeleton from 'components/skeleton'
 
 interface Props {
+  isLoading: boolean
   name: string
   icon: string
   createdAt: string
@@ -13,6 +15,7 @@ interface Props {
 export type ActivityEventProps = Props
 
 const ActivityEvent: React.FC<ActivityEventProps> = ({
+  isLoading = false,
   name,
   icon,
   createdAt,
@@ -23,13 +26,21 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
   return (
     <>
       <li className="activity-event">
-        <Avatar
-          className="activity-event__avatar"
-          src={`${staticPath}${icon}`}
-          alt={name}
-        />
+        {
+          isLoading ? <Skeleton rounded className="activity-event__avatar" height={32} width={32} /> :
+          <Avatar
+            className="activity-event__avatar"
+            src={`${staticPath}${icon}`}
+            alt={name}
+          />
+        }
         <Text className="activity-event__message">{children}</Text>
-        <Text className="activity-event__created-at">{timeAgo(createdAt)}</Text>
+        <Text className="activity-event__created-at">
+          {
+            isLoading ? <Skeleton width={80} /> :
+            <>{timeAgo(createdAt)}</>
+          }
+        </Text>
       </li>
       <style jsx>{`
         .activity-event {

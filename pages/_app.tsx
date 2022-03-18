@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
 import { SWRConfig } from 'swr'
+import NProgress from 'nprogress'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
 import Menu from '../components/menu'
 import Search from '../components/search'
@@ -18,24 +19,25 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
+    let timer = null
     const handleStart = (url, { shallow }) => {
       console.log(`Loading: ${url}, ${shallow}`)
+      timer = setTimeout(() => NProgress.start(), 300)
     }
-    const handleStop = (url, { shallow }) => {
-      console.log(`Loaded: ${url}, ${shallow}`)
-    }
-    const handleError = (err, url, { shallow }) => {
-      console.log(`error: ${err}, ${url}, ${shallow}`)
+    const handleStop = () => {
+      clearTimeout(timer)
+      NProgress.done()
     }
 
     router.events.on('routeChangeStart', handleStart)
     router.events.on('routeChangeComplete', handleStop)
-    router.events.on('routeChangeError', handleError)
+    router.events.on('routeChangeError', handleStop)
 
     return () => {
+      timer = null
       router.events.off('routeChangeStart', handleStart)
       router.events.off('routeChangeComplete', handleStop)
-      router.events.off('routeChangeError', handleError)
+      router.events.off('routeChangeError', handleStop)
     }
   }, [router])
 
@@ -83,6 +85,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             --geist-page-nav-height: 64px;
             --accent-1: ${theme.palette.accents_1};
             --accent-2: ${theme.palette.accents_2};
+            --geist-foreground: ${theme.palette.foreground};
           }
           body::-webkit-scrollbar {
             width: 0;
@@ -94,6 +97,28 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           }
           #__next {
             overflow: visible !important;
+          }
+          #nprogress {
+            pointer-events:none;
+          }
+          #nprogress .bar {
+            z-index:2000;
+            background:var(--geist-foreground);
+          }
+          #nprogress .bar,
+          #nprogress:after {
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:4px;
+          }
+          #nprogress:after {
+            content:"";
+            background:var(--accents-2);
+          }
+          #nprogress .peg{
+            box-shadow:0 0 10px var(--geist-foreground),0 0 5px var(--geist-foreground);
           }
           .layout {
             min-height: calc(100vh - 108px);

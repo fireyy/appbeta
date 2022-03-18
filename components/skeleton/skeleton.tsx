@@ -32,8 +32,8 @@ const Skeleton: React.FC<SkeletonProps> = ({
   const shouldAutoSize = !!children && !(width || height)
 
   // Defaults
-  width = width || 24
-  height = height || 24
+  width = width || 20
+  height = height || 20
   boxHeight = boxHeight || height
 
   return (

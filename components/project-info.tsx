@@ -6,8 +6,10 @@ import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
+import Skeleton from 'components/skeleton'
 
 interface Props {
+  isLoading: boolean
   data: AppItem
 }
 
@@ -20,7 +22,7 @@ async function destroy(id: number): Promise<void> {
   await Router.push('/')
 }
 
-const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
+const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
   const theme = useTheme()
   const { visible, setVisible, bindings } = useModal()
 
@@ -28,19 +30,32 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
     <>
       <div className="heading__wrapper">
         <div className="heading">
-          <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
+          {
+            isLoading ? <Skeleton className="heading__user-avatar" height={40} width={40} /> : <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
+          }
           <div className="heading__name">
             <div className="heading__title">
-              <Text h2 className="headding__user-name">
+              {
+                isLoading ? (
+                  <>
+                    <Skeleton width={350} height={36} boxHeight={47} style={{ marginRight: '10px' }} />
+                    <Skeleton width={50} height={36} boxHeight={47} />
+                  </>
+                ) : <Text h2 className="headding__user-name">
                 <Link href={`/${data.slug}?pid=${data.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
                 <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
               </Text>
+              }
               <div className="heading__actions">
-                <ButtonDropdown auto icon={<MoreVertical />}>
-                  <ButtonDropdown.Item onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>New</ButtonDropdown.Item>
-                  <ButtonDropdown.Item onClick={() => Router.push(`/apps/new?id=${data.id}`)}>Edit</ButtonDropdown.Item>
-                  <ButtonDropdown.Item type="error" onClick={() => setVisible(true)}>Delete</ButtonDropdown.Item>
-                </ButtonDropdown>
+                {
+                  isLoading ? <Skeleton height={36} width={36} /> :
+                  <ButtonDropdown auto icon={<MoreVertical />}>
+                    <ButtonDropdown.Item onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>New</ButtonDropdown.Item>
+                    <ButtonDropdown.Item onClick={() => Router.push(`/apps/new?id=${data.id}`)}>Edit</ButtonDropdown.Item>
+                    <ButtonDropdown.Item type="error" onClick={() => setVisible(true)}>Delete</ButtonDropdown.Item>
+                  </ButtonDropdown>
+                }
+
                 <Modal {...bindings}>
                   <Modal.Content>
                     <p>Are you sure you want to delete this item?</p>
@@ -50,15 +65,19 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
                 </Modal>
               </div>
             </div>
-
-            {data?.description && (
-              <div className="heading__integration">
-                <Text className="heading__integration-title">Description:</Text>
-                <div className="heading__integration-inner">
-                  <span>{data.description}</span>
-                </div>
+            <div className="heading__integration">
+              <Text className="heading__integration-title">Description:</Text>
+              <div className="heading__integration-inner">
+                {
+                  isLoading ? (
+                    <>
+                      <Skeleton width={800} boxHeight={24} />
+                      <Skeleton width={800} boxHeight={24} />
+                    </>
+                  ) : (<span>{data.description}</span>)
+                }
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
@@ -124,8 +143,8 @@ const ProjectInfo: React.FC<HeadingProps> = ({ data }) => {
         }
         .heading__integration-inner {
           display: flex;
-          flex-direction: row;
-          align-items: center;
+          flex-direction: column;
+          align-items: left;
         }
         .heading__integration-inner :global(svg) {
           margin-right: ${theme.layout.gapQuarter};

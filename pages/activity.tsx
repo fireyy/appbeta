@@ -5,8 +5,8 @@ import { useTheme, Link } from '@geist-ui/core'
 import useSWR from 'swr'
 import ActivityEvent from 'components/activity-event'
 import Title from 'components/title'
-import MaskLoading from 'components/mask-loading'
 import { bytesStr } from 'lib/utils'
+import Skeleton from 'components/skeleton'
 
 const groupResults = (data) => {
   return data.reduce((acc, item) => {
@@ -23,27 +23,33 @@ const groupResults = (data) => {
 
 const ActivityPage: NextPage<unknown> = () => {
   const theme = useTheme()
-  const { data = [], isValidating } = useSWR('/api/activity')
+  const { data = [{},{},{},{},{},{},{},{}], isValidating } = useSWR('/api/activity')
   const grouppedResults = useMemo(() => groupResults(data), [data])
 
   return (
     <div className="page__activity">
       <Title value="Activity" />
-      <MaskLoading loading={isValidating} />
       <ul className="page__activity__list">
       {grouppedResults.map((group) => (
         <li role="presentation" key={group.title}>
-          <div className="group-title">{group.title}</div>
+          <div className="group-title">
+            {
+              isValidating && !group.title ? <Skeleton inline height={24} width={150} /> : <>{group.title}</>
+            }
+          </div>
           <ul role="group">
             {group.items.map(item => (
               <ActivityEvent
+                isLoading={isValidating && !item.id}
                 key={item.id}
                 name={item.name}
                 icon={item.icon}
                 createdAt={item.createdAt}
               >
                 <NextLink href="/" passHref>
-                  <Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link>
+                  {
+                    isValidating && !item.id ? <Skeleton width={150} /> : <Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link>
+                  }
                 </NextLink>
               </ActivityEvent>
             ))}

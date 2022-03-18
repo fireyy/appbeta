@@ -8,13 +8,12 @@ import ProjectCard from '../components/project-card'
 import Plus from '@geist-ui/icons/plus'
 import NoItem from 'components/no-item'
 import Title from 'components/title'
-import Skeleton from 'components/skeleton'
 
 const Home: NextPage<unknown> = () => {
   const theme = useTheme()
   const router = useRouter()
   const [deviceType, setDeviceType] = useState<string>('all')
-  const { data: apps = [], isValidating } = useSWR<AppItem[]>(`/api/apps`)
+  const { data: apps = [{}, {}, {}, {}, {}, {}, {}, {}, {}], isValidating } = useSWR<AppItem[]>(`/api/apps`)
 
   const handleChange = async (val: string) => {
     setDeviceType(val)
@@ -36,13 +35,13 @@ const Home: NextPage<unknown> = () => {
             New Project
           </Button>
         </div>
-        <Skeleton width={160} />
         <Grid.Container gap={2} marginTop={1} justify="flex-start">
           {
-            apps.length > 0 && apps.map((item, index) => {
+            apps.map((item, index) => {
               return (deviceType === 'all' || item.deviceType === deviceType) && (
-                <Grid xs={24} sm={12} md={8} key={item.id}>
+                <Grid xs={24} sm={12} md={8} key={index}>
                   <ProjectCard
+                    isLoading={isValidating && !item.name}
                     data={item}
                   />
                 </Grid>
