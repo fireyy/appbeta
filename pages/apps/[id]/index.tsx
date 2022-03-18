@@ -103,8 +103,8 @@ const AppPage: React.FC<unknown> = () => {
 
   return (
     <>
-      <Title value={data?.name} />
-      <NavLink>{data?.name}</NavLink>
+      <Title value={data?.name || ''} />
+      <NavLink>{data?.name || ''}</NavLink>
       <ProjectInfo data={data} isLoading={isLoading && !data} />
       <div className="page__wrapper">
         <div className="page__content">
