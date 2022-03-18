@@ -13,31 +13,59 @@ import {
 } from '@geist-ui/core'
 import MoonIcon from '@geist-ui/icons/moon'
 import SunIcon from '@geist-ui/icons/sun'
+import Display from '@geist-ui/icons/display'
 import { usePrefers } from 'lib/use-prefers'
 import { getAutoTheme } from 'lib/utils'
 
-const UserSettingsPop: React.FC = () => (
-  <>
-    <Popover.Item title>
-      <span>User Settings</span>
-    </Popover.Item>
-    <Popover.Item>
-      <NextLink href="/account" passHref>
-        <Link>Settings</Link>
-      </NextLink>
-    </Popover.Item>
-    <Popover.Item line />
-    <Popover.Item>
-      <span onClick={() => signOut()}>Logout</span>
-    </Popover.Item>
-  </>
-);
+type UserSettingsProp = {
+  autoTheme: string
+}
+
+const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
+  const { switchTheme, themeType } = usePrefers()
+
+  return (
+    <>
+      <Popover.Item>
+        <NextLink href="/account" passHref>
+          <Link>Settings</Link>
+        </NextLink>
+      </Popover.Item>
+      <Popover.Item line />
+      <Popover.Item>
+        Theme
+        <Select
+          disableMatchWidth
+          onChange={switchTheme}
+          value={themeType}
+          title={'Switch Themes'}
+          ml={0.5}
+          style={{ minWidth: '7em' }}>
+          <Select.Option value="auto">
+            <Display size={12} /> {'Auto'}
+          </Select.Option>
+          <Select.Option value="light">
+            <SunIcon size={12} /> {'Light'}
+          </Select.Option>
+          <Select.Option value="dark">
+            <MoonIcon size={12} /> {'Dark'}
+          </Select.Option>
+        </Select>
+      </Popover.Item>
+      <Popover.Item line />
+      <Popover.Item>
+        <NextLink href="/api/auth/signout" passHref>
+          <Link>Logout</Link>
+        </NextLink>
+      </Popover.Item>
+    </>
+  )
+}
 
 const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
   const [autoTheme, setAutoTheme] = useState('dark')
   const theme = useTheme()
-  const { switchTheme, themeType } = usePrefers()
   useEffect(() => {
     setAutoTheme(getAutoTheme('auto'))
   }, [])
@@ -53,35 +81,10 @@ const Controls: React.FC<unknown> = React.memo(() => {
         K
       </Keyboard>
       <Spacer w={0.75} />
-      <Select
-        disableMatchWidth
-        scale={0.5}
-        h="28px"
-        pure
-        onChange={switchTheme}
-        value={themeType}
-        title={'Switch Themes'}>
-        <Select.Option value="auto">
-          <span className="select-content">
-            {autoTheme === 'light' ? <SunIcon size={12} /> : <MoonIcon size={12} />} {'Auto'}
-          </span>
-        </Select.Option>
-        <Select.Option value="light">
-          <span className="select-content">
-            <SunIcon size={12} /> {'Light'}
-          </span>
-        </Select.Option>
-        <Select.Option value="dark">
-          <span className="select-content">
-            <MoonIcon size={12} /> {'Dark'}
-          </span>
-        </Select.Option>
-      </Select>
-      <Spacer w={0.75} />
       {
         status === 'loading' && <Loading />
       }
-      <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
+      <Popover content={<UserSettingsPop autoTheme={autoTheme} />} placement="bottomEnd" portalClassName="user-settings__popover">
         {
           (!session && status !== 'loading') && (
             <button className="user-settings__button" onClick={() => signIn()}>
@@ -106,26 +109,6 @@ const Controls: React.FC<unknown> = React.memo(() => {
           opacity: 0.75;
           border: none;
         }
-        .wrapper :global(.select) {
-          width: 20px;
-          min-width: 20px;
-        }
-        .select-content {
-          width: auto;
-          height: 18px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .wrapper :global(.select .value .select-content) {
-          font-size: 0;
-        }
-        .wrapper :global(.select .value) {
-          margin-right: 0;
-        }
-        .select-content :global(svg) {
-          margin: 0 2px;
-        }
         .user-settings__button {
           border: none;
           background: none;
@@ -136,6 +119,16 @@ const Controls: React.FC<unknown> = React.memo(() => {
         }
         :global(.user-settings__popover) {
           width: 180px !important;
+        }
+        :global(.user-settings__popover .link) {
+          display: block;
+          width: 100%;
+          padding: ${theme.layout.gapHalf};
+          margin: -8px -12px;
+          box-sizing: content-box;
+        }
+        :global(.user-settings__popover .link:hover) {
+          background-color: ${theme.palette.accents_1};
         }
         @media (max-width: ${theme.breakpoints.xs.max}) {
           .wrapper :global(kbd.shortcuts) {

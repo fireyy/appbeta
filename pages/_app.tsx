@@ -87,6 +87,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             --accent-2: ${theme.palette.accents_2};
             --geist-foreground: ${theme.palette.foreground};
           }
+          body {
+            background-color: ${theme.palette.background};
+          }
           body::-webkit-scrollbar {
             width: 0;
             background-color: ${theme.palette.accents_1};
