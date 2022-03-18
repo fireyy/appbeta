@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import Script from 'next/script'
 import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react'
-import { GeistProvider, CssBaseline, useTheme } from '@geist-ui/core'
+import { GeistProvider, CssBaseline, useTheme, Themes } from '@geist-ui/core'
 import { SWRConfig } from 'swr'
 import NProgress from 'nprogress'
 import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
@@ -42,17 +43,22 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   }, [router])
 
   useEffect(() => {
-    document.documentElement.removeAttribute('style')
-    document.body.removeAttribute('style')
-
     const theme = window.localStorage.getItem('theme') as ThemeType
     setThemeType(theme)
   }, [])
 
   const switchTheme = useCallback((theme: ThemeType) => {
     setThemeType(theme)
-    if (typeof window !== 'undefined' && window.localStorage) window.localStorage.setItem('theme', theme)
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem('theme', theme)
+      document.documentElement.classList.remove('light-theme','dark-theme')
+      document.documentElement.classList.add(`${getAutoTheme(theme)}-theme`)
+    }
   }, [])
+
+  const themes = Themes.getPresets()
+  const lightPalette = themes.find(t => t.type === 'light').palette
+  const darkPalette = themes.find(t => t.type === 'dark').palette
 
   return (
     <SessionProvider session={session}>
@@ -61,6 +67,28 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
           <Head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta name="theme-color" content="var(--geist-background)" />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+              !function(){try {var d=document.documentElement.classList;d.remove('light-theme','dark-theme');var e=localStorage.getItem('theme');if("auto"===e||(!e&&true)){var t="(prefers-color-scheme: dark)",m=window.matchMedia(t);m.media!==t||m.matches?d.add('dark-theme'):d.add('light-theme')}else if(e) var x={"light":"light-theme","dark":"dark-theme"};d.add(x[e])}catch(e){}}()
+            `,
+              }}
+            />
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+                body::before{content:'';display:block;position:fixed;width:100%;height:100%;top:0;left:0;background:var(--geist-background);z-index: 99999}.render body::before{display:none}
+            `,
+              }}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                document.documentElement.classList.add('render')
+            `,
+              }}
+            />
           </Head>
           {
             !pageProps.isFront && (
@@ -83,13 +111,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <style global jsx>{`
           html {
             --geist-page-nav-height: 64px;
-            --accent-1: ${theme.palette.accents_1};
-            --accent-2: ${theme.palette.accents_2};
-            --geist-foreground: ${theme.palette.foreground};
-            --geist-background: ${theme.palette.background};
           }
-          body {
-            background-color: ${theme.palette.background};
+          html.light-theme {
+            --accent-1: ${lightPalette.accents_1};
+            --accent-2: ${lightPalette.accents_2};
+            --geist-foreground: ${lightPalette.foreground};
+            --geist-background: ${lightPalette.background};
+          }
+          html.dark-theme {
+            --accent-1: ${darkPalette.accents_1};
+            --accent-2: ${darkPalette.accents_2};
+            --geist-foreground: ${darkPalette.foreground};
+            --geist-background: ${darkPalette.background};
+          }
+          body, html {
+            background-color: var(--geist-background);
           }
           body::-webkit-scrollbar {
             width: 0;

@@ -30,7 +30,7 @@ const Menu: React.FC<unknown> = () => {
             <div className="logo">
               <NextLink href={`/`}>
                 <a aria-label="Go Home">
-                  <svg aria-label="logo" height="20" viewBox="0 0 140 150" stroke={theme.palette.foreground} stroke-width="20">
+                  <svg aria-label="logo" height="20" viewBox="0 0 140 150" stroke={theme.palette.foreground} strokeWidth="20">
                     <path d="M85.0816 5L13.7609 140.636M57.3181 14.6834L127.318 145M0 94.9724H140" />
                   </svg>
                   AppBeta

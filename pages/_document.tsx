@@ -22,19 +22,6 @@ class MyDocument extends Document {
       <Html>
         <Head />
         <body style={{ overflow: 'unset' }}>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-            (function(){
-              if (!window.localStorage) return;
-              if (window.localStorage.getItem('theme') === 'dark' || window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.style.background = '#000';
-                document.body.style.background = '#000';
-              };
-            })()
-          `,
-            }}
-          />
           <Main />
           <NextScript />
         </body>
