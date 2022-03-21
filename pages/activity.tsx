@@ -4,9 +4,9 @@ import NextLink from 'next/link'
 import { useTheme, Link } from '@geist-ui/core'
 import useSWR from 'swr'
 import ActivityEvent from 'components/activity-event'
-import Title from 'components/title'
 import { bytesStr } from 'lib/utils'
 import Skeleton from 'components/skeleton'
+import Layout from 'components/layout'
 
 const groupResults = (data) => {
   return data.reduce((acc, item) => {
@@ -27,69 +27,70 @@ const ActivityPage: NextPage<unknown> = () => {
   const grouppedResults = useMemo(() => groupResults(data), [data])
 
   return (
-    <div className="page__activity">
-      <Title value="Activity" />
-      <ul className="page__activity__list">
-      {grouppedResults.map((group, i) => (
-        <li role="presentation" key={group.title + i}>
-          <div className="group-title">
-            {
-              isValidating && !group.title ? <Skeleton inline height={24} width={150} /> : <>{group.title}</>
-            }
-          </div>
-          <ul role="group">
-            {group.items.map((item, index) => (
-              <ActivityEvent
-                isLoading={isValidating && !item.id}
-                key={index}
-                name={item.name}
-                icon={item.icon}
-                createdAt={item.createdAt}
-              >
-                {
-                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link></NextLink>
-                }
-              </ActivityEvent>
-            ))}
-          </ul>
-        </li>
-      ))}
-      </ul>
-      <style jsx>{`
-        .page__activity ul {
-          padding: 0;
-          margin: 0;
-        }
-        .page__activity__list > li:before {
-          content: none;
-        }
-        .page__activity__list > li {
-          display: flex;
-          margin: 0;
-        }
-        .page__activity__list .group-title {
-          width: 25%;
-          font-size: 1.2rem;
-          padding: calc(${theme.layout.gap} * 1.7) 0;
-          color: ${theme.palette.accents_5};
-        }
-        .page__activity__list ul {
-          border-left: 2px solid ${theme.palette.border};
-          flex: 1;
-          padding: ${theme.layout.gap} 0;
-        }
-        @media (max-width: ${theme.breakpoints.sm.max}) {
+    <Layout title="Activity">
+      <div className="page__activity">
+        <ul className="page__activity__list">
+        {grouppedResults.map((group, i) => (
+          <li role="presentation" key={group.title + i}>
+            <div className="group-title">
+              {
+                isValidating && !group.title ? <Skeleton inline height={24} width={150} /> : <>{group.title}</>
+              }
+            </div>
+            <ul role="group">
+              {group.items.map((item, index) => (
+                <ActivityEvent
+                  isLoading={isValidating && !item.id}
+                  key={index}
+                  name={item.name}
+                  icon={item.icon}
+                  createdAt={item.createdAt}
+                >
+                  {
+                    isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link></NextLink>
+                  }
+                </ActivityEvent>
+              ))}
+            </ul>
+          </li>
+        ))}
+        </ul>
+        <style jsx>{`
+          .page__activity ul {
+            padding: 0;
+            margin: 0;
+          }
+          .page__activity__list > li:before {
+            content: none;
+          }
           .page__activity__list > li {
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
+            display: flex;
+            margin: 0;
           }
           .page__activity__list .group-title {
-            width: 100%;
+            width: 25%;
+            font-size: 1.2rem;
+            padding: calc(${theme.layout.gap} * 1.7) 0;
+            color: ${theme.palette.accents_5};
           }
-        }
-      `}</style>
-    </div>
+          .page__activity__list ul {
+            border-left: 2px solid ${theme.palette.border};
+            flex: 1;
+            padding: ${theme.layout.gap} 0;
+          }
+          @media (max-width: ${theme.breakpoints.sm.max}) {
+            .page__activity__list > li {
+              flex-direction: column;
+              justify-content: flex-start;
+              align-items: stretch;
+            }
+            .page__activity__list .group-title {
+              width: 100%;
+            }
+          }
+        `}</style>
+      </div>
+    </Layout>
   )
 }
 

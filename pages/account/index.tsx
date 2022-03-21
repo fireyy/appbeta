@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import type { NextPage, GetServerSideProps } from 'next'
 import { Fieldset, Button, Grid, Link, useTheme, Input, Avatar } from '@geist-ui/core'
 import { useSession } from 'next-auth/react'
-import Title from 'components/title'
+import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 import AccountSidebar from 'components/account-sidebar'
 
@@ -13,8 +13,7 @@ const AccountPage: NextPage = () => {
   const { data: session } = useSession()
 
   return (
-    <>
-      <Title value="Settings" />
+    <Layout title="Settings">
       <NavLink>Settings</NavLink>
       <div className="page__content">
         <Grid.Container gap={2}>
@@ -66,7 +65,7 @@ const AccountPage: NextPage = () => {
           top: 20px;
         }
       `}</style>
-    </>
+    </Layout>
   )
 }
 

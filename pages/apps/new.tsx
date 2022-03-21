@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Input, Button, Text, Grid, Textarea, Radio, useInput, useToasts } from '@geist-ui/core'
 import useSWR from 'swr'
-import Title from 'components/title'
+import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 
 const AppNewPage: React.FC<unknown> = () => {
@@ -51,8 +51,7 @@ const AppNewPage: React.FC<unknown> = () => {
   }
 
   return (
-    <>
-      <Title value="New App" />
+    <Layout title="New App">
       {
         isEdit ? <NavLink href={`/apps/${id}`} parent={name}>Edit</NavLink> : <NavLink>New App</NavLink>
       }
@@ -86,7 +85,7 @@ const AppNewPage: React.FC<unknown> = () => {
           <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>
         </Grid>
       </Grid.Container>
-    </>
+    </Layout>
   )
 }
 

@@ -7,7 +7,7 @@ import { AppItem } from 'lib/interfaces'
 import ProjectCard from '../components/project-card'
 import Plus from '@geist-ui/icons/plus'
 import NoItem from 'components/no-item'
-import Title from 'components/title'
+import Layout from 'components/layout'
 
 const Home: NextPage<unknown> = () => {
   const theme = useTheme()
@@ -20,8 +20,7 @@ const Home: NextPage<unknown> = () => {
   }
 
   return (
-    <>
-      <Title value="Home" />
+    <Layout title="Home">
       <div className="page__content">
         <div className="actions-stack">
           <div>
@@ -85,7 +84,7 @@ const Home: NextPage<unknown> = () => {
           }
         }
       `}</style>
-    </>
+    </Layout>
   )
 }
 

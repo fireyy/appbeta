@@ -27,6 +27,7 @@ async function handleGET(pid: number, res: NextApiResponse) {
   })
   if (app) {
     const apkUrl = staticPath + app.file
+    // TODO：吐出真实下载地址，无需跳转
     res.redirect(apkUrl)
   } else {
     res.json({})

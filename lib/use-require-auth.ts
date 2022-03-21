@@ -9,7 +9,11 @@ function useRequireAuth() {
   // If auth.user is false that means we're not
   // logged in and should redirect.
   useEffect(() => {
+    if (router.pathname === '/[slug]') return
     if (!session && typeof session != 'undefined') {
+      router.push(`/api/auth/login`)
+    } else if (session && session.user.role !== 'admin') {
+      // TODO: 告知权限不足
       router.push(`/api/auth/login`)
     }
   }, [session, router])

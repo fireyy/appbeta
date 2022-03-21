@@ -11,16 +11,12 @@ import Download from '@geist-ui/icons/download'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
-import Title from 'components/title'
+import Layout from 'components/layout'
 import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 import NavLink from 'components/nav-link'
 import { bytesStr } from 'lib/utils'
 import MaskLoading from 'components/mask-loading'
 import { baseUrl } from 'lib/contants'
-
-type Props = {
-  data: AppItem
-}
 
 const AppPage: React.FC<unknown> = () => {
   const theme = useTheme()
@@ -111,8 +107,7 @@ const AppPage: React.FC<unknown> = () => {
   }
 
   return (
-    <>
-      <Title value={data?.name || ''} />
+    <Layout title={data?.name || ''}>
       <NavLink>{data?.name || ''}</NavLink>
       <ProjectInfo data={data} isLoading={isLoading && !data} />
       <div className="page__wrapper">
@@ -162,7 +157,7 @@ const AppPage: React.FC<unknown> = () => {
           }
         }
       `}</style>
-    </>
+    </Layout>
   )
 }
 

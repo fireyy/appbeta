@@ -1,15 +1,12 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import type { AppProps } from 'next/app'
-import Head from 'next/head'
-import Script from 'next/script'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
 import { GeistProvider, CssBaseline, useTheme, Themes } from '@geist-ui/core'
 import { SWRConfig } from 'swr'
 import NProgress from 'nprogress'
-import { PrefersContext, themes, ThemeType } from '../lib/use-prefers'
-import Menu from '../components/menu'
-import Search from '../components/search'
+import { PrefersContext, ThemeType } from '../lib/use-prefers'
 import { getAutoTheme } from 'lib/utils'
 import fetcher from 'lib/fetcher'
 
@@ -59,54 +56,49 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const themes = Themes.getPresets()
   const lightPalette = themes.find(t => t.type === 'light').palette
   const darkPalette = themes.find(t => t.type === 'dark').palette
+  const logo = '/favicon.ico'
 
   return (
     <SessionProvider session={session}>
+      <Head>
+      <link rel="icon" href={logo} />
+      <link rel="shortcut icon" type="image/x-icon" href={logo} />
+      <link rel="apple-touch-icon" sizes="180x180" href={logo} />
+      <meta name="theme-color" content="var(--geist-background)" />
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script
+          dangerouslySetInnerHTML={{
+            __html: `
+          !function(){try {var d=document.documentElement.classList;d.remove('light-theme','dark-theme');var e=localStorage.getItem('theme');if("auto"===e||(!e&&true)){var t="(prefers-color-scheme: dark)",m=window.matchMedia(t);m.media!==t||m.matches?d.add('dark-theme'):d.add('light-theme')}else if(e) var x={"light":"light-theme","dark":"dark-theme"};d.add(x[e])}catch(e){}}()
+        `,
+          }}
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            body::before{content:'';display:block;position:fixed;width:100%;height:100%;top:0;left:0;background:var(--geist-background);z-index: 99999}.render body::before{display:none}
+        `,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            document.documentElement.classList.add('render')
+        `,
+          }}
+        />
+      </Head>
       <GeistProvider themeType={geistTheme}>
         <CssBaseline />
         <PrefersContext.Provider value={{ themeType, switchTheme }}>
-          <Head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <meta name="theme-color" content="var(--geist-background)" />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-              !function(){try {var d=document.documentElement.classList;d.remove('light-theme','dark-theme');var e=localStorage.getItem('theme');if("auto"===e||(!e&&true)){var t="(prefers-color-scheme: dark)",m=window.matchMedia(t);m.media!==t||m.matches?d.add('dark-theme'):d.add('light-theme')}else if(e) var x={"light":"light-theme","dark":"dark-theme"};d.add(x[e])}catch(e){}}()
-            `,
-              }}
-            />
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-                body::before{content:'';display:block;position:fixed;width:100%;height:100%;top:0;left:0;background:var(--geist-background);z-index: 99999}.render body::before{display:none}
-            `,
-              }}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                document.documentElement.classList.add('render')
-            `,
-              }}
-            />
-          </Head>
-          {
-            !pageProps.isFront && (
-              <>
-                <Menu />
-                <Search />
-              </>
-            )
-          }
-          <div className="layout">
-            <SWRConfig
-              value={{
-                fetcher,
-              }}
-            >
-              <Component {...pageProps} />
-            </SWRConfig>
-          </div>
+          <SWRConfig
+            value={{
+              fetcher,
+            }}
+          >
+            <Component {...pageProps} />
+          </SWRConfig>
         </PrefersContext.Provider>
         <style global jsx>{`
           html {
@@ -160,18 +152,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           #nprogress .peg{
             box-shadow:0 0 10px var(--geist-foreground),0 0 5px var(--geist-foreground);
           }
-          .layout {
-            min-height: calc(100vh - 108px);
-            max-width: ${theme.layout.pageWidthWithMargin};
-            margin: 0 auto;
-            padding: ${theme.layout.gap};
-            box-sizing: border-box;
-          }
-          @media (max-width: ${theme.breakpoints.sm.max}) {
-            .layout {
-              padding: ${theme.layout.gapHalf};
-            }
-          }
+
         `}</style>
       </GeistProvider>
     </SessionProvider>

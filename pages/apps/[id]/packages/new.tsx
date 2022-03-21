@@ -5,7 +5,7 @@ import Script from 'next/script'
 import { Input, Button, Text, Grid, Textarea, Display, Code, useInput, Avatar, useToasts } from '@geist-ui/core'
 import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem, AppInfo } from 'lib/interfaces'
-import Title from 'components/title'
+import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 import { baseUrl, staticPath } from 'lib/contants'
 import parseApp from 'lib/parse-app'
@@ -86,8 +86,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   }
 
   return (
-    <>
-      <Title value="New Package" />
+    <Layout title="New Package">
       <Script src="https://cdn.jsdelivr.net/npm/app-info-parser@1.1.3/dist/app-info-parser.min.js" />
       <NavLink href={`/apps/${app.id}`} parent={app.name}>New Package</NavLink>
       <Grid.Container gap={2} justify="center">
@@ -128,7 +127,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
           <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>
         </Grid>
       </Grid.Container>
-    </>
+    </Layout>
   )
 }
 

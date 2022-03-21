@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
 import { staticPath } from 'lib/contants'
 
+// TODO: 提前生成并存储
 const genPlist = ({ name, file, size, icon, bundleId, version }) => `
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

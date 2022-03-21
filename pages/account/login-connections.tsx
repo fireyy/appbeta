@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import Github from '@geist-ui/icons/github'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import useSWR from 'swr'
-import Title from 'components/title'
+import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 import AccountSidebar from 'components/account-sidebar'
 
@@ -21,8 +21,7 @@ const LoginConnections: NextPage = () => {
   const { data: accounts } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
 
   return (
-    <>
-      <Title value="Login Connections" />
+    <Layout title="Login Connections">
       <NavLink>Login Connections</NavLink>
       <div className="page__content">
         <Grid.Container gap={2}>
@@ -83,7 +82,7 @@ const LoginConnections: NextPage = () => {
           padding: ${theme.layout.gap} 0;
         }
       `}</style>
-    </>
+    </Layout>
   )
 }
 
