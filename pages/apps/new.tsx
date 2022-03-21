@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
-import { Input, Button, Text, Grid, Textarea, Radio, useInput } from '@geist-ui/core'
+import { Input, Button, Text, Grid, Textarea, Radio, useInput, useToasts } from '@geist-ui/core'
 import useSWR from 'swr'
 import Title from 'components/title'
 import NavLink from 'components/nav-link'
@@ -13,6 +13,7 @@ const AppNewPage: React.FC<unknown> = () => {
   const [loading, setLoading] = useState(false)
   const { query: { id = 0 } } = useRouter()
   const isEdit = id !== 0
+  const { setToast } = useToasts()
 
   const handleDeviceType = (val: string) => {
     setDeviceType(val)
@@ -41,6 +42,10 @@ const AppNewPage: React.FC<unknown> = () => {
         description: desc,
         deviceType,
       }),
+    })
+    setToast({
+      text: 'Added new app Successfully.',
+      type: 'success',
     })
     await Router.push(isEdit ? `/apps/${id}` : '/')
   }

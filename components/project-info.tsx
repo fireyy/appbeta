@@ -1,7 +1,7 @@
 import React from 'react'
 import NextLink from 'next/link'
 import Router from 'next/router'
-import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown } from '@geist-ui/core'
+import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
@@ -13,18 +13,23 @@ interface Props {
   data: AppItem
 }
 
-export type HeadingProps = Props;
-
-async function destroy(id: number): Promise<void> {
-  await fetch(`/api/apps/${id}`, {
-    method: 'DELETE',
-  })
-  await Router.push('/')
-}
+export type HeadingProps = Props
 
 const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
   const theme = useTheme()
   const { visible, setVisible, bindings } = useModal()
+  const { setToast } = useToasts()
+
+  const destroy = async function (id: number): Promise<void> {
+    await fetch(`/api/apps/${id}`, {
+      method: 'DELETE',
+    })
+    setToast({
+      text: 'Removed app successfully.',
+      type: 'success',
+    })
+    await Router.push('/')
+  }
 
   return (
     <>

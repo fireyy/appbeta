@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link } from '@geist-ui/core'
+import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link, useToasts } from '@geist-ui/core'
 import useSWR from 'swr'
 import Edit from '@geist-ui/icons/edit'
 import Trash2 from '@geist-ui/icons/trash2'
@@ -30,6 +30,7 @@ const AppPage: React.FC<unknown> = () => {
   const { setVisible: setEditVisible, bindings: editBindings } = useModal()
   const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
   const router = useRouter()
+  const { setToast } = useToasts()
 
   const { data, isValidating: isLoading } = useSWR<AppItem>(`/api/apps/${router.query.id}`)
 
@@ -53,6 +54,10 @@ const AppPage: React.FC<unknown> = () => {
       mate[index].changelog = changelog
       return mate
     })
+    setToast({
+      text: 'Updated package changelog successfully.',
+      type: 'success',
+    })
   }
 
   const setEditIdAndVisible = (id: number, row: PackageItem) => {
@@ -65,6 +70,10 @@ const AppPage: React.FC<unknown> = () => {
     mutate(packages.filter((item) => item.id !== pid))
     await fetch(`/api/apps/${data.id}/packages/${pid}`, {
       method: 'DELETE',
+    })
+    setToast({
+      text: 'Removed package successfully.',
+      type: 'success',
     })
   }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import Script from 'next/script'
-import { Input, Button, Text, Grid, Textarea, Display, Code, useInput, Avatar } from '@geist-ui/core'
+import { Input, Button, Text, Grid, Textarea, Display, Code, useInput, Avatar, useToasts } from '@geist-ui/core'
 import Upload from '@geist-ui/icons/upload'
 import { AppItem, PackageItem, AppInfo } from 'lib/interfaces'
 import Title from 'components/title'
@@ -21,6 +21,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   const {state: desc, setState: setDesc, bindings: descBindings} = useInput('')
   const [loading, setLoading] = useState(false)
   const hiddenFileInput = useRef(null)
+  const { setToast } = useToasts()
 
   const handleFile= async (event: any) => {
     if (event.target.files && event.target.files[0]) {
@@ -53,6 +54,10 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
         icon: result.name
       }),
     })
+    setToast({
+      text: 'Updated app icon successfully.',
+      type: 'success',
+    })
     setLoading(false)
   }
 
@@ -72,6 +77,10 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
+    })
+    setToast({
+      text: 'Added new package successfully.',
+      type: 'success',
     })
     await Router.push(`/apps/${app.id}`)
   }
