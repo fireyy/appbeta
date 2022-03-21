@@ -28,7 +28,7 @@ export default function Layout({ title, children }: LayoutProps) {
         <title>{`${title} - AppBeta`}</title>
       </Head>
       {
-        isFront && (
+        !isFront && (
           <>
             <Menu />
             <Search />

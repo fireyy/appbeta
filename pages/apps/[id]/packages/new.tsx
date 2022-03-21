@@ -89,18 +89,20 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
     <Layout title="New Package">
       <Script src="https://cdn.jsdelivr.net/npm/app-info-parser@1.1.3/dist/app-info-parser.min.js" />
       <NavLink href={`/apps/${app.id}`} parent={app.name}>New Package</NavLink>
-      <Grid.Container gap={2} justify="center">
-        <Grid xs={24}>
+      <Grid.Container gap={2} justify="center" alignItems="center">
+        <Grid xs={24} md={12}>
           <Display caption={`Upload ${app.deviceType === 'ios' ? '.ipa' : '.apk'} file`}>
             {
               data && data.icon && (
-                <>
-                  <Avatar src={data.icon.includes('data:image/png;base64') ? data.icon : `${staticPath}${data.icon}`} width="100px" height="100px" alt="name" isSquare />
-                  <p>
+                <Grid.Container gap={2} justify="center" alignItems="center">
+                  <Grid xs={12}>
+                    <Avatar src={data.icon.includes('data:image/png;base64') ? data.icon : `${staticPath}${data.icon}`} width="100px" height="100px" alt="name" isSquare />
+                  </Grid>
+                  <Grid xs={12} direction="column" alignItems="flex-start">
                     <Button auto scale={1/4} onClick={handleSetAsCover} loading={loading}>Set As Cover</Button>
-                    <Button auto scale={1/4} onClick={() => setData(null)} ml={0.5}>Reset</Button>
-                  </p>
-                </>
+                    <Button auto scale={1/4} onClick={() => setData(null)} mt={0.5}>Reset File</Button>
+                  </Grid>
+                </Grid.Container>
               )
             }
             {
@@ -114,14 +116,14 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
           </Display>
         </Grid>
         <Grid xs={24} md={12} direction="column">
-          <Text h6>Changelog:</Text>
-          <Textarea placeholder="Text" width="100%" height="100%" {...descBindings} />
-        </Grid>
-        <Grid xs={24} md={12} direction="column">
           <Text h6>Data:</Text>
           <Code block my={0} height="210px">
             {JSON.stringify(data, null, 2)}
           </Code>
+        </Grid>
+        <Grid xs={24} direction="column">
+          <Text h6>Changelog:</Text>
+          <Textarea placeholder="Text" width="100%" height="100%" {...descBindings} />
         </Grid>
         <Grid xs justify="flex-end">
           <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>
