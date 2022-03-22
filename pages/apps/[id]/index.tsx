@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link, useToasts } from '@geist-ui/core'
+import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link, useToasts, Popover } from '@geist-ui/core'
 import useSWR from 'swr'
-import Edit from '@geist-ui/icons/edit'
-import Trash2 from '@geist-ui/icons/trash2'
 import Checkbox from '@geist-ui/icons/checkbox'
 import CheckboxFill from '@geist-ui/icons/checkboxFill'
-import Download from '@geist-ui/icons/download'
+import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import ProjectInfo from 'components/project-info'
 import NoItem from 'components/no-item'
 import Layout from 'components/layout'
 import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 import NavLink from 'components/nav-link'
-import { bytesStr } from 'lib/utils'
+import { bytesStr, formatDate } from 'lib/utils'
 import MaskLoading from 'components/mask-loading'
 import { baseUrl } from 'lib/contants'
 
@@ -97,11 +95,23 @@ const AppPage: React.FC<unknown> = () => {
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
-        <Link href={`/${data.slug}?pid=${id}`} target="_blank" px={0.5}><Download size={14} /></Link>
-        <Button type="abort" iconRight={<Edit size={14} />} auto scale={2/3} px={0.5} onClick={() => setEditIdAndVisible(id, row)} />
-        <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
-          <Button type="abort" iconRight={<Trash2 size={14} />} auto scale={2/3} px={0.5} />
-        </PopConfirm>
+        <Popover placement="bottomEnd" content={(
+          <>
+            <Popover.Item>
+              <Button width="100px" onClick={() => window.open(`/${data.slug}?pid=${id}`)}>Preview</Button>
+            </Popover.Item>
+            <Popover.Item>
+              <Button width="100px" onClick={() => setEditIdAndVisible(id, row)}>Edit</Button>
+            </Popover.Item>
+            <Popover.Item disableAutoClose>
+              <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
+                <Button width="100px" type="error">Delete</Button>
+              </PopConfirm>
+            </Popover.Item>
+          </>
+        )}>
+          <MoreVertical />
+        </Popover>
       </>
     )
   }
@@ -117,7 +127,7 @@ const AppPage: React.FC<unknown> = () => {
               <Table.Column prop="icon" label="current" render={renderCurrent} />
               <Table.Column prop="version" label="version" render={(version, row: PackageItem) => (<>{version}({row.buildVersion})</>)} />
               <Table.Column prop="size" label="size" render={(size) => (<>{bytesStr(size)}</>)} />
-              <Table.Column prop="updatedAt" label="updatedAt" />
+              <Table.Column prop="updatedAt" label="updatedAt" render={(updatedAt) => (<>{formatDate(updatedAt)}</>)} />
               <Table.Column prop="id" label="action" render={renderAction} />
             </Table>
           </MaskLoading>

@@ -14,14 +14,9 @@ import {
 import MoonIcon from '@geist-ui/icons/moon'
 import SunIcon from '@geist-ui/icons/sun'
 import Display from '@geist-ui/icons/display'
-import { getAutoTheme } from 'lib/utils'
 import { useTheme as useNextTheme } from 'next-themes'
 
-type UserSettingsProp = {
-  autoTheme: string
-}
-
-const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
+const UserSettingsPop: React.FC = () => {
   const { theme, setTheme } = useNextTheme()
 
   return (
@@ -84,11 +79,7 @@ const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
 
 const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
-  const [autoTheme, setAutoTheme] = useState('dark')
   const theme = useTheme()
-  useEffect(() => {
-    setAutoTheme(getAutoTheme('auto'))
-  }, [])
 
   return (
     <div className="wrapper">
@@ -104,7 +95,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
       {
         status === 'loading' && <Loading />
       }
-      <Popover content={<UserSettingsPop autoTheme={autoTheme} />} placement="bottomEnd" portalClassName="user-settings__popover">
+      <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
         {
           (!session && status !== 'loading') && (
             <button className="user-settings__button" onClick={() => signIn()}>

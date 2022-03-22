@@ -1,5 +1,6 @@
 import bytesUtil from 'bytes-util'
-import { staticPath, baseUrl } from './contants'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 const hexToRgb = (color: string): [number, number, number] => {
   const fullReg = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
@@ -41,31 +42,12 @@ export const addColorAlpha = (color: string, alpha: number) => {
 }
 
 export function timeAgo (time: string) {
-  const between = (Date.now() - new Date(time).getTime()) / 1000
-  if (between < 3600) {
-    return pluralize(~~(between / 60), ' minute')
-  } else if (between < 86400) {
-    return pluralize(~~(between / 3600), ' hour')
-  } else {
-    return pluralize(~~(between / 86400), ' day')
-  }
+  dayjs.extend(relativeTime)
+  return dayjs(time).fromNow()
 }
 
-function pluralize (time: number, label: string) {
-  if (time === 1) {
-    return time + label
-  }
-  return time + label + 's'
+export function formatDate (time: string) {
+  return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
 }
-
-export const getAutoTheme = t => t === 'auto' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light' : t
-
-export const getBaseUrl = () => {
-  return baseUrl
-}
-
-export const getItmsServices = (pid: string) => `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}`
-
-export const getApkDownload = (pid: string) => `${baseUrl}/api/apk/${pid}`
 
 export const bytesStr = bytesUtil.stringify

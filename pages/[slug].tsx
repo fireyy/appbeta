@@ -6,7 +6,7 @@ import useSWR, { SWRConfig } from 'swr'
 import type { SWRConfiguration } from 'swr'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import Layout from 'components/layout'
-import { getItmsServices, bytesStr, getApkDownload } from 'lib/utils'
+import { bytesStr } from 'lib/utils'
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
@@ -44,7 +44,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
     })
   }
 
-  const downloadUrl = app.deviceType === 'ios' ? getItmsServices(pid) : getApkDownload(pid)
+  const downloadUrl = app.deviceType === 'ios' ? `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}` : `${baseUrl}/api/apk/${pid}`
 
   return (
     <Layout title={app.name}>

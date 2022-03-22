@@ -97,7 +97,7 @@ const ProjectCard: React.FC<Props> = ({
             font="12px"
             style={{ color: theme.palette.accents_5 }}
           >
-            Version: {data.lastVersion || '-'}, {bytesStr(data.lastPkgSize || 0)}, {timeAgo(data.updatedAt)} ago.
+            Version: {data.lastVersion || '-'}, {bytesStr(data.lastPkgSize || 0)}, {timeAgo(data.updatedAt)}.
           </Text>
           }
         </Card>
