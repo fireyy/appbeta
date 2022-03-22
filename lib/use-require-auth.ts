@@ -11,10 +11,10 @@ function useRequireAuth() {
   useEffect(() => {
     if (router.pathname === '/[slug]') return
     if (!session && typeof session != 'undefined') {
-      router.push(`/api/auth/login`)
+      router.push(`/api/auth/signin`)
     } else if (session && session.user.role !== 'admin') {
       // TODO: 告知权限不足
-      router.push(`/api/auth/login`)
+      router.push(`/api/auth/signin`)
     }
   }, [session, router])
 
