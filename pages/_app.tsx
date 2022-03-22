@@ -3,17 +3,14 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
-import { GeistProvider, CssBaseline, useTheme, Themes } from '@geist-ui/core'
+import { useTheme, Themes } from '@geist-ui/core'
+import { ThemeProvider } from 'lib/theme-provider'
 import { SWRConfig } from 'swr'
 import NProgress from 'nprogress'
-import { PrefersContext, ThemeType } from '../lib/use-prefers'
-import { getAutoTheme } from 'lib/utils'
 import fetcher from 'lib/fetcher'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const theme = useTheme()
-  const [themeType, setThemeType] = useState<ThemeType>()
-  const geistTheme = useMemo(() => getAutoTheme(themeType), [themeType])
   const router = useRouter()
 
   useEffect(() => {
@@ -39,20 +36,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     }
   }, [router])
 
-  useEffect(() => {
-    const theme = window.localStorage.getItem('theme') as ThemeType
-    setThemeType(theme)
-  }, [])
-
-  const switchTheme = useCallback((theme: ThemeType) => {
-    setThemeType(theme)
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem('theme', theme)
-      document.documentElement.classList.remove('light-theme','dark-theme')
-      document.documentElement.classList.add(`${getAutoTheme(theme)}-theme`)
-    }
-  }, [])
-
   const themes = Themes.getPresets()
   const lightPalette = themes.find(t => t.type === 'light').palette
   const darkPalette = themes.find(t => t.type === 'dark').palette
@@ -67,50 +50,24 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <meta name="theme-color" content="var(--geist-background)" />
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <script
-          dangerouslySetInnerHTML={{
-            __html: `
-          !function(){try {var d=document.documentElement.classList;d.remove('light-theme','dark-theme');var e=localStorage.getItem('theme');if("auto"===e||(!e&&true)){var t="(prefers-color-scheme: dark)",m=window.matchMedia(t);m.media!==t||m.matches?d.add('dark-theme'):d.add('light-theme')}else if(e) var x={"light":"light-theme","dark":"dark-theme"};d.add(x[e])}catch(e){}}()
-        `,
-          }}
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-            body::before{content:'';display:block;position:fixed;width:100%;height:100%;top:0;left:0;background:var(--geist-background);z-index: 99999}.render body::before{display:none}
-        `,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            document.documentElement.classList.add('render')
-        `,
-          }}
-        />
       </Head>
-      <GeistProvider themeType={geistTheme}>
-        <CssBaseline />
-        <PrefersContext.Provider value={{ themeType, switchTheme }}>
-          <SWRConfig
-            value={{
-              fetcher,
-            }}
-          >
-            <Component {...pageProps} />
-          </SWRConfig>
-        </PrefersContext.Provider>
+      <ThemeProvider>
+        <SWRConfig
+          value={{
+            fetcher,
+          }}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
         <style global jsx>{`
-          html {
+          :root {
             --geist-page-nav-height: 64px;
-          }
-          html.light-theme {
             --accent-1: ${lightPalette.accents_1};
             --accent-2: ${lightPalette.accents_2};
             --geist-foreground: ${lightPalette.foreground};
             --geist-background: ${lightPalette.background};
           }
-          html.dark-theme {
+          [data-theme='dark'] {
             --accent-1: ${darkPalette.accents_1};
             --accent-2: ${darkPalette.accents_2};
             --geist-foreground: ${darkPalette.foreground};
@@ -154,7 +111,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           }
 
         `}</style>
-      </GeistProvider>
+      </ThemeProvider>
     </SessionProvider>
   )
 }

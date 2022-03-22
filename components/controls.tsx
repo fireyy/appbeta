@@ -14,15 +14,15 @@ import {
 import MoonIcon from '@geist-ui/icons/moon'
 import SunIcon from '@geist-ui/icons/sun'
 import Display from '@geist-ui/icons/display'
-import { usePrefers } from 'lib/use-prefers'
 import { getAutoTheme } from 'lib/utils'
+import { useTheme as useNextTheme } from 'next-themes'
 
 type UserSettingsProp = {
   autoTheme: string
 }
 
 const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
-  const { switchTheme, themeType } = usePrefers()
+  const { theme, setTheme } = useNextTheme()
 
   return (
     <>
@@ -37,12 +37,12 @@ const UserSettingsPop: React.FC<UserSettingsProp> = ({ autoTheme }) => {
         <Select
           disableMatchWidth
           height="28px"
-          onChange={switchTheme}
-          value={themeType}
+          onChange={setTheme}
+          value={theme}
           title={'Switch Themes'}
           ml={0.5}
           style={{ minWidth: '7em' }}>
-          <Select.Option value="auto">
+          <Select.Option value="system">
             <span className="select-content">
               <Display size={12} /> {'System'}
             </span>
