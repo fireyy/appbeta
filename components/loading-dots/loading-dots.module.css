@@ -1,0 +1,72 @@
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+}
+.loader {
+  position: relative;
+  width: 2.5em;
+  height: 2.5em;
+  transform: rotate(165deg);
+}
+.loader:before, .loader:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 0.25em;
+  transform: translate(-50%, -50%);
+}
+.loader:before {
+  animation: before 2s infinite;
+}
+.loader:after {
+  animation: after 2s infinite;
+}
+
+@keyframes before {
+  0% {
+    width: 0.5em;
+    box-shadow: 1em -0.5em var(--geist-foreground), -1em 0.5em var(--geist-foreground);
+  }
+  35% {
+    width: 2.5em;
+    box-shadow: 0 -0.5em var(--geist-foreground), 0 0.5em var(--geist-foreground);
+  }
+  70% {
+    width: 0.5em;
+    box-shadow: -1em -0.5em var(--geist-foreground), 1em 0.5em var(--geist-foreground);
+  }
+  100% {
+    box-shadow: 1em -0.5em var(--geist-foreground), -1em 0.5em var(--geist-foreground);
+  }
+}
+@keyframes after {
+  0% {
+    height: 0.5em;
+    box-shadow: 0.5em 1em var(--geist-foreground), -0.5em -1em var(--geist-foreground);
+  }
+  35% {
+    height: 2.5em;
+    box-shadow: 0.5em 0 var(--geist-foreground), -0.5em 0 var(--geist-foreground);
+  }
+  70% {
+    height: 0.5em;
+    box-shadow: 0.5em -1em var(--geist-foreground), -0.5em 1em var(--geist-foreground);
+  }
+  100% {
+    box-shadow: 0.5em 1em var(--geist-foreground), -0.5em -1em var(--geist-foreground);
+  }
+}
+
+.loader {
+  position: absolute;
+  top: calc(50% - 1.25em);
+  left: calc(50% - 1.25em);
+}
