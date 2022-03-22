@@ -71,7 +71,8 @@ const ActivityPage: NextPage<unknown> = () => {
             width: 25%;
             font-size: 1.2rem;
             padding: calc(${theme.layout.gap} * 1.7) 0;
-            color: ${theme.palette.accents_5};
+            color: ${theme.palette.accents_6};
+            font-weight: 500;
           }
           .page__activity__list ul {
             border-left: 2px solid ${theme.palette.border};
@@ -79,6 +80,9 @@ const ActivityPage: NextPage<unknown> = () => {
             padding: ${theme.layout.gap} 0;
           }
           @media (max-width: ${theme.breakpoints.sm.max}) {
+            .page__activity {
+              padding: 0 ${theme.layout.gap};
+            }
             .page__activity__list > li {
               flex-direction: column;
               justify-content: flex-start;
