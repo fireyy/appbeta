@@ -1,7 +1,6 @@
 import React from 'react'
-import NextLink from 'next/link'
 import Router from 'next/router'
-import { Avatar, Button, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
+import { Avatar, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'

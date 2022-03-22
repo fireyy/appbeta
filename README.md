@@ -30,11 +30,6 @@ Add details for one or more providers (e.g. Google, Twitter, GitHub, Email, etc)
 
 A database is needed to persist user accounts and to support email sign in.
 
-For more information about setting up a database, please check out the following links:
-
-* Docs: [next-auth.js.org/adapters/overview](https://next-auth.js.org/adapters/overview)
-* Adapters Repo: [nextauthjs/adapters](https://github.com/nextauthjs/adapters)
-
 ### 3. Configure Authentication Providers
 
 1. Review and update options in `pages/api/auth/[...nextauth].js` as needed.
