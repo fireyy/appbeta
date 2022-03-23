@@ -85,6 +85,7 @@ const SearchItems = React.forwardRef<
         <style jsx>{`
           .results {
             width: 100%;
+            min-height: 20px;
             max-height: 300px;
             overflow-y: auto;
             position: relative;

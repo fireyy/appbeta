@@ -15,6 +15,7 @@ import { focusNextElement, search, SearchResults } from './helper'
 import SearchItems, { SearchItemsRef } from './search-items'
 import { useRouter } from 'next/router'
 import useDebounce from 'lib/use-debounce'
+import MaskLoading from 'components/mask-loading'
 
 const Search: React.FC<unknown> = () => {
   const theme = useTheme()
@@ -27,6 +28,7 @@ const Search: React.FC<unknown> = () => {
   const { bindings: inputBindings, setState: setInput, state: input } = useInput('')
   const debouncedSearchTerm: string = useDebounce<string>(input, 500)
   const [onComposition, setOnComposition] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const cleanAfterModalClose = () => {
     setVisible(false)
@@ -55,17 +57,13 @@ const Search: React.FC<unknown> = () => {
     }, 0)
   }, [KeyMod.CtrlCmd, KeyCode.KEY_K])
 
-  // useEffect(() => {
-  //   if (!input) return setState([])
-  //   setPreventHover(true)
-  //   setState(search(input))
-  //   itemsRef.current?.scrollTo(0, 0)
-  // }, [input])
   useEffect(
     () => {
       if (debouncedSearchTerm && !onComposition) {
+        setLoading(true)
         setPreventHover(true)
         search(input).then(results => {
+          setLoading(false)
           setState(results)
           itemsRef.current?.scrollTo(0, 0)
         })
@@ -136,15 +134,17 @@ const Search: React.FC<unknown> = () => {
           onCompositionEnd={handleComposition}
           {...inputBindings}
         />
-        {state.length > 0 && (
+        {(state.length > 0 || loading) && (
           <>
             <Divider mt={0} mb={1} />
-            <SearchItems
-              preventHoverHighlightSync={preventHover}
-              ref={itemsRef}
-              data={state}
-              onSelect={selectHandler}
-            />
+            <MaskLoading loading={loading}>
+              <SearchItems
+                preventHoverHighlightSync={preventHover}
+                ref={itemsRef}
+                data={state}
+                onSelect={selectHandler}
+              />
+            </MaskLoading>
           </>
         )}
       </Modal>

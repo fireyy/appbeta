@@ -5,9 +5,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const s = String(req.query.s)
   const apps = await prisma.apps.findMany({
     where: {
-      name: {
-        contains: s,
-      }
+      OR: [
+        {
+          name: {
+            contains: s,
+          },
+        },
+        {
+          description: {
+            contains: s,
+          }
+        }
+      ]
     }
   })
   const result = apps.map(item => (
