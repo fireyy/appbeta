@@ -2,9 +2,15 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // TODO: 分页
-  const packages = await prisma.packages.findMany()
-  const result = packages.map(item => (
+  const { page, limit } = req.query
+  const packages = await prisma.packages.findMany({
+    take: +limit,
+    skip: (+page - 1) * +limit,
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
+  const result = packages.slice((+page - 1) * +limit, +page*+limit).map(item => (
     {
       ...item,
       url: `/apps/${item.appId}`,

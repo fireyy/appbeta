@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import type { NextPage } from 'next'
 import NextLink from 'next/link'
-import { useTheme, Link } from '@geist-ui/core'
+import { useTheme, Link, Button } from '@geist-ui/core'
 import useSWR from 'swr'
+import useSWRInfinite from 'swr/infinite'
 import ActivityEvent from 'components/activity-event'
 import { bytesStr } from 'lib/utils'
 import Skeleton from 'components/skeleton'
@@ -21,10 +22,24 @@ const groupResults = (data) => {
   }, []).sort((a, b) => new Date(b.title).getTime() - new Date(a.title).getTime())
 }
 
+const PAGE_SIZE = 10
+
 const ActivityPage: NextPage<unknown> = () => {
   const theme = useTheme()
-  const { data = [{},{},{},{},{},{},{},{}], isValidating } = useSWR('/api/activity')
-  const grouppedResults = useMemo(() => groupResults(data), [data])
+  // const { data = [{},{},{},{},{},{},{},{}], isValidating } = useSWR('/api/activity')
+  const { data, error, isValidating, size, setSize } = useSWRInfinite((index) =>
+  `/api/activity?limit=${PAGE_SIZE}&page=${
+    index + 1
+  }`)
+  const issues = data ? [].concat(...data) : [{},{},{},{},{},{},{},{}];
+  const grouppedResults = useMemo(() => groupResults(issues), [issues])
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore =
+    isLoadingInitialData ||
+    (size > 0 && data && typeof data[size - 1] === 'undefined')
+  const isEmpty = data?.[0]?.length === 0
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
 
   return (
     <Layout title="Activity">
@@ -47,7 +62,7 @@ const ActivityPage: NextPage<unknown> = () => {
                   createdAt={item.createdAt}
                 >
                   {
-                    isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size)} by {item.userId}</Link></NextLink>
+                    isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size || 0)} by {item.userId}</Link></NextLink>
                   }
                 </ActivityEvent>
               ))}
@@ -55,6 +70,9 @@ const ActivityPage: NextPage<unknown> = () => {
           </li>
         ))}
         </ul>
+        <Button width="100%" onClick={() => setSize(size + 1)} loading={isLoadingMore} disabled={isReachingEnd}>{isReachingEnd
+            ? 'no more'
+            : 'load more'}</Button>
         <style jsx>{`
           .page__activity ul {
             padding: 0;
