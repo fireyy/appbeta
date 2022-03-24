@@ -1,6 +1,7 @@
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { baseUrl } from 'lib/contants'
 
 function useRequireAuth() {
   const { data: session } = useSession()
@@ -11,10 +12,10 @@ function useRequireAuth() {
   useEffect(() => {
     if (router.pathname === '/[slug]') return
     if (!session && typeof session != 'undefined') {
-      router.push(`/api/auth/signin`)
+      router.push(`/api/auth/signin?callbackUrl=${baseUrl}${router.asPath}`)
     } else if (session && session.user.role !== 'admin') {
       // TODO: 告知权限不足
-      router.push(`/api/auth/signin`)
+      router.push(`/api/auth/signin?callbackUrl=${baseUrl}${router.asPath}`)
     }
   }, [session, router])
 

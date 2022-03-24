@@ -4,7 +4,7 @@ import { withAuth } from 'next-auth/middleware'
 
 export default function middleware(req: NextRequest) {
   if (
-    ['/api/app/', '/api/apk/', '/api/plist/'].some((path) => req.nextUrl.pathname.includes(path))
+    ['/api/app/'].some((path) => req.nextUrl.pathname.includes(path))
   ) {
     return NextResponse.next()
   } else {

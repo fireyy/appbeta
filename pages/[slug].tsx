@@ -6,7 +6,7 @@ import useSWR, { SWRConfig } from 'swr'
 import type { SWRConfiguration } from 'swr'
 import { AppItem, PackageItem } from 'lib/interfaces'
 import Layout from 'components/layout'
-import { bytesStr } from 'lib/utils'
+import { bytesStr, formatDate } from 'lib/utils'
 import QRCode from 'components/qrcode'
 import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
@@ -35,7 +35,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
   const isMobile = useMediaQuery('xs', { match: 'down' })
   const { pid, slug } = router.query as { pid: string; slug: string }
   const pathname = router.pathname
-  const { data: { app, packages }, error, isValidating } = useSWR<AppAndPackages>(`/api/app/${slug}?deviceType=${deviceType}`)
+  const { data: { app, packages = [] }, error, isValidating } = useSWR<AppAndPackages>(`/api/app/${slug}?deviceType=${deviceType}`)
 
   const handleClick = (pid: number) => {
     router.push({
@@ -44,7 +44,9 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
     })
   }
 
-  const downloadUrl = app.deviceType === 'ios' ? `itms-services://?action=download-manifest&url=${baseUrl}/api/plist/${pid}` : `${baseUrl}/api/apk/${pid}`
+  const currentPackage = packages.find(p => p.id === +pid)
+
+  const downloadUrl = app.deviceType === 'ios' ? `itms-services://?action=download-manifest&url=${baseUrl}/api/app/plist/${pid}` : currentPackage ? `${staticPath}${currentPackage.file}` : ''
 
   return (
     <Layout title={app.name}>
@@ -53,10 +55,11 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
           <Grid xs={24} md={12} direction="column" alignItems="center">
             <Text h3>{app.name} <Tag><DeviceType size={14} type={app.deviceType} /></Tag></Text>
             <div className="download-area">
-              <Link block href={downloadUrl} download>Download</Link>
+              {downloadUrl && <Link block href={downloadUrl} download>Download</Link>}
             </div>
             <Display shadow caption="Scan the QR code with your mobile device.">
-              <QRCode value={downloadUrl} logoImage={`${staticPath}${app.icon}`} />
+              {!downloadUrl && <MaskLoading loading={true} />}
+              {downloadUrl && <QRCode value={downloadUrl} logoImage={`${staticPath}${app.icon}`} />}
             </Display>
           </Grid>
           <Grid xs={24} md={12} direction="column">
@@ -66,7 +69,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
               {
                 packages && packages.map(item => {
                   return (
-                    <Dot key={item.id} type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesStr(item.size)}, {item.createdAt}</Dot>
+                    <Dot key={item.id} type={Number(pid) === item.id ? 'success' : 'default' } onClick={() => handleClick(item.id)}>{item.name} {item.version}({item.buildVersion}), {bytesStr(item.size)}, {formatDate(item.createdAt)}</Dot>
                   )
                 })
               }

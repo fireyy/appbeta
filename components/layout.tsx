@@ -19,8 +19,10 @@ export default function Layout({ title, children }: LayoutProps) {
   const theme = useTheme()
   const isFront = router.pathname.startsWith('/[slug]')
 
-  const session = useRequireAuth()
-  if (!session) return <LoadingDots />
+  if (!isFront) {
+    const session = useRequireAuth()
+    if (!session) return <LoadingDots />
+  }
 
   return (
     <>
