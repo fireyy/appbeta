@@ -108,26 +108,24 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
 
   return (
     <>
-      <MaskLoading loading={isValidating && packages.length === 0}>
-        <div className="card-box">
-          {
-            packages.map(p => (
-              <Card key={p.id}>
-                <Grid.Container gap={2} alignItems="center">
-                  <Grid xs={12} direction="column">
-                    <Text h6 my={0}>{p.name} {p.version}({p.buildVersion})</Text>
-                    <Text span font="14px">{bytesStr(p.size)}</Text>
-                  </Grid>
-                  <Grid xs={12} justify="flex-end">
-                    <Text span font="14px" mr={0.5}>{timeAgo(p.updatedAt)}</Text>
-                    {renderAction(p.id, p)}
-                  </Grid>
-                </Grid.Container>
-              </Card>
-            ))
-          }
-        </div>
-      </MaskLoading>
+      <div className="card-box">
+        {
+          packages.map(p => (
+            <Card key={p.id}>
+              <Grid.Container gap={2} alignItems="center">
+                <Grid xs={12} direction="column">
+                  <Text h6 my={0}>{p.name} {p.version}({p.buildVersion})</Text>
+                  <Text span font="14px" style={{ color: 'var(--body-color)' }}>{bytesStr(p.size)}</Text>
+                </Grid>
+                <Grid xs={12} justify="flex-end">
+                  <Text span font="14px" mr={0.5} style={{ color: 'var(--body-color)' }}>{timeAgo(p.updatedAt)}</Text>
+                  {renderAction(p.id, p)}
+                </Grid>
+              </Grid.Container>
+            </Card>
+          ))
+        }
+      </div>
       <Modal {...editBindings}>
         <Modal.Title>Edit Changelog</Modal.Title>
         <Modal.Content>
@@ -149,10 +147,12 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
           border-top: 0;
         }
         .card-box :global(.card:first-child) {
-          border-radius: 6px 6px 0 0;
+          border-top-left-radius: 6px;
+          border-top-right-radius: 6px;
         }
         .card-box :global(.card:last-child) {
-          border-radius: 0 0 6px 6px;
+          border-bottom-left-radius: 6px;
+          border-bottom-right-radius: 6px;
         }
         :global(.drop-menu-box .item:hover) {
           background-color: ${theme.palette.accents_2};

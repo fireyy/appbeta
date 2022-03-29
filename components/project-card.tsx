@@ -3,9 +3,11 @@ import {
   Avatar,
   Text,
   Card,
+  Tag,
+  Link,
   useTheme,
-  Badge,
 } from '@geist-ui/core'
+import ExternalLink from '@geist-ui/icons/externalLink'
 import Router from 'next/router'
 import { AppItem } from 'lib/interfaces'
 import { timeAgo, bytesStr } from 'lib/utils'
@@ -31,18 +33,13 @@ const ProjectCard: React.FC<Props> = ({
           <div className="project-title__wrapper">
             {
               isLoading ? <Skeleton height={40} width={40} /> :
-              (
-                <Badge.Anchor placement="bottomRight">
-                  <Badge scale={0.5}>{data.packagesCount}</Badge>
-                  <Avatar
-                    src={`${staticPath}${data.icon}`}
-                    height={1.5}
-                    width={1.5}
-                    isSquare
-                    className="project-icon"
-                  />
-                </Badge.Anchor>
-              )
+              <Avatar
+                src={`${staticPath}${data.icon}`}
+                height={1.5}
+                width={1.5}
+                isSquare
+                className="project-icon"
+              />
             }
             <div className="project-title__content">
               {
@@ -61,17 +58,20 @@ const ProjectCard: React.FC<Props> = ({
                     </Text>
                     <Text
                       margin={0}
-                      font="0.875rem"
+                      font="0.8rem"
                       style={{
                         color: theme.palette.accents_6,
                         lineHeight: '1.25rem',
                       }}
                     >
-                      {data.slug}
+                      Version: {data.lastVersion || '-'}, Size: {bytesStr(data.lastPkgSize || 0)}
                     </Text>
                   </>
                 )
               }
+            </div>
+            <div>
+              <Tag type="lite">{data.packagesCount}</Tag>
             </div>
           </div>
           <div className="project-description">
@@ -97,9 +97,12 @@ const ProjectCard: React.FC<Props> = ({
             font="12px"
             style={{ color: theme.palette.accents_5 }}
           >
-            Version: {data.lastVersion || '-'}, {bytesStr(data.lastPkgSize || 0)}, {timeAgo(data.updatedAt)}.
+           Update at {timeAgo(data.updatedAt)}.
           </Text>
           }
+          <Link className="external-link" href={`/app/${data.slug}?pid=${data.lastPkgId}`} target="_blank">
+            <ExternalLink size={16} />
+          </Link>
         </Card>
       </div>
       <style jsx>{`
@@ -108,6 +111,7 @@ const ProjectCard: React.FC<Props> = ({
         }
         .project__wrapper :global(.project__card) {
           cursor: pointer;
+          position: relative;
         }
         .project__wrapper :global(.project__card):hover {
           border-color: ${theme.palette.foreground};
@@ -118,7 +122,38 @@ const ProjectCard: React.FC<Props> = ({
           align-items: center;
         }
         .project-title__content {
-          margin-left: ${theme.layout.gap};
+          flex: 1;
+          margin-left: ${theme.layout.gapHalf};
+        }
+        :global(.project__card .external-link) {
+          position: absolute;
+          right: 0;
+          top: 0;
+          opacity: 0;
+          pointer-events: none;
+          transform: translate(25%,-25%);
+          display: block;
+          width: 32px;
+          height: 32px;
+          text-align: center;
+          border-radius: 100%;
+          color: ${theme.palette.background};
+          background-color: ${theme.palette.foreground};
+          border: 1px solid ${theme.palette.foreground};
+          transition: .15s ease;
+          transition-property: opacity,transform;
+        }
+        :global(.project__card .external-link svg) {
+          vertical-align: middle;
+        }
+        :global(.project__card .external-link:hover) {
+          color: ${theme.palette.foreground};
+          background-color: ${theme.palette.background};
+        }
+        :global(.project__card:hover .external-link) {
+          opacity: 1;
+          pointer-events: unset;
+          transform: translate(25%,-40%);
         }
         .project-title__wrapper :global(.project-icon) {
           background: ${theme.palette.accents_2};

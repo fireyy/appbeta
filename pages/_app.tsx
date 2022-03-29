@@ -64,12 +64,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             --geist-page-nav-height: 64px;
             --accent-1: ${lightPalette.accents_1};
             --accent-2: ${lightPalette.accents_2};
+            --body-color: ${lightPalette.accents_4};
             --geist-foreground: ${lightPalette.foreground};
             --geist-background: ${lightPalette.background};
           }
           [data-theme='dark'] {
             --accent-1: ${darkPalette.accents_1};
             --accent-2: ${darkPalette.accents_2};
+            --body-color: ${lightPalette.accents_4};
             --geist-foreground: ${darkPalette.foreground};
             --geist-background: ${darkPalette.background};
           }
