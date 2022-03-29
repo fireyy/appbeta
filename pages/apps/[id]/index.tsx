@@ -1,120 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
+import React from 'react'
 import { useRouter } from 'next/router'
-import { useTheme, Table, Button, Modal, useModal, Textarea, useInput, Link, useToasts, Popover } from '@geist-ui/core'
+import { useTheme } from '@geist-ui/core'
 import useSWR from 'swr'
-import Checkbox from '@geist-ui/icons/checkbox'
-import CheckboxFill from '@geist-ui/icons/checkboxFill'
-import MoreVertical from '@geist-ui/icons/moreVertical'
-import { AppItem, PackageItem } from 'lib/interfaces'
+import { AppItem } from 'lib/interfaces'
 import ProjectInfo from 'components/project-info'
-import NoItem from 'components/no-item'
 import Layout from 'components/layout'
-import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 import NavLink from 'components/nav-link'
-import { bytesStr, formatDate } from 'lib/utils'
-import MaskLoading from 'components/mask-loading'
-import { baseUrl } from 'lib/contants'
+import PackageItems from 'components/package-items'
+import Skeleton from 'components/skeleton'
 
 const AppPage: React.FC<unknown> = () => {
   const theme = useTheme()
-  const { bindings } = usePopConfirm()
-  const [loading, setLoading] = useState(false)
-  const [editId, setEditId] = useState(0)
-  const { setVisible: setEditVisible, bindings: editBindings } = useModal()
-  const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
   const router = useRouter()
-  const { setToast } = useToasts()
 
   const { data, isValidating: isLoading } = useSWR<AppItem>(`/api/apps/${router.query.id}`)
-
-  const [current, setCurrent] = useState(data?.lastPkgId)
-
-  const { data: packages = [], isValidating, mutate } = useSWR<PackageItem[]>(data?.id && `/api/apps/${data.id}/packages`)
-
-  const saveEdit = async (e): Promise<void> => {
-    setLoading(true)
-    await fetch(`/api/apps/${data.id}/packages/${editId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        changelog
-      })
-    })
-    setEditVisible(false)
-    setLoading(false)
-    mutate((mate) => {
-      const index = mate.findIndex((item) => item.id === editId)
-      mate[index].changelog = changelog
-      return mate
-    })
-    setToast({
-      text: 'Updated package changelog successfully.',
-      type: 'success',
-    })
-  }
-
-  const setEditIdAndVisible = (id: number, row: PackageItem) => {
-    setEditId(id)
-    setChangelog(row.changelog || '')
-    setEditVisible(true)
-  }
-
-  const handleDelete = async (pid: number) => {
-    mutate(packages.filter((item) => item.id !== pid))
-    await fetch(`/api/apps/${data.id}/packages/${pid}`, {
-      method: 'DELETE',
-    })
-    setToast({
-      text: 'Removed package successfully.',
-      type: 'success',
-    })
-  }
-
-  const handleCheck = async (row: PackageItem) => {
-    setLoading(true)
-    await fetch(`/api/apps/${data.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        lastPkgId: row.id,
-        lastPkgSize: row.size,
-        lastVersion: row.version,
-      })
-    })
-    setCurrent(row.id)
-    setLoading(false)
-  }
-
-  const renderCurrent = (icon: string, row: PackageItem) => {
-    return (
-      <Button type="abort" iconRight={current === row.id ? <CheckboxFill size={14} /> : <Checkbox size={14} />} auto loading={loading} onClick={() => handleCheck(row)} />
-    )
-  }
-
-  const renderAction = (id: number, row: PackageItem) => {
-    return (
-      <>
-        <Popover placement="bottomEnd" content={(
-          <>
-            <Popover.Item>
-              <Button width="100px" onClick={() => window.open(`/${data.slug}?pid=${id}`)}>Preview</Button>
-            </Popover.Item>
-            <Popover.Item>
-              <Button width="100px" onClick={() => setEditIdAndVisible(id, row)}>Edit</Button>
-            </Popover.Item>
-            <Popover.Item disableAutoClose>
-              <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
-                <Button width="100px" type="error">Delete</Button>
-              </PopConfirm>
-            </Popover.Item>
-          </>
-        )}>
-          <MoreVertical />
-        </Popover>
-      </>
-    )
-  }
 
   return (
     <Layout title={data?.name || ''}>
@@ -122,35 +21,18 @@ const AppPage: React.FC<unknown> = () => {
       <ProjectInfo data={data} isLoading={isLoading && !data} />
       <div className="page__wrapper">
         <div className="page__content">
-          <MaskLoading loading={isValidating && packages.length === 0}>
-            <Table data={packages}>
-              <Table.Column prop="icon" label="current" render={renderCurrent} />
-              <Table.Column prop="version" label="version" render={(version, row: PackageItem) => (<>{version}({row.buildVersion})</>)} />
-              <Table.Column prop="size" label="size" render={(size) => (<>{bytesStr(size)}</>)} />
-              <Table.Column prop="updatedAt" label="updatedAt" render={(updatedAt) => (<>{formatDate(updatedAt)}</>)} />
-              <Table.Column prop="id" label="action" render={renderAction} />
-            </Table>
-          </MaskLoading>
-          <Modal {...editBindings}>
-            <Modal.Title>Edit Changelog</Modal.Title>
-            <Modal.Content>
-              <Textarea placeholder="Text" width="100%" height="100%" {...changelogBindings} />
-            </Modal.Content>
-            <Modal.Action passive onClick={() => setEditVisible(false)}>Cancel</Modal.Action>
-            <Modal.Action loading={loading} onClick={saveEdit}>OK</Modal.Action>
-          </Modal>
           {
-            packages.length === 0 && !isValidating && (
-              <NoItem link={`/apps/${data?.id}/packages/new`} />
-            )
+            !data ? <>
+              <Skeleton boxHeight={32} />
+              <Skeleton boxHeight={32} />
+              <Skeleton boxHeight={32} />
+            </> :
+            <PackageItems slug={data.slug} appId={data.id} lastPkgId={data.lastPkgId} />
           }
         </div>
       </div>
       <style jsx>{`
         .page__content {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
           width: ${theme.layout.pageWidthWithMargin};
           max-width: 100%;
           margin: 0 auto;
@@ -169,16 +51,6 @@ const AppPage: React.FC<unknown> = () => {
       `}</style>
     </Layout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`${baseUrl}/api/apps/${context.params.id}`, {
-    headers: {
-      'cookie': context.req.headers.cookie,
-    }
-  })
-  const data = await res.json()
-  return { props: { data } }
 }
 
 export default AppPage
