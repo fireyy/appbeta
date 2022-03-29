@@ -1,6 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
-import { Avatar, Tag, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
+import { Avatar, Badge, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
@@ -35,19 +35,16 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
       <div className="heading__wrapper">
         <div className="heading">
           {
-            isLoading ? <Skeleton className="heading__user-avatar" height={40} width={40} /> : <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
+            isLoading ? <Skeleton className="heading__user-avatar" height={40} width={40} /> : <Badge.Anchor>
+            <Badge><DeviceType size={14} type={data?.deviceType} /></Badge>
+            <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
+          </Badge.Anchor>
           }
           <div className="heading__name">
             <div className="heading__title">
               {
-                isLoading ? (
-                  <>
-                    <Skeleton width={350} height={36} boxHeight={47} style={{ marginRight: '10px' }} />
-                    <Skeleton width={50} height={36} boxHeight={47} />
-                  </>
-                ) : <Text h2 className="headding__user-name">
+                isLoading ? <Skeleton width={350} height={26} boxHeight={37} /> : <Text h3 className="headding__user-name">
                 <Link href={`/${data.slug}?pid=${data.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
-                <Tag className="headding__user-role"><DeviceType size={14} type={data.deviceType} /></Tag>
               </Text>
               }
               <div className="heading__actions">
@@ -99,7 +96,6 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
         .heading :global(.heading__user-avatar) {
           height: 100px;
           width: 100px;
-          margin-right: ${theme.layout.gap};
         }
         .heading__title {
           display: flex;
@@ -112,6 +108,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
           flex-direction: column;
           justify-content: center;
           flex: 1;
+          margin-left: ${theme.layout.gap};
         }
         .heading__name :global(.headding__user-name) {
           line-height: 1;

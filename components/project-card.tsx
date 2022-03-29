@@ -3,7 +3,7 @@ import {
   Avatar,
   Text,
   Card,
-  Tag,
+  Spacer,
   Link,
   useTheme,
 } from '@geist-ui/core'
@@ -70,9 +70,6 @@ const ProjectCard: React.FC<Props> = ({
                 )
               }
             </div>
-            <div>
-              <Tag type="lite">{data.packagesCount}</Tag>
-            </div>
           </div>
           <div className="project-description">
             {
@@ -94,10 +91,11 @@ const ProjectCard: React.FC<Props> = ({
           {
             isLoading ? <Skeleton width={200} /> : <Text
             marginBottom={0}
-            font="12px"
+            font="0.8rem"
             style={{ color: theme.palette.accents_5 }}
           >
-           Update at {timeAgo(data.updatedAt)}.
+            <span style={{ float: 'right' }}>Update at {timeAgo(data.updatedAt)}.</span>
+            Packages: {data.packagesCount}
           </Text>
           }
           <Link className="external-link" href={`/app/${data.slug}?pid=${data.lastPkgId}`} target="_blank">
