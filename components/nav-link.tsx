@@ -1,8 +1,8 @@
 import React from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { Link, useTheme, Breadcrumbs } from '@geist-ui/core'
-import ChevronLeft from '@geist-ui/icons/chevronLeft'
+import { useTheme, Breadcrumbs } from '@geist-ui/core'
+import Home from '@geist-ui/icons/home'
 
 type Props = {
   href?: string
@@ -21,20 +21,25 @@ const NavLink: React.FC<Props> = ({
     <div className="nav-breadcrumbs">
       <Breadcrumbs>
         <NextLink href="/" passHref>
-          <Breadcrumbs.Item nextLink>Overview</Breadcrumbs.Item>
+          <Breadcrumbs.Item nextLink><Home /><span>Overview</span></Breadcrumbs.Item>
         </NextLink>
         {
           parent && (
             <NextLink href={href} passHref>
-              <Breadcrumbs.Item nextLink>{parent}</Breadcrumbs.Item>
+              <Breadcrumbs.Item nextLink className="ellipsis">{parent}</Breadcrumbs.Item>
             </NextLink>
           )
         }
-        <Breadcrumbs.Item>{children}</Breadcrumbs.Item>
+        <Breadcrumbs.Item className="ellipsis">{children}</Breadcrumbs.Item>
       </Breadcrumbs>
       <style jsx>{`
         .nav-breadcrumbs {
           padding-bottom: ${theme.layout.gapHalf};
+        }
+        @media (max-width: ${theme.breakpoints.xs.max}) {
+          .nav-breadcrumbs :global(.breadcrumbs-item:first-child span) {
+            font-size: 0;
+          }
         }
       `}</style>
     </div>

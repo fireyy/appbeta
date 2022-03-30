@@ -112,7 +112,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           #nprogress .peg{
             box-shadow:0 0 10px var(--geist-foreground),0 0 5px var(--geist-foreground);
           }
-
+          .ellipsis {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
         `}</style>
       </ThemeProvider>
     </SessionProvider>

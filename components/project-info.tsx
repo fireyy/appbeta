@@ -82,8 +82,8 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                 {
                   isLoading ? (
                     <>
-                      <Skeleton width={800} boxHeight={24} />
-                      <Skeleton width={800} boxHeight={24} />
+                      <Skeleton boxHeight={24} />
+                      <Skeleton boxHeight={24} />
                     </>
                   ) : (<span>{data.description}</span>)
                 }
