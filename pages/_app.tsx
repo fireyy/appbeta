@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         </SWRConfig>
         <style global jsx>{`
           :root {
-            --geist-page-nav-height: 64px;
+            --geist-page-nav-height: 48px;
             --accent-1: ${lightPalette.accents_1};
             --accent-2: ${lightPalette.accents_2};
             --body-color: ${lightPalette.accents_4};
@@ -88,6 +88,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           }
           #__next {
             overflow: visible !important;
+            background-color: var(--accent-1);
           }
           #nprogress {
             pointer-events:none;

@@ -11,6 +11,7 @@ const Menu: React.FC<unknown> = () => {
 
   const names = router.pathname.split('/').filter(r => !!r)
   const currentUrlTabValue = names[0] || ''
+  console.log('currentUrlTabValue', currentUrlTabValue)
 
   const handleTabChange = useCallback(
     (tab: string) => {
@@ -43,11 +44,9 @@ const Menu: React.FC<unknown> = () => {
                 value={currentUrlTabValue}
                 leftSpace={0}
                 activeClassName="current"
-                align="center"
                 hideDivider
-                hideBorder
                 onChange={handleTabChange}>
-                <Tabs.Item font="14px" label={'Home'} value="" />
+                <Tabs.Item font="14px" label={'Overview'} value="" />
                 <Tabs.Item font="14px" label={'Activity'} value="activity" />
               </Tabs>
             </div>
@@ -68,11 +67,8 @@ const Menu: React.FC<unknown> = () => {
           top: 0;
           height: var(--geist-page-nav-height);
           width: 100%;
-          backdrop-filter: saturate(180%) blur(5px);
-          background-color: ${addColorAlpha(theme.palette.background, 0.8)};
-          box-shadow: ${theme.type === 'dark'
-            ? '0 0 0 1px #333'
-            : '0 0 15px 0 rgba(0, 0, 0, 0.1)'};
+          background-color: ${theme.palette.background};
+          box-shadow: inset 0 -1px ${theme.palette.accents_2};
           z-index: 999;
         }
         nav .content {
@@ -86,7 +82,6 @@ const Menu: React.FC<unknown> = () => {
           padding: 0 ${theme.layout.gap};
         }
         .logo {
-          flex: 1 1;
           display: flex;
           align-items: center;
           justify-content: flex-start;

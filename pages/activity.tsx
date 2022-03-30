@@ -70,9 +70,11 @@ const ActivityPage: NextPage<unknown> = () => {
           </li>
         ))}
         </ul>
-        <Button width="100%" onClick={() => setSize(size + 1)} loading={isLoadingMore} disabled={isReachingEnd}>{isReachingEnd
+        <div className="loadmore-button">
+          <Button width="100%" onClick={() => setSize(size + 1)} loading={isLoadingMore} disabled={isReachingEnd}>{isReachingEnd
             ? 'no more'
             : 'load more'}</Button>
+        </div>
         <style jsx>{`
           .page__activity ul {
             padding: 0;
@@ -99,7 +101,11 @@ const ActivityPage: NextPage<unknown> = () => {
           }
           @media (max-width: ${theme.breakpoints.sm.max}) {
             .page__activity {
-              padding: 0 ${theme.layout.gap};
+              padding: 0 0 0 ${theme.layout.gap};
+            }
+            .page__activity__list .group-title {
+              padding: ${theme.layout.gapHalf} 0;
+              margin-left: -${theme.layout.gap};
             }
             .page__activity__list > li {
               flex-direction: column;
@@ -108,6 +114,9 @@ const ActivityPage: NextPage<unknown> = () => {
             }
             .page__activity__list .group-title {
               width: 100%;
+            }
+            .loadmore-button {
+              margin-left: -${theme.layout.gap};
             }
           }
         `}</style>

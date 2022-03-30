@@ -20,7 +20,7 @@ const Home: NextPage<unknown> = () => {
   }
 
   return (
-    <Layout title="Home">
+    <Layout title="Overview">
       <div className="page__content">
         <div className="actions-stack">
           <div>
@@ -64,7 +64,6 @@ const Home: NextPage<unknown> = () => {
           width: ${theme.layout.pageWidthWithMargin};
           max-width: 100%;
           margin: 0 auto;
-          padding: ${theme.layout.unit} ${theme.layout.pageMargin};
           box-sizing: border-box;
         }
         .actions-stack {
@@ -77,11 +76,6 @@ const Home: NextPage<unknown> = () => {
           font-size: 14px;
           align-items: center;
           justify-content: space-between;
-        }
-        @media (max-width: ${theme.breakpoints.sm.max}) {
-          .page__content {
-            padding: ${theme.layout.unit};
-          }
         }
       `}</style>
     </Layout>

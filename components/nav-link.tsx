@@ -21,7 +21,7 @@ const NavLink: React.FC<Props> = ({
     <div className="nav-breadcrumbs">
       <Breadcrumbs>
         <NextLink href="/" passHref>
-          <Breadcrumbs.Item nextLink>Home</Breadcrumbs.Item>
+          <Breadcrumbs.Item nextLink>Overview</Breadcrumbs.Item>
         </NextLink>
         {
           parent && (

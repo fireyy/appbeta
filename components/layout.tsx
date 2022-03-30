@@ -42,16 +42,11 @@ export default function Layout({ title, children }: LayoutProps) {
       </div>
       <style jsx>{`
         .layout {
-          min-height: calc(100vh - 108px);
+          min-height: calc(100vh - var(--geist-page-nav-height));
           max-width: ${theme.layout.pageWidthWithMargin};
           margin: 0 auto;
           padding: ${theme.layout.gap};
           box-sizing: border-box;
-        }
-        @media (max-width: ${theme.breakpoints.sm.max}) {
-          .layout {
-            padding: ${theme.layout.gapHalf};
-          }
         }
       `}</style>
     </>

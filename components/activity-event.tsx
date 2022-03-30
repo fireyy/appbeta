@@ -45,6 +45,7 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
       <style jsx>{`
         .activity-event {
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
           font-size: 0.875rem;
           padding: ${theme.layout.gapHalf} 0;
@@ -54,6 +55,8 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
           color: ${theme.palette.border};
         }
         .activity-event :global(.activity-event__avatar) {
+          display: block;
+          flex: 0 0 2rem;
           width: 2rem;
           height: 2rem;
           margin-right: ${theme.layout.gapHalf};
@@ -67,6 +70,13 @@ const ActivityEvent: React.FC<ActivityEventProps> = ({
           margin: 0 0 0 auto;
           padding-left: ${theme.layout.gapHalf};
           text-align: right;
+        }
+        @media (max-width: ${theme.breakpoints.sm.max}) {
+          .activity-event :global(.activity-event__created-at) {
+            width: 100%;
+            text-align: left;
+            padding-left: calc(2rem + ${theme.layout.gapHalf});
+          }
         }
       `}</style>
     </>
