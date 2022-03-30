@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { useTheme, Loading, Modal, useModal, Textarea, useInput, useToasts, Card, Grid, Text, Popover } from '@geist-ui/core'
+import { Loading, Modal, useModal, Textarea, useInput, useToasts, Card, Grid, Text } from '@geist-ui/core'
 import useSWR from 'swr'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { PackageItem } from 'lib/interfaces'
-import { bytesStr, formatDate, timeAgo } from 'lib/utils'
-import MaskLoading from 'components/mask-loading'
+import { bytesStr, timeAgo } from 'lib/utils'
+import { Dropdown, DropdownItem } from 'components/dropdown'
 import NoItem from 'components/no-item'
-import PopConfirm, { usePopConfirm } from 'components/pop-confirm'
 
 type Props = {
   slug: string
@@ -15,9 +14,8 @@ type Props = {
 }
 
 const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
-  const theme = useTheme()
   const [editId, setEditId] = useState(0)
-  const { bindings } = usePopConfirm()
+  const [action, setAction] = useState('edit')
   const { setVisible: setEditVisible, bindings: editBindings } = useModal()
   const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
   const { setToast } = useToasts()
@@ -26,14 +24,15 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
 
   const { data: packages = [], isValidating, mutate } = useSWR<PackageItem[]>(appId && `/api/apps/${appId}/packages`)
 
-  const setEditIdAndVisible = (id: number, row: PackageItem) => {
+  const setIdAndVisible = (id: number, row: PackageItem, type = 'edit') => {
     setEditId(id)
-    setChangelog(row.changelog || '')
+    type === 'edit' && setChangelog(row.changelog || '')
+    setAction(type)
     setEditVisible(true)
   }
-  const handleDelete = async (pid: number) => {
-    mutate(packages.filter((item) => item.id !== pid))
-    await fetch(`/api/apps/${appId}/packages/${pid}`, {
+  const handleDelete = async () => {
+    mutate(packages.filter((item) => item.id !== editId))
+    await fetch(`/api/apps/${appId}/packages/${editId}`, {
       method: 'DELETE',
     })
     setToast({
@@ -41,7 +40,7 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
       type: 'success',
     })
   }
-  const saveEdit = async (e): Promise<void> => {
+  const saveEdit = async (): Promise<void> => {
     setLoading(true)
     await fetch(`/api/apps/${appId}/packages/${editId}`, {
       method: 'PUT',
@@ -80,28 +79,26 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
   const renderAction = (id: number, row: PackageItem) => {
     return (
       <>
-        <Popover placement="bottomEnd" portalClassName="drop-menu-box" content={(
+        <Dropdown content={(
           <>
             {
-              current !== id && <Popover.Item onClick={() => handleCheck(row)}>
+              current !== id && <DropdownItem onClick={() => handleCheck(row)}>
                 {loading ? <Loading /> : 'Set Default'}
-              </Popover.Item>
+              </DropdownItem>
             }
-            <Popover.Item onClick={() => window.open(`/${slug}?pid=${id}`)}>
+            <DropdownItem onClick={() => window.open(`/${slug}?pid=${id}`)}>
               Preview
-            </Popover.Item>
-            <Popover.Item onClick={() => setEditIdAndVisible(id, row)}>
+            </DropdownItem>
+            <DropdownItem onClick={() => setIdAndVisible(id, row)}>
               Edit
-            </Popover.Item>
-            <Popover.Item disableAutoClose>
-              <PopConfirm onConfirm={() => handleDelete(id)} {...bindings}>
-                Delete
-              </PopConfirm>
-            </Popover.Item>
+            </DropdownItem>
+            <DropdownItem onClick={() => setIdAndVisible(id, row, 'delete')}>
+              Delete
+            </DropdownItem>
           </>
         )}>
           <MoreVertical />
-        </Popover>
+        </Dropdown>
       </>
     )
   }
@@ -127,12 +124,15 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
         }
       </div>
       <Modal {...editBindings}>
-        <Modal.Title>Edit Changelog</Modal.Title>
+        <Modal.Title>{action === 'edit' ? 'Edit Changelog' : 'Confirm'}</Modal.Title>
         <Modal.Content>
-          <Textarea placeholder="Text" width="100%" height="100%" {...changelogBindings} />
+          {
+            action === 'edit' ? <Textarea placeholder="Text" width="100%" height="100%" {...changelogBindings} /> :
+            'Are you sure you want to delete this item?'
+          }
         </Modal.Content>
         <Modal.Action passive onClick={() => setEditVisible(false)}>Cancel</Modal.Action>
-        <Modal.Action loading={loading} onClick={saveEdit}>OK</Modal.Action>
+        <Modal.Action loading={loading} onClick={() => action === 'edit' ? saveEdit() : handleDelete()}>OK</Modal.Action>
       </Modal>
       {
         packages.length === 0 && !isValidating && (
@@ -153,18 +153,6 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
         .card-box :global(.card:last-child) {
           border-bottom-left-radius: 6px;
           border-bottom-right-radius: 6px;
-        }
-        :global(.drop-menu-box .item:hover) {
-          background-color: ${theme.palette.accents_2};
-        }
-        :global(.drop-menu-box .item.disabled) {
-          cursor: not-allowed;
-          color: ${theme.palette.accents_1};
-        }
-        :global(.drop-menu-box .item .tooltip) {
-          display: block;
-          flex: 1;
-          cursor: pointer;
         }
       `}</style>
     </>

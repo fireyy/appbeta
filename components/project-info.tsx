@@ -1,11 +1,12 @@
 import React from 'react'
 import Router from 'next/router'
-import { Avatar, Badge, Text, useTheme, Modal, useModal, Link, ButtonDropdown, useToasts } from '@geist-ui/core'
+import { Avatar, Badge, Text, useTheme, Modal, useModal, Link, useToasts } from '@geist-ui/core'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
 import Skeleton from 'components/skeleton'
+import { Dropdown, DropdownItem } from 'components/dropdown'
 
 interface Props {
   isLoading: boolean
@@ -50,13 +51,22 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
               <div className="heading__actions">
                 {
                   isLoading ? <Skeleton height={36} width={36} /> :
-                  <ButtonDropdown auto icon={<MoreVertical />}>
-                    <ButtonDropdown.Item onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>New</ButtonDropdown.Item>
-                    <ButtonDropdown.Item onClick={() => Router.push(`/apps/new?id=${data.id}`)}>Edit</ButtonDropdown.Item>
-                    <ButtonDropdown.Item type="error" onClick={() => setVisible(true)}>Delete</ButtonDropdown.Item>
-                  </ButtonDropdown>
+                  <Dropdown content={(
+                    <>
+                      <DropdownItem onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>
+                        New
+                      </DropdownItem>
+                      <DropdownItem onClick={() => Router.push(`/apps/new?id=${data.id}`)}>
+                        Edit
+                      </DropdownItem>
+                      <DropdownItem onClick={() => setVisible(true)}>
+                        Delete
+                      </DropdownItem>
+                    </>
+                  )}>
+                    <MoreVertical />
+                  </Dropdown>
                 }
-
                 <Modal {...bindings}>
                   <Modal.Content>
                     <p>Are you sure you want to delete this item?</p>
@@ -126,14 +136,6 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
         }
         .heading__actions {
           margin-left: auto;
-        }
-        .heading__actions :global(.btn-dropdown) {
-          border: 0;
-        }
-        .heading__actions :global(.btn-dropdown .content) {
-          width: 100px;
-          left: auto;
-          right: 0;
         }
         .heading__integration :global(.heading__integration-title) {
           color: ${theme.palette.accents_5} !important;
