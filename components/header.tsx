@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import Controls from './controls'
-import { useTheme, Image, Tabs } from '@geist-ui/core'
-import { addColorAlpha } from '../lib/utils'
+import { useTheme, Tabs } from '@geist-ui/core'
 
-const Menu: React.FC<unknown> = () => {
+const Header: React.FC<unknown> = () => {
   const router = useRouter()
   const theme = useTheme()
 
@@ -25,21 +24,20 @@ const Menu: React.FC<unknown> = () => {
 
   return (
     <>
-      <div className="menu-wrapper">
-        <nav className="menu">
+      <div className="header-wrapper">
+        <nav className="header">
           <div className="content">
             <div className="logo">
               <NextLink href={`/`}>
-                <a aria-label="Go Home">
+                <a aria-label="Go Home" title="AppBeta">
                   <svg aria-label="logo" height="20" viewBox="0 0 140 150" stroke={theme.palette.foreground} strokeWidth="20">
                     <path d="M85.0816 5L13.7609 140.636M57.3181 14.6834L127.318 145M0 94.9724H140" />
                   </svg>
-                  AppBeta
                 </a>
               </NextLink>
             </div>
 
-            <div className="tabs">
+            <div className="menu">
               <Tabs
                 value={currentUrlTabValue}
                 leftSpace={0}
@@ -47,7 +45,9 @@ const Menu: React.FC<unknown> = () => {
                 hideDivider
                 onChange={handleTabChange}>
                 <Tabs.Item font="14px" label={'Overview'} value="" />
+                <Tabs.Item font="14px" label={'Apps'} value="apps" />
                 <Tabs.Item font="14px" label={'Activity'} value="activity" />
+                <Tabs.Item font="14px" label={'Settings'} value="account" />
               </Tabs>
             </div>
 
@@ -59,10 +59,10 @@ const Menu: React.FC<unknown> = () => {
       </div>
 
       <style jsx>{`
-        .menu-wrapper {
+        .header-wrapper {
           height: var(--geist-page-nav-height);
         }
-        .menu {
+        .header {
           position: fixed;
           top: 0;
           height: var(--geist-page-nav-height);
@@ -98,11 +98,11 @@ const Menu: React.FC<unknown> = () => {
         .logo svg {
           margin-right: 5px;
         }
-        .tabs {
+        .menu {
           flex: 1 1;
           padding: 0 ${theme.layout.gap};
         }
-        .tabs :global(.content) {
+        .menu :global(.content) {
           display: none;
         }
         .controls {
@@ -128,4 +128,4 @@ const Menu: React.FC<unknown> = () => {
   )
 }
 
-export default Menu
+export default Header

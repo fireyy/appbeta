@@ -4,7 +4,7 @@ import React from 'react'
 import type { PropsWithChildren } from 'react'
 import { useTheme } from '@geist-ui/core'
 import useRequireAuth from 'lib/use-require-auth'
-import Menu from 'components/menu'
+import Header from 'components/header'
 import Search from 'components/search'
 import LoadingDots from 'components/loading-dots'
 
@@ -32,7 +32,7 @@ export default function Layout({ title, children }: LayoutProps) {
       {
         !isFront && (
           <>
-            <Menu />
+            <Header />
             <Search />
           </>
         )
