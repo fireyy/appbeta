@@ -8,8 +8,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     skip: (+page - 1) * +limit,
     orderBy: {
       createdAt: 'desc'
-    }
+    },
+    include: {
+      app: {
+        select: {
+          name: true,
+          deviceType: true,
+        }
+      },
+    },
   })
+  console.log('packages', packages)
   const result = packages.slice((+page - 1) * +limit, +page*+limit).map(item => (
     {
       ...item,

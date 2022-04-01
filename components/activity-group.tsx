@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import NextLink from 'next/link'
-import { useTheme, Link, Button } from '@geist-ui/core'
+import { useTheme, Link, Button, Tag } from '@geist-ui/core'
 import useSWRInfinite from 'swr/infinite'
 import ActivityEvent from 'components/activity-event'
 import { bytesStr } from 'lib/utils'
@@ -61,7 +61,7 @@ const ActivityGroup: React.FC<Props> = ({ infinite }) => {
                 createdAt={item.createdAt}
               >
                 {
-                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.name}, {item.bundleId}, {item.version}({item.buildVersion}), {bytesStr(item.size || 0)} by {item.userId}</Link></NextLink>
+                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.app.name} upload new package {item.version}({item.buildVersion}), {bytesStr(item.size || 0)}<Tag type="lite" ml={1}>{item.app.deviceType}</Tag></Link></NextLink>
                 }
               </ActivityEvent>
             ))}

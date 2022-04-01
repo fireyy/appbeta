@@ -21,14 +21,17 @@ model Apps {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   packagesCount   Int? @default(0)
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          Int
   archived        Boolean @default(false)
+  packages        Packages[]
   @@unique([slug, deviceType], name: "slug_device_type_unique")
 }
 
 model Packages {
   id           Int     @id @default(autoincrement())
-  appId        Int?
+  app          Apps @relation(fields: [appId], references: [id], onDelete: Cascade)
+  appId        Int
   name         String?
   icon         String?
   bundleId     String?
@@ -39,6 +42,7 @@ model Packages {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   size         Int? @default(0)
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int
 }
 
@@ -83,6 +87,8 @@ model User {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   accounts      Account[]
+  packages      Packages[]
+  apps          Apps[]
 }
 
 model VerificationToken {

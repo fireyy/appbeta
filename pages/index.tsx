@@ -14,7 +14,7 @@ type OverviewType = {
 const Home: NextPage<unknown> = () => {
   const theme = useTheme()
   const router = useRouter()
-  const { data, isValidating } = useSWR<OverviewType>('/api/overview')
+  const { data = { apps: 0, packages: 0 }, isValidating } = useSWR<OverviewType>('/api/overview')
 
   return (
     <Layout title="Dashboard">
