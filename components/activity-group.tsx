@@ -61,7 +61,7 @@ const ActivityGroup: React.FC<Props> = ({ infinite }) => {
                 createdAt={item.createdAt}
               >
                 {
-                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href="/" passHref><Link>{item.app.name} upload new package {item.version}({item.buildVersion}), {bytesStr(item.size || 0)}<Tag type="lite" ml={1}>{item.app.deviceType}</Tag></Link></NextLink>
+                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href={`/apps/${item.appId}`} passHref><Link>{item.app?.name} upload new package {item.version}({item.buildVersion}), {bytesStr(item.size || 0)}<Tag scale={1/3} type="lite" ml={1}>{item.app.deviceType}</Tag></Link></NextLink>
                 }
               </ActivityEvent>
             ))}

@@ -21,14 +21,7 @@ const AppPage: React.FC<unknown> = () => {
       <ProjectInfo data={data} isLoading={isLoading && !data} />
       <div className="page__wrapper">
         <div className="page__content">
-          {
-            !data ? <>
-              <Skeleton boxHeight={32} />
-              <Skeleton boxHeight={32} />
-              <Skeleton boxHeight={32} />
-            </> :
-            <PackageItems slug={data.slug} appId={data.id} lastPkgId={data.lastPkgId} />
-          }
+          <PackageItems slug={data?.slug} appId={data?.id} lastPkgId={data?.lastPkgId} />
         </div>
       </div>
       <style jsx>{`

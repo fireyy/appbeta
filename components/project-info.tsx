@@ -1,6 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
-import { Avatar, Badge, Text, useTheme, Modal, useModal, Link, useToasts } from '@geist-ui/core'
+import { Avatar, Text, useTheme, Modal, useModal, Link, useToasts } from '@geist-ui/core'
 import MoreVertical from '@geist-ui/icons/moreVertical'
 import { AppItem } from 'lib/interfaces'
 import { staticPath } from 'lib/contants'
@@ -35,17 +35,19 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
     <>
       <div className="heading__wrapper">
         <div className="heading">
+          <div className="heading__icon-avatar">
           {
-            isLoading ? <Skeleton className="heading__user-avatar" height={40} width={40} /> : <Badge.Anchor>
-            <Badge><DeviceType size={14} type={data?.deviceType} /></Badge>
-            <Avatar alt={data?.name} className="heading__user-avatar" src={`${staticPath}${data.icon}`} isSquare />
-          </Badge.Anchor>
+            isLoading ? <Skeleton className="heading__avatar" height={40} width={40} /> : <>
+            <Avatar alt={data?.name} className="heading__avatar" src={`${staticPath}${data?.icon}`} isSquare />
+            <span className="tag"><DeviceType size={14} type={data?.deviceType} /></span>
+          </>
           }
+          </div>
           <div className="heading__name">
             <div className="heading__title">
               {
                 isLoading ? <Skeleton width={350} height={26} boxHeight={37} /> : <Text h3 className="headding__user-name">
-                <Link href={`/${data.slug}?pid=${data.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
+                <Link href={`/${data?.slug}?pid=${data?.lastPkgId || ''}`} target="_blank">{data?.name}</Link>
               </Text>
               }
               <div className="heading__actions">
@@ -53,10 +55,10 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                   isLoading ? <Skeleton height={36} width={36} /> :
                   <Dropdown content={(
                     <>
-                      <DropdownItem onClick={() => Router.push(`/apps/${data.id}/packages/new`)}>
+                      <DropdownItem onClick={() => Router.push(`/apps/${data?.id}/packages/new`)}>
                         New
                       </DropdownItem>
-                      <DropdownItem onClick={() => Router.push(`/apps/new?id=${data.id}`)}>
+                      <DropdownItem onClick={() => Router.push(`/apps/new?id=${data?.id}`)}>
                         Edit
                       </DropdownItem>
                       <DropdownItem onClick={() => setVisible(true)}>
@@ -72,7 +74,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                     <p>Are you sure you want to delete this item?</p>
                   </Modal.Content>
                   <Modal.Action passive onClick={() => setVisible(false)}>Cancel</Modal.Action>
-                  <Modal.Action onClick={() => destroy(data.id)}>OK</Modal.Action>
+                  <Modal.Action onClick={() => destroy(data?.id)}>OK</Modal.Action>
                 </Modal>
               </div>
             </div>
@@ -85,7 +87,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                       <Skeleton boxHeight={24} />
                       <Skeleton boxHeight={24} />
                     </>
-                  ) : (<span>{data.description}</span>)
+                  ) : (<span>{data?.description}</span>)
                 }
               </div>
             </div>
@@ -103,7 +105,19 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
           padding: calc(${theme.layout.gap} * 2) ${theme.layout.pageMargin};
           box-sizing: border-box;
         }
-        .heading :global(.heading__user-avatar) {
+        .heading .heading__icon-avatar {
+          position: relative;
+        }
+        .heading .heading__icon-avatar .tag {
+          position: absolute;
+          right: 0;
+          top: 0;
+          padding: 0 6px;
+          border-radius: 6px;
+          color: ${theme.palette.background};
+          background-color: ${theme.palette.foreground};
+        }
+        .heading :global(.heading__avatar) {
           height: 100px;
           width: 100px;
         }
@@ -156,7 +170,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
           .heading {
             padding: ${theme.layout.gap} 0;
           }
-          .heading :global(.heading__user-avatar) {
+          .heading :global(.heading__avatar) {
             width: 80px !important;
             height: 80px !important;
           }

@@ -18,7 +18,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
   })
-  console.log('packages', packages)
   const result = packages.slice((+page - 1) * +limit, +page*+limit).map(item => (
     {
       ...item,

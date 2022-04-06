@@ -36,6 +36,7 @@ export const Dropdown = React.forwardRef<
       <style jsx global>{`
       .tooltip-content.popover.drop-menu-box > .inner {
           padding: calc(${theme.layout.gapHalf} / 2);
+          min-width: 120px;
         }
         .drop-menu-box .item:hover {
           background-color: ${theme.palette.accents_2};

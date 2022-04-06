@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { Loading, Modal, useModal, Textarea, useInput, useToasts, Card, Grid, Text } from '@geist-ui/core'
+import React, { useEffect, useState } from 'react'
+import { Card, Grid, Text, useTheme } from '@geist-ui/core'
 import useSWR from 'swr'
-import MoreVertical from '@geist-ui/icons/moreVertical'
+import ChevronRight from '@geist-ui/icons/chevronRight'
 import { PackageItem } from 'lib/interfaces'
 import { bytesStr, timeAgo } from 'lib/utils'
-import { Dropdown, DropdownItem } from 'components/dropdown'
 import NoItem from 'components/no-item'
+import PackageDetail from 'components/package-detail'
+import Skeleton from 'components/skeleton'
 
 type Props = {
   slug: string
@@ -14,128 +15,74 @@ type Props = {
 }
 
 const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
-  const [editId, setEditId] = useState(0)
-  const [action, setAction] = useState('edit')
-  const { setVisible: setEditVisible, bindings: editBindings } = useModal()
-  const {state: changelog, setState: setChangelog, bindings: changelogBindings} = useInput('')
-  const { setToast } = useToasts()
-  const [loading, setLoading] = useState(false)
-  const [current, setCurrent] = useState(lastPkgId)
+  const theme = useTheme()
+  const [detailId, setDetailId] = useState(0)
+
+  const [lastId, setLastPkgId] = useState(lastPkgId)
+  const [current, setCurrent] = useState(null)
+  const [sideVisible, setSideVisible] = useState(false)
 
   const { data: packages = [], isValidating, mutate } = useSWR<PackageItem[]>(appId && `/api/apps/${appId}/packages`)
+  const isLoading = isValidating && packages.length === 0
 
-  const setIdAndVisible = (id: number, row: PackageItem, type = 'edit') => {
-    setEditId(id)
-    type === 'edit' && setChangelog(row.changelog || '')
-    setAction(type)
-    setEditVisible(true)
-  }
-  const handleDelete = async () => {
-    mutate(packages.filter((item) => item.id !== editId))
-    await fetch(`/api/apps/${appId}/packages/${editId}`, {
-      method: 'DELETE',
-    })
-    setToast({
-      text: 'Removed package successfully.',
-      type: 'success',
-    })
-  }
-  const saveEdit = async (): Promise<void> => {
-    setLoading(true)
-    await fetch(`/api/apps/${appId}/packages/${editId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        changelog
-      })
-    })
-    setEditVisible(false)
-    setLoading(false)
-    mutate((mate) => {
-      const index = mate.findIndex((item) => item.id === editId)
-      mate[index].changelog = changelog
-      return mate
-    })
-    setToast({
-      text: 'Updated package changelog successfully.',
-      type: 'success',
-    })
-  }
-  const handleCheck = async (row: PackageItem) => {
-    setLoading(true)
-    await fetch(`/api/apps/${appId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        lastPkgId: row.id,
-        lastPkgSize: row.size,
-        lastVersion: row.version,
-      })
-    })
-    setCurrent(row.id)
-    setLoading(false)
+  useEffect(() => {
+    setCurrent(packages.find(p => p.id === detailId))
+  }, [detailId])
+
+  const handleDetail = (id) => {
+    setDetailId(id)
+    setSideVisible(true)
   }
 
-  const renderAction = (id: number, row: PackageItem) => {
-    return (
-      <>
-        <Dropdown content={(
-          <>
-            {
-              current !== id && <DropdownItem onClick={() => handleCheck(row)}>
-                {loading ? <Loading /> : 'Set Default'}
-              </DropdownItem>
-            }
-            <DropdownItem onClick={() => window.open(`/${slug}?pid=${id}`)}>
-              Preview
-            </DropdownItem>
-            <DropdownItem onClick={() => setIdAndVisible(id, row)}>
-              Edit
-            </DropdownItem>
-            <DropdownItem onClick={() => setIdAndVisible(id, row, 'delete')}>
-              Delete
-            </DropdownItem>
-          </>
-        )}>
-          <MoreVertical />
-        </Dropdown>
-      </>
-    )
+  const handleUpdate = (type, payload) => {
+    if (type === 'remove') {
+      mutate(packages.filter((item) => item.id !== detailId))
+    } else if (type === 'edit') {
+      mutate((mate) => {
+        const index = mate.findIndex((item) => item.id === detailId)
+        mate[index].changelog = payload.changelog
+        return mate
+      })
+    } else if (type === 'setDefault') {
+      setLastPkgId(detailId)
+    }
   }
 
   return (
     <>
       <div className="card-box">
         {
-          packages.map(p => (
-            <Card key={p.id}>
+          (isLoading ? [{}, {}, {}] : packages).map(p => (
+            <Card key={p.id} onClick={() => handleDetail(p.id)} className={p.id === current ? 'default' : ''}>
               <Grid.Container gap={2} alignItems="center">
                 <Grid xs={12} direction="column">
-                  <Text h6 my={0}>{p.name} {p.version}({p.buildVersion})</Text>
-                  <Text span font="14px" style={{ color: 'var(--body-color)' }}>{bytesStr(p.size)}</Text>
+                  <Text h6 my={0}>
+                    {
+                      isLoading ? <Skeleton inline width={150} /> : <>{p.name} {p.version}({p.buildVersion})</>
+                    }
+                  </Text>
+                  <Text span font="14px" style={{ color: 'var(--body-color)' }}>
+                  {
+                    isLoading ? <Skeleton inline width={50} /> : bytesStr(p.size)
+                  }
+                  </Text>
                 </Grid>
                 <Grid xs={12} justify="flex-end">
-                  <Text span font="14px" mr={0.5} style={{ color: 'var(--body-color)' }}>{timeAgo(p.updatedAt)}</Text>
-                  {renderAction(p.id, p)}
+                  <Text span font="14px" mr={0.5} style={{ color: 'var(--body-color)' }}>
+                  {
+                    isLoading ? <Skeleton inline width={100} /> : timeAgo(p.updatedAt)
+                  }
+                  </Text>
+                  <ChevronRight color={theme.palette.accents_4} />
                 </Grid>
               </Grid.Container>
             </Card>
           ))
         }
       </div>
-      <Modal {...editBindings}>
-        <Modal.Title>{action === 'edit' ? 'Edit Changelog' : 'Confirm'}</Modal.Title>
-        <Modal.Content>
-          {
-            action === 'edit' ? <Textarea placeholder="Text" width="100%" height="100%" {...changelogBindings} /> :
-            'Are you sure you want to delete this item?'
-          }
-        </Modal.Content>
-        <Modal.Action passive onClick={() => setEditVisible(false)}>Cancel</Modal.Action>
-        <Modal.Action loading={loading} onClick={() => action === 'edit' ? saveEdit() : handleDelete()}>OK</Modal.Action>
-      </Modal>
+      <PackageDetail lastPkgId={lastPkgId} visible={sideVisible} setVisible={setSideVisible} data={current} onUpdate={handleUpdate} />
       {
-        packages.length === 0 && !isValidating && (
+        packages.length === 0 && !isValidating && appId && (
           <NoItem link={`/apps/${appId}/packages/new`} />
         )
       }
