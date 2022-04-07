@@ -28,15 +28,21 @@ export const Dropdown = React.forwardRef<
       }
       {
         !isMobile && (
-          <Popover ref={forwardedRef} placement="bottomEnd" content={content} portalClassName={useClasses('drop-menu-box', portalClassName)} {...props}>
+          <Popover ref={forwardedRef} placement="bottomEnd" hideArrow content={content} portalClassName={useClasses('drop-menu-box', portalClassName)} {...props}>
             <div className={useClasses('dropdown-button', className)}>{children}</div>
           </Popover>
         )
       }
       <style jsx global>{`
+      .tooltip-content.popover.drop-menu-box {
+        border: 1px solid ${theme.palette.border};
+      }
       .tooltip-content.popover.drop-menu-box > .inner {
           padding: calc(${theme.layout.gapHalf} / 2);
           min-width: 120px;
+        }
+        .drop-menu-box .item {
+          border-radius: 6px;
         }
         .drop-menu-box .item:hover {
           background-color: ${theme.palette.accents_2};

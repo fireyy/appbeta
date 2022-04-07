@@ -53,7 +53,7 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
       <div className="card-box">
         {
           (isLoading ? [{}, {}, {}] : packages).map(p => (
-            <Card key={p.id} onClick={() => handleDetail(p.id)} className={p.id === current ? 'default' : ''}>
+            <Card key={p.id} onClick={() => handleDetail(p.id)} className={p.id === lastId ? 'default' : ''}>
               <Grid.Container gap={2} alignItems="center">
                 <Grid xs={12} direction="column">
                   <Text h6 my={0}>
@@ -89,6 +89,10 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
       <style jsx>{`
         .card-box :global(.card) {
           border-radius: 0;
+          cursor: pointer;
+        }
+        .card-box :global(.card:hover) {
+          background-color: ${theme.palette.accents_1};
         }
         .card-box :global(.card + .card) {
           border-top: 0;
