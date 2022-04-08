@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { Divider, Grid, useTheme, Card, Text } from '@geist-ui/core'
+import { Divider, Grid, Card, Text } from '@geist-ui/core'
 import useSWR from 'swr'
 import Layout from 'components/layout'
 import ActivityGroup from 'components/activity-group'
@@ -12,8 +10,6 @@ type OverviewType = {
 }
 
 const Home: NextPage<unknown> = () => {
-  const theme = useTheme()
-  const router = useRouter()
   const { data = { apps: 0, packages: 0 }, isValidating } = useSWR<OverviewType>('/api/overview')
 
   return (

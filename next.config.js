@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const path = require('path')
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
+const nextTranslate = require('next-translate')
 
 const nextConfig = async (phase, { defaultConfig }) => {
   const nextConfig = {
@@ -13,7 +14,7 @@ const nextConfig = async (phase, { defaultConfig }) => {
       staticPath: process.env.STORAGE_PROVIDER === 'local' ? '/uploads/' : process.env.QINIU_BASEURL
     }
   }
-  return nextConfig
+  return nextTranslate(nextConfig)
 }
 
 module.exports = nextConfig

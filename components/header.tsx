@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import Controls from './controls'
 import { useTheme, Tabs } from '@geist-ui/core'
+import useTranslation from 'next-translate/useTranslation'
 
 const Header: React.FC<unknown> = () => {
   const router = useRouter()
   const theme = useTheme()
+  const { t } = useTranslation('common')
 
   const names = router.pathname.split('/').filter(r => !!r)
   const currentUrlTabValue = names[0] || ''
@@ -29,7 +31,7 @@ const Header: React.FC<unknown> = () => {
           <div className="content">
             <div className="logo">
               <NextLink href={`/`}>
-                <a aria-label="Go Home" title="AppBeta">
+                <a aria-label={t('common:Go Home')} title={t('common:AppBeta')}>
                   <svg aria-label="logo" height="20" viewBox="0 0 140 150" stroke={theme.palette.foreground} strokeWidth="20">
                     <path d="M85.0816 5L13.7609 140.636M57.3181 14.6834L127.318 145M0 94.9724H140" />
                   </svg>
@@ -44,10 +46,10 @@ const Header: React.FC<unknown> = () => {
                 activeClassName="current"
                 hideDivider
                 onChange={handleTabChange}>
-                <Tabs.Item font="14px" label={'Overview'} value="" />
-                <Tabs.Item font="14px" label={'Apps'} value="apps" />
-                <Tabs.Item font="14px" label={'Activity'} value="activity" />
-                <Tabs.Item font="14px" label={'Settings'} value="account" />
+                <Tabs.Item font="14px" label={t('common:Overview')} value="" />
+                <Tabs.Item font="14px" label={t('common:Apps')} value="apps" />
+                <Tabs.Item font="14px" label={t('common:Activity')} value="activity" />
+                <Tabs.Item font="14px" label={t('common:Settings')} value="account" />
               </Tabs>
             </div>
 
