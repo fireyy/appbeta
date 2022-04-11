@@ -68,7 +68,7 @@ const ActivityGroup: React.FC<Props> = ({ infinite }) => {
                     version: item.version,
                     buildVersion: item.buildVersion,
                     size: bytesStr(item.size || 0)
-                  })}<Tag scale={1/3} type="lite" ml={1}>{item.app?.deviceType}</Tag></Link></NextLink>
+                  })}<Tag scale={1/3} type="lite" ml={1}>{t(item.app?.deviceType)}</Tag></Link></NextLink>
                 }
               </ActivityEvent>
             ))}

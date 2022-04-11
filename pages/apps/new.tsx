@@ -4,6 +4,7 @@ import { Input, Button, Text, Grid, Textarea, Radio, useInput, useToasts } from 
 import useSWR from 'swr'
 import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
+import useTranslation from 'next-translate/useTranslation'
 
 const AppNewPage: React.FC<unknown> = () => {
   const [deviceType, setDeviceType] = useState('ios')
@@ -14,6 +15,7 @@ const AppNewPage: React.FC<unknown> = () => {
   const { query: { id = 0 } } = useRouter()
   const isEdit = id !== 0
   const { setToast } = useToasts()
+  const { t } = useTranslation('common')
 
   const handleDeviceType = (val: string) => {
     setDeviceType(val)
@@ -44,45 +46,45 @@ const AppNewPage: React.FC<unknown> = () => {
       }),
     })
     setToast({
-      text: 'Added new app Successfully.',
+      text: t('Added new app Successfully.'),
       type: 'success',
     })
     await Router.push(isEdit ? `/apps/${id}` : '/')
   }
 
   return (
-    <Layout title="New App">
+    <Layout title={t('New')}>
       {
-        isEdit ? <NavLink href={`/apps/${id}`} parent={name}>Edit</NavLink> : <NavLink>New App</NavLink>
+        isEdit ? <NavLink href={`/apps/${id}`} parent={name}>{t('Edit')}</NavLink> : <NavLink>{t('New')}</NavLink>
       }
       <Grid.Container gap={4} justify="center">
         <Grid xs={24} md={12} direction="column">
-          <Text h6>Name:</Text>
+          <Text h6>{t('Name')}:</Text>
           <Input placeholder="Text" width="100%" {...nameBindings} />
         </Grid>
         <Grid xs={24} md={12} direction="column">
-          <Text h6>Slug:</Text>
+          <Text h6>{t('Slug')}:</Text>
           <Input placeholder="Text" width="100%" {...slugBindings} />
         </Grid>
         <Grid xs={24} direction="column">
-          <Text h6>Device Type:</Text>
+          <Text h6>{t('Device Type')}:</Text>
           <Radio.Group value={deviceType} useRow onChange={handleDeviceType}>
             <Radio value="ios">
-              iOS
-              <Radio.Desc>For iPhone, iPad and iPod touch</Radio.Desc>
+              {t('ios')}
+              <Radio.Desc>{t('For iPhone, iPad and iPod touch')}</Radio.Desc>
             </Radio>
             <Radio value="android">
-              Android
-              <Radio.Desc>For Android device</Radio.Desc>
+              {t('android')}
+              <Radio.Desc>{t('For Android device')}</Radio.Desc>
             </Radio>
           </Radio.Group>
         </Grid>
         <Grid xs={24} direction="column">
-          <Text h6>Description:</Text>
+          <Text h6>{t('Description')}:</Text>
           <Textarea placeholder="Text" width="100%" {...descBindings} />
         </Grid>
         <Grid xs justify="flex-end">
-          <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>
+          <Button type="secondary" onClick={handleSubmit} loading={loading}>{t('Submit')}</Button>
         </Grid>
       </Grid.Container>
     </Layout>

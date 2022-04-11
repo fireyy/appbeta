@@ -30,7 +30,7 @@ const PackageDetail: React.FC<Props> = ({ lastPkgId, visible, setVisible, data, 
       method: 'DELETE',
     })
     setToast({
-      text: 'Removed package successfully.',
+      text: t('Removed package successfully.'),
       type: 'success',
     })
   }
@@ -47,7 +47,7 @@ const PackageDetail: React.FC<Props> = ({ lastPkgId, visible, setVisible, data, 
     setLoading(false)
     onUpdate && onUpdate('edit', { changelog })
     setToast({
-      text: 'Updated package changelog successfully.',
+      text: t('Updated package changelog successfully.'),
       type: 'success',
     })
   }

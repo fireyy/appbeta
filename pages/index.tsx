@@ -15,7 +15,7 @@ const Home: NextPage<unknown> = () => {
   const { data = { app: 0, package: 0 }, isValidating } = useSWR<OverviewType>('/api/overview')
 
   return (
-    <Layout title="Dashboard">
+    <Layout title={t('Dashboard')}>
       <Grid.Container gap={2}>
         {
           Object.keys(data).map((d, index) => (

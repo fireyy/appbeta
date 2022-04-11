@@ -10,6 +10,7 @@ import NavLink from 'components/nav-link'
 import { baseUrl, staticPath } from 'lib/contants'
 import parseApp from 'lib/parse-app'
 import base64ToFile from 'lib/base64-file'
+import useTranslation from 'next-translate/useTranslation'
 
 type Props = {
   app: AppItem
@@ -22,6 +23,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
   const [loading, setLoading] = useState(false)
   const hiddenFileInput = useRef(null)
   const { setToast } = useToasts()
+  const { t } = useTranslation('common')
 
   const handleFile= async (event: any) => {
     if (event.target.files && event.target.files[0]) {
@@ -55,7 +57,7 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
       }),
     })
     setToast({
-      text: 'Updated app icon successfully.',
+      text: t('Updated app icon successfully.'),
       type: 'success',
     })
     setLoading(false)
@@ -79,19 +81,21 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
       body: JSON.stringify(data),
     })
     setToast({
-      text: 'Added new package successfully.',
+      text: t('Added new package successfully.'),
       type: 'success',
     })
     await Router.push(`/apps/${app.id}`)
   }
 
   return (
-    <Layout title="New Package">
+    <Layout title={t('New')}>
       <Script src="https://cdn.jsdelivr.net/npm/app-info-parser@1.1.3/dist/app-info-parser.min.js" />
-      <NavLink href={`/apps/${app.id}`} parent={app.name}>New Package</NavLink>
+      <NavLink href={`/apps/${app.id}`} parent={app.name}>{t('New')}</NavLink>
       <Grid.Container gap={2} justify="center" alignItems="center">
         <Grid xs={24} md={12}>
-          <Display caption={`Upload ${app.deviceType === 'ios' ? '.ipa' : '.apk'} file`}>
+          <Display caption={t('upload ext file', {
+            ext: app.deviceType === 'ios' ? '.ipa' : '.apk'
+          })}>
             {
               data && data.icon && (
                 <Grid.Container gap={2} justify="center" alignItems="center">
@@ -99,8 +103,8 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
                     <Avatar src={data.icon.includes('data:image/png;base64') ? data.icon : `${staticPath}${data.icon}`} width="100px" height="100px" alt="name" isSquare />
                   </Grid>
                   <Grid xs={12} direction="column" alignItems="flex-start">
-                    <Button auto scale={1/4} onClick={handleSetAsCover} loading={loading}>Set As Cover</Button>
-                    <Button auto scale={1/4} onClick={() => setData(null)} mt={0.5}>Reset File</Button>
+                    <Button auto scale={1/4} onClick={handleSetAsCover} loading={loading}>{t('Set As Cover')}</Button>
+                    <Button auto scale={1/4} onClick={() => setData(null)} mt={0.5}>{t('Reset File')}</Button>
                   </Grid>
                 </Grid.Container>
               )
@@ -109,30 +113,31 @@ const PackageNewPage: React.FC<Props> = ({ app }) => {
               !data && (
                 <>
                   <input type="file" ref={hiddenFileInput} onChange={handleFile} accept={app.deviceType === 'ios' ? '.ipa' : 'application/vnd.android.package-archive'} style={{ display: 'none' }} />
-                  <Button auto icon={<Upload />} onClick={() => hiddenFileInput.current.click()}>Upload</Button>
+                  <Button auto icon={<Upload />} onClick={() => hiddenFileInput.current.click()}>{t('Select File')}</Button>
                 </>
               )
             }
           </Display>
         </Grid>
         <Grid xs={24} md={12} direction="column">
-          <Text h6>Data:</Text>
+          <Text h6>{t('Data')}:</Text>
           <Code block my={0} height="210px">
             {JSON.stringify(data, null, 2)}
           </Code>
         </Grid>
         <Grid xs={24} direction="column">
-          <Text h6>Changelog:</Text>
+          <Text h6>{t('Changelog')}:</Text>
           <Textarea placeholder="Text" width="100%" height="100%" {...descBindings} />
         </Grid>
         <Grid xs justify="flex-end">
-          <Button type="secondary" onClick={handleSubmit} loading={loading}>Submit</Button>
+          <Button type="secondary" onClick={handleSubmit} loading={loading}>{t('Submit')}</Button>
         </Grid>
       </Grid.Container>
     </Layout>
   )
 }
 
+// TODO: 改用client端请求数据
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await fetch(`${baseUrl}/api/apps/${context.params.id}`, {
     headers: {

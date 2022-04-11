@@ -7,7 +7,6 @@ import ProjectInfo from 'components/project-info'
 import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 import PackageItems from 'components/package-items'
-import Skeleton from 'components/skeleton'
 
 const AppPage: React.FC<unknown> = () => {
   const theme = useTheme()

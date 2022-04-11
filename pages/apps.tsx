@@ -22,7 +22,7 @@ const Apps: NextPage<unknown> = () => {
   }
 
   return (
-    <Layout title="Overview">
+    <Layout title={t('Apps')}>
       <div className="page__content">
         <div className="actions-stack">
           <div>
