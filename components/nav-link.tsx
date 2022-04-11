@@ -21,7 +21,7 @@ const NavLink: React.FC<Props> = ({
     <div className="nav-breadcrumbs">
       <Breadcrumbs>
         <NextLink href="/" passHref>
-          <Breadcrumbs.Item nextLink><Home /><span>Overview</span></Breadcrumbs.Item>
+          <Breadcrumbs.Item nextLink><Home /></Breadcrumbs.Item>
         </NextLink>
         {
           parent && (
@@ -35,11 +35,6 @@ const NavLink: React.FC<Props> = ({
       <style jsx>{`
         .nav-breadcrumbs {
           padding-bottom: ${theme.layout.gapHalf};
-        }
-        @media (max-width: ${theme.breakpoints.xs.max}) {
-          .nav-breadcrumbs :global(.breadcrumbs-item:first-child span) {
-            font-size: 0;
-          }
         }
       `}</style>
     </div>

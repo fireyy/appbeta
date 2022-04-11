@@ -22,7 +22,7 @@ import useTranslation from 'next-translate/useTranslation'
 const UserSettingsPop: React.FC = () => {
   const { theme, setTheme } = useNextTheme()
   const { locale, locales, defaultLocale } = useRouter()
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const switchLocale = async (lang: string) => {
     await setLanguage(lang)
   }
@@ -31,25 +31,25 @@ const UserSettingsPop: React.FC = () => {
     <>
       <Popover.Item>
         <NextLink href="/account" passHref>
-          <Link>{t('common:Settings')}</Link>
+          <Link>{t('Settings')}</Link>
         </NextLink>
       </Popover.Item>
       <Popover.Item line />
       <Popover.Item>
-        {t('common:Lang')}
+        {t('Lang')}
         <Select
           disableMatchWidth
           height="28px"
           onChange={switchLocale}
           value={locale}
-          title={t('common:Switch Language')}
+          title={t('Switch Language')}
           ml={0.5}
           style={{ minWidth: '7em' }}>
           {
             locales.map(l => (
               <Select.Option key={l} value={l}>
                 <span className="select-content">
-                  {t(`common:${l}`)}
+                  {t(`${l}`)}
                 </span>
               </Select.Option>
             ))
@@ -58,28 +58,28 @@ const UserSettingsPop: React.FC = () => {
       </Popover.Item>
       <Popover.Item line />
       <Popover.Item>
-        {t('common:Theme')}
+        {t('Theme')}
         <Select
           disableMatchWidth
           height="28px"
           onChange={setTheme}
           value={theme}
-          title={t('common:Switch Themes')}
+          title={t('Switch Themes')}
           ml={0.5}
           style={{ minWidth: '7em' }}>
           <Select.Option value="system">
             <span className="select-content">
-              <Display size={12} /> {t('common:System')}
+              <Display size={12} /> {t('System')}
             </span>
           </Select.Option>
           <Select.Option value="light">
             <span className="select-content">
-              <SunIcon size={12} /> {t('common:Light')}
+              <SunIcon size={12} /> {t('Light')}
             </span>
           </Select.Option>
           <Select.Option value="dark">
             <span className="select-content">
-              <MoonIcon size={12} /> {t('common:Dark')}
+              <MoonIcon size={12} /> {t('Dark')}
             </span>
           </Select.Option>
         </Select>
@@ -87,7 +87,7 @@ const UserSettingsPop: React.FC = () => {
       <Popover.Item line />
       <Popover.Item>
         <NextLink href="/api/auth/signout" passHref>
-          <Link>{t('common:Logout')}</Link>
+          <Link>{t('Logout')}</Link>
         </NextLink>
       </Popover.Item>
       <style jsx>{`
@@ -110,7 +110,7 @@ const UserSettingsPop: React.FC = () => {
 const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
   const theme = useTheme()
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
 
   return (
     <div className="wrapper">
@@ -119,7 +119,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
         command
         font="12px"
         className="shortcuts"
-        title={t('common:Command + K to search.')}>
+        title={t('Command + K to search.')}>
         K
       </Keyboard>
       <Spacer w={0.75} />

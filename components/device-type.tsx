@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation'
 import React from 'react'
 
 type Props = {
@@ -16,6 +17,7 @@ const DeviceType: React.FC<Props> = ({
   size = 24,
   color = 'currentColor',
 }) => {
+  const { t } = useTranslation('common')
   return (
     <>
       <svg
@@ -24,7 +26,9 @@ const DeviceType: React.FC<Props> = ({
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         fill={color}
+        aria-label={`{t(type)} icon`}
       >
+        <title>{t(type)}</title>
         <path d={typeIcon[type]} />
       </svg>
     </>

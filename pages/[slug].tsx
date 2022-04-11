@@ -12,6 +12,7 @@ import NoItem from 'components/no-item'
 import MaskLoading from 'components/mask-loading'
 import { baseUrl, staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
+import useTranslation from 'next-translate/useTranslation'
 
 type AppAndPackages = {
   app: AppItem,
@@ -31,6 +32,7 @@ type AppGetPageProps = {
 const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
   const router = useRouter()
   const theme = useTheme()
+  const { t } = useTranslation('common')
 
   const isMobile = useMediaQuery('xs', { match: 'down' })
   const { pid, slug } = router.query as { pid: string; slug: string }
@@ -57,13 +59,13 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
             <div className="download-area">
               {downloadUrl && <Link block href={downloadUrl} download>Download</Link>}
             </div>
-            <Display shadow caption="Scan the QR code with your mobile device.">
+            <Display shadow caption={t('Scan the QR code with your mobile device.')}>
               {!downloadUrl && <MaskLoading loading={true} />}
               {downloadUrl && <QRCode value={downloadUrl} logoImage={`${staticPath}${app.icon}`} />}
             </Display>
           </Grid>
           <Grid xs={24} md={12} direction="column">
-            <Text h5>Packages:</Text>
+            <Text h5>{t('Package list')}:</Text>
             <MaskLoading loading={isValidating}>
               <div className="page__appget__packages">
               {
@@ -77,7 +79,7 @@ const AppDetail: React.FC<AppDetailProps> = ({ deviceType }) => {
             </MaskLoading>
             {
               (!packages || packages.length === 0) && (
-                <NoItem message="Nothing to see here." />
+                <NoItem message={t('Nothing to see here.')} />
               )
             }
           </Grid>

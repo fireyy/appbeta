@@ -80,7 +80,9 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
           ))
         }
       </div>
-      <PackageDetail lastPkgId={lastPkgId} visible={sideVisible} setVisible={setSideVisible} data={current} onUpdate={handleUpdate} />
+      {
+        current && <PackageDetail lastPkgId={lastPkgId} visible={sideVisible} setVisible={setSideVisible} data={current} onUpdate={handleUpdate} />
+      }
       {
         packages.length === 0 && !isValidating && appId && (
           <NoItem link={`/apps/${appId}/packages/new`} />

@@ -7,6 +7,7 @@ import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
 import Skeleton from 'components/skeleton'
 import { Dropdown, DropdownItem } from 'components/dropdown'
+import useTranslation from 'next-translate/useTranslation'
 
 interface Props {
   isLoading: boolean
@@ -19,6 +20,7 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
   const theme = useTheme()
   const { visible, setVisible, bindings } = useModal()
   const { setToast } = useToasts()
+  const { t } = useTranslation('common')
 
   const destroy = async function (id: number): Promise<void> {
     await fetch(`/api/apps/${id}`, {
@@ -56,13 +58,13 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                   <Dropdown content={(
                     <>
                       <DropdownItem onClick={() => Router.push(`/apps/${data?.id}/packages/new`)}>
-                        New
+                        {t('New')}
                       </DropdownItem>
                       <DropdownItem onClick={() => Router.push(`/apps/new?id=${data?.id}`)}>
-                        Edit
+                        {t('Edit')}
                       </DropdownItem>
                       <DropdownItem onClick={() => setVisible(true)}>
-                        Delete
+                        {t('Delete')}
                       </DropdownItem>
                     </>
                   )}>
@@ -71,15 +73,15 @@ const ProjectInfo: React.FC<HeadingProps> = ({ isLoading = false, data }) => {
                 }
                 <Modal {...bindings}>
                   <Modal.Content>
-                    <p>Are you sure you want to delete this item?</p>
+                    <p>{t('Are you sure you want to delete this item?')}</p>
                   </Modal.Content>
-                  <Modal.Action passive onClick={() => setVisible(false)}>Cancel</Modal.Action>
-                  <Modal.Action onClick={() => destroy(data?.id)}>OK</Modal.Action>
+                  <Modal.Action passive onClick={() => setVisible(false)}>{t('Cancel')}</Modal.Action>
+                  <Modal.Action onClick={() => destroy(data?.id)}>{t('OK')}</Modal.Action>
                 </Modal>
               </div>
             </div>
             <div className="heading__integration">
-              <Text className="heading__integration-title">Description:</Text>
+              <Text className="heading__integration-title">{t('Description')}:</Text>
               <div className="heading__integration-inner">
                 {
                   isLoading ? (

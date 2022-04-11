@@ -8,11 +8,13 @@ import ProjectCard from '../components/project-card'
 import Plus from '@geist-ui/icons/plus'
 import NoItem from 'components/no-item'
 import Layout from 'components/layout'
+import useTranslation from 'next-translate/useTranslation'
 
 const Apps: NextPage<unknown> = () => {
   const theme = useTheme()
   const router = useRouter()
   const [deviceType, setDeviceType] = useState<string>('all')
+  const { t } = useTranslation('common')
   const { data: apps = [{}, {}, {}, {}, {}, {}, {}, {}, {}], isValidating } = useSWR<AppItem[]>(`/api/apps`)
 
   const handleChange = async (val: string) => {
@@ -25,13 +27,13 @@ const Apps: NextPage<unknown> = () => {
         <div className="actions-stack">
           <div>
             <Select placeholder="Choose one" value={deviceType} disabled={isValidating} width="150px" ml={0.5} disableMatchWidth onChange={handleChange}>
-              <Select.Option value="all">All</Select.Option>
-              <Select.Option value="ios">iOS</Select.Option>
-              <Select.Option value="android">Android</Select.Option>
+              <Select.Option value="all">{t('all')}</Select.Option>
+              <Select.Option value="ios">{t('ios')}</Select.Option>
+              <Select.Option value="android">{t('android')}</Select.Option>
             </Select>
           </div>
           <Button auto type="secondary" icon={<Plus />} onClick={() => router.push('/apps/new')}>
-            New Project
+            {t('New')}
           </Button>
         </div>
         <Grid.Container gap={2} marginTop={1} justify="flex-start">

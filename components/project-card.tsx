@@ -3,7 +3,6 @@ import {
   Avatar,
   Text,
   Card,
-  Spacer,
   Link,
   useTheme,
 } from '@geist-ui/core'
@@ -14,6 +13,7 @@ import { timeAgo, bytesStr } from 'lib/utils'
 import { staticPath } from 'lib/contants'
 import DeviceType from 'components/device-type'
 import Skeleton from 'components/skeleton'
+import useTranslation from 'next-translate/useTranslation'
 
 interface Props {
   isLoading: boolean
@@ -25,6 +25,7 @@ const ProjectCard: React.FC<Props> = ({
   data
 }) => {
   const theme = useTheme()
+  const { t } =  useTranslation('common')
 
   return (
     <>
@@ -64,7 +65,7 @@ const ProjectCard: React.FC<Props> = ({
                         lineHeight: '1.25rem',
                       }}
                     >
-                      Version: {data.lastVersion || '-'}, Size: {bytesStr(data.lastPkgSize || 0)}
+                      {t('Version')}: {data.lastVersion || '-'}, {t('Size')}: {bytesStr(data.lastPkgSize || 0)}
                     </Text>
                   </>
                 )
@@ -94,8 +95,10 @@ const ProjectCard: React.FC<Props> = ({
             font="0.8rem"
             style={{ color: theme.palette.accents_5 }}
           >
-            <span style={{ float: 'right' }}>Update at {timeAgo(data.updatedAt)}.</span>
-            Packages: {data.packagesCount}
+            <span style={{ float: 'right' }}>{t('Update at ago', {
+              ago: timeAgo(data.updatedAt)
+            })}</span>
+            {t('Packages')}: {data.packagesCount}
           </Text>
           }
           <Link className="external-link" href={`/app/${data.slug}?pid=${data.lastPkgId}`} target="_blank">

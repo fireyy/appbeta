@@ -5,6 +5,7 @@ import useSWRInfinite from 'swr/infinite'
 import ActivityEvent from 'components/activity-event'
 import { bytesStr } from 'lib/utils'
 import Skeleton from 'components/skeleton'
+import useTranslation from 'next-translate/useTranslation'
 
 type Props = {
   infinite?: boolean,
@@ -27,6 +28,7 @@ const PAGE_SIZE = 10
 
 const ActivityGroup: React.FC<Props> = ({ infinite }) => {
   const theme = useTheme()
+  const { t } = useTranslation('common')
   const { data, error, isValidating, size, setSize } = useSWRInfinite((index) =>
   `/api/activity?limit=${PAGE_SIZE}&page=${
     index + 1
@@ -61,7 +63,12 @@ const ActivityGroup: React.FC<Props> = ({ infinite }) => {
                 createdAt={item.createdAt}
               >
                 {
-                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href={`/apps/${item.appId}`} passHref><Link>{item.app?.name} upload new package {item.version}({item.buildVersion}), {bytesStr(item.size || 0)}<Tag scale={1/3} type="lite" ml={1}>{item.app.deviceType}</Tag></Link></NextLink>
+                  isValidating && !item.id ? <Skeleton width={150} /> : <NextLink href={`/apps/${item.appId}`} passHref><Link>{t('activity-message', {
+                    appName: item.app?.name,
+                    version: item.version,
+                    buildVersion: item.buildVersion,
+                    size: bytesStr(item.size || 0)
+                  })}<Tag scale={1/3} type="lite" ml={1}>{item.app?.deviceType}</Tag></Link></NextLink>
                 }
               </ActivityEvent>
             ))}
@@ -72,8 +79,8 @@ const ActivityGroup: React.FC<Props> = ({ infinite }) => {
       {
         infinite && <div className="loadmore-button">
         <Button width="100%" onClick={() => setSize(size + 1)} loading={isLoadingMore} disabled={isReachingEnd}>{isReachingEnd
-          ? 'no more'
-          : 'load more'}</Button>
+          ? t('no more')
+          : t('load more')}</Button>
       </div>
       }
       <style jsx>{`
