@@ -1,16 +1,55 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { NextPage, GetServerSideProps } from 'next'
-import { Fieldset, Button, Grid, Link, useTheme, Input, Avatar } from '@geist-ui/core'
+import { Fieldset, Button, Grid, useToasts, useTheme, Input, Avatar, useInput } from '@geist-ui/core'
 import { useSession } from 'next-auth/react'
+import useSWR from 'swr'
 import Layout from 'components/layout'
 import NavLink from 'components/nav-link'
 import AccountSidebar from 'components/account-sidebar'
+import useTranslation from 'next-translate/useTranslation'
 
 const AccountPage: NextPage = () => {
   const theme = useTheme()
   const router = useRouter()
   const { data: session } = useSession()
+  const [loading, setLoading] = useState(false)
+  const { setToast } = useToasts()
+  const { t } = useTranslation('common')
+
+  // const { data: user } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
+
+  const { state: name, setState: setName, bindings: bindName } = useInput(session?.user?.name)
+  const { state: email, setState: setEmail, bindings: bindEmail } = useInput(session?.user?.email)
+
+  useEffect(() => {
+    if (session && session.user) {
+      setName(session.user.name)
+      setEmail(session.user.email)
+    }
+  }, [session])
+
+  const handleSaveName = () => handleSave('name', name)
+
+  const handleSaveEmail = () => handleSave('email', email)
+
+  const handleSave = async (type, data) => {
+    setLoading(true)
+    await fetch(`/api/account/${session.user.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        [type]: data
+      })
+    })
+    setLoading(false)
+    setToast({
+      text: t('Updated successfully', {
+        msg: `user ${type}`
+      }),
+      type: 'success',
+    })
+  }
 
   return (
     <Layout title="Settings">
@@ -22,19 +61,19 @@ const AccountPage: NextPage = () => {
             <Fieldset width="100%" mb={2}>
               <Fieldset.Title>Your Name</Fieldset.Title>
               <Fieldset.Subtitle>Please enter your full name, or a display name you are comfortable with.</Fieldset.Subtitle>
-              <Input value={session?.user.name} autoCapitalize="off" autoComplete="off" autoCorrect="off" spellCheck="true" maxLength={32} width="300px" />
+              <Input autoCapitalize="off" autoComplete="off" autoCorrect="off" spellCheck="true" maxLength={32} width="300px" {...bindName} />
               <Fieldset.Footer>
                 Please use 32 characters at maximum.
-                <Button type="secondary" auto scale={1/3}>Save</Button>
+                <Button type="secondary" loading={loading} auto scale={1/3} onClick={handleSaveName}>Save</Button>
               </Fieldset.Footer>
             </Fieldset>
             <Fieldset width="100%" mb={2}>
               <Fieldset.Title>Your Email</Fieldset.Title>
               <Fieldset.Subtitle>Please enter the email address you want to use to log in with Vercel.</Fieldset.Subtitle>
-              <Input value={session?.user.email} htmlType="email" autoCapitalize="off" autoComplete="off" autoCorrect="off" spellCheck="true" width="300px" />
+              <Input htmlType="email" autoCapitalize="off" autoComplete="off" autoCorrect="off" spellCheck="true" width="300px" {...bindEmail} />
               <Fieldset.Footer>
                 We will email you to verify the change.
-                <Button type="secondary" auto scale={1/3}>Save</Button>
+                <Button type="secondary" loading={loading} auto scale={1/3} onClick={handleSaveEmail}>Save</Button>
               </Fieldset.Footer>
             </Fieldset>
             <Fieldset width="100%" mb={2}>

@@ -64,5 +64,6 @@
   "Select File": "Select File",
   "Data": "Data",
   "Removed package successfully.": "Removed package successfully.",
-  "Updated package changelog successfully.": "Updated package changelog successfully."
+  "Updated package changelog successfully.": "Updated package changelog successfully.",
+  "Updated successfully": "Updated {{msg}} successfully."
 }

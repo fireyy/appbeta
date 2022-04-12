@@ -64,5 +64,6 @@
   "Select File": "选择文件",
   "Data": "数据",
   "Removed package successfully.": "移除安装包成功。",
-  "Updated package changelog successfully.": "更新安装包日志成功。"
+  "Updated package changelog successfully.": "更新安装包日志成功。",
+  "Updated successfully": "更新{{msg}}成功。"
 }

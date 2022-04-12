@@ -18,7 +18,7 @@ const LoginConnections: NextPage = () => {
   const { data: session } = useSession()
 
   const { data: providers } = useSWR('/api/auth/providers')
-  const { data: accounts } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
+  const { data: user } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
 
   return (
     <Layout title="Login Connections">
@@ -46,7 +46,7 @@ const LoginConnections: NextPage = () => {
               </Fieldset.Footer>
             </Fieldset>
             {
-              accounts && accounts.map(account => {
+              user && user.accounts && user.accounts.map(account => {
                 const ICON = ProviderIcons[account.provider]
                 return (
                   <Card width="100%" key={account.id}>
