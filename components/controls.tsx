@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import NextLink from 'next/link'
 import {
   Link,
   Keyboard,
   useTheme,
-  Loading,
   Popover,
   Avatar,
   Spacer,
@@ -18,24 +17,34 @@ import { useTheme as useNextTheme } from 'next-themes'
 import setLanguage from 'next-translate/setLanguage'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
+import useSWR from 'swr'
+import { Dropdown, DropdownItem } from 'components/dropdown'
 
-const UserSettingsPop: React.FC = () => {
+type Props = {
+  email: string
+}
+
+const UserSettingsPop: React.FC<Props> = ({ email }) => {
   const { theme, setTheme } = useNextTheme()
   const { locale, locales, defaultLocale } = useRouter()
   const { t } = useTranslation('common')
+
   const switchLocale = async (lang: string) => {
     await setLanguage(lang)
   }
 
   return (
     <>
-      <Popover.Item>
+      <DropdownItem title>
+        SignIn as {email}
+      </DropdownItem>
+      <DropdownItem>
         <NextLink href="/account" passHref>
           <Link>{t('Settings')}</Link>
         </NextLink>
-      </Popover.Item>
-      <Popover.Item line />
-      <Popover.Item>
+      </DropdownItem>
+      <DropdownItem line />
+      <DropdownItem>
         {t('Lang')}
         <Select
           disableMatchWidth
@@ -55,9 +64,9 @@ const UserSettingsPop: React.FC = () => {
             ))
           }
         </Select>
-      </Popover.Item>
-      <Popover.Item line />
-      <Popover.Item>
+      </DropdownItem>
+      <DropdownItem line />
+      <DropdownItem>
         {t('Theme')}
         <Select
           disableMatchWidth
@@ -83,13 +92,13 @@ const UserSettingsPop: React.FC = () => {
             </span>
           </Select.Option>
         </Select>
-      </Popover.Item>
-      <Popover.Item line />
-      <Popover.Item>
-        <NextLink href="/api/auth/signout" passHref>
-          <Link>{t('Logout')}</Link>
-        </NextLink>
-      </Popover.Item>
+      </DropdownItem>
+      <DropdownItem line />
+      <DropdownItem>
+        <a href="/api/auth/signout">
+          {t('Logout')}
+        </a>
+      </DropdownItem>
       <style jsx>{`
         .select-content {
             width: auto;
@@ -111,6 +120,7 @@ const Controls: React.FC<unknown> = React.memo(() => {
   const { data: session, status } = useSession()
   const theme = useTheme()
   const { t } = useTranslation('common')
+  const { data: user, isValidating } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
 
   return (
     <div className="wrapper">
@@ -123,23 +133,13 @@ const Controls: React.FC<unknown> = React.memo(() => {
         K
       </Keyboard>
       <Spacer w={0.75} />
-      {
-        status === 'loading' && <Loading />
-      }
-      <Popover content={<UserSettingsPop />} placement="bottomEnd" portalClassName="user-settings__popover">
-        {
-          (!session && status !== 'loading') && (
-            <button className="user-settings__button" onClick={() => signIn()}>
-              <Avatar text="Log in" />
-            </button>
-          )
-        }
-        { session && (
+      { user && (
+        <Dropdown content={<UserSettingsPop email={user.email} />} portalClassName="user-settings__popover">
           <button className="user-settings__button">
-            <Avatar src={session.user.image} text={session.user.name} />
+            <Avatar src={user.image} text={user.name} />
           </button>
-        )}
-      </Popover>
+        </Dropdown>
+      )}
       <style jsx>{`
         .wrapper {
           display: flex;

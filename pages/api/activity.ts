@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
+import roleProtect from 'lib/role-protect'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { page, limit } = req.query
+  const session = await roleProtect(req, res)
   const packages = await prisma.packages.findMany({
     take: +limit,
     skip: (+page - 1) * +limit,

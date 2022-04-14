@@ -51,6 +51,7 @@ export const Dropdown = React.forwardRef<
           cursor: not-allowed;
           color: ${theme.palette.accents_1};
         }
+        .drop-menu-box .item a,
         .drop-menu-box .item .tooltip {
           display: block;
           flex: 1;

@@ -18,7 +18,7 @@ interface LayoutProps extends WithChildren {
 export default function Layout({ title, children }: LayoutProps) {
   const router = useRouter()
   const theme = useTheme()
-  const isFront = router.pathname.startsWith('/[slug]')
+  const isFront = router.pathname.startsWith('/[slug]') || router.pathname.startsWith('/sign-in')
   const { t } = useTranslation('common')
 
   if (!isFront) {
@@ -44,7 +44,7 @@ export default function Layout({ title, children }: LayoutProps) {
       </div>
       <style jsx>{`
         .layout {
-          min-height: calc(100vh - var(--geist-page-nav-height));
+          min-height: ${ isFront ? '100vh' : 'calc(100vh - var(--geist-page-nav-height))'};
           max-width: ${theme.layout.pageWidthWithMargin};
           margin: 0 auto;
           padding: ${theme.layout.gap};

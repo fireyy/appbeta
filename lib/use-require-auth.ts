@@ -12,10 +12,10 @@ function useRequireAuth() {
   useEffect(() => {
     if (router.pathname === '/[slug]') return
     if (!session && typeof session != 'undefined') {
-      router.push(`/api/auth/signin?callbackUrl=${baseUrl}${router.asPath}`)
-    } else if (session && session.user.role !== 'admin') {
+      router.push(`/sign-in?callbackUrl=${baseUrl}${router.asPath}`)
+    } else if (session && session.user.role !== 'ADMIN') {
       // TODO: 告知权限不足
-      router.push(`/api/auth/signin?callbackUrl=${baseUrl}${router.asPath}`)
+      router.push(`/sign-in?callbackUrl=${baseUrl}${router.asPath}`)
     }
   }, [session, router])
 

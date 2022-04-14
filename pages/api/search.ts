@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
+import roleProtect from 'lib/role-protect'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const s = String(req.query.s)
+  const session = await roleProtect(req, res)
   const apps = await prisma.apps.findMany({
     where: {
       OR: [

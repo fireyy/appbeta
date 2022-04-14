@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
+import roleProtect from 'lib/role-protect'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -7,6 +8,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     body: data,
     method,
   } = req
+
+  const session = await roleProtect(req, res)
 
   switch (method) {
     case 'GET':

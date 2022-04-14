@@ -1,12 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'lib/prisma'
 import storage from 'lib/upload'
+import roleProtect from 'lib/role-protect'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { id, pid },
     method,
   } = req
+
+  const session = await roleProtect(req, res)
 
   switch (method) {
     case 'GET':

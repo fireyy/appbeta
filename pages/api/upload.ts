@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import storage from 'lib/upload'
+import roleProtect from 'lib/role-protect'
 
 export const config = {
   api: {
@@ -8,6 +9,7 @@ export const config = {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await roleProtect(req, res)
   if (req.method === 'PUT') {
     const result = await storage.upload(req)
     res.json(result)
