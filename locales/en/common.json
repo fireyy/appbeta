@@ -15,7 +15,7 @@
   "Light": "Light",
   "Dark": "Dark",
   "Logout": "Logout",
-  "Command + K to search.": "Command + K to search.",
+  "search title": "Command + K to search.",
   "Search an app": "Search an app",
   "activity-message": "{{appName}} upload new package {{version}}({{buildVersion}}), {{size}}",
   "New": "New",

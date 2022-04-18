@@ -12,7 +12,6 @@ const Header: React.FC<unknown> = () => {
 
   const names = router.pathname.split('/').filter(r => !!r)
   const currentUrlTabValue = names[0] || ''
-  console.log('currentUrlTabValue', currentUrlTabValue)
 
   const handleTabChange = useCallback(
     (tab: string) => {

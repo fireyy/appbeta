@@ -30,6 +30,8 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/sign-in',
+    verifyRequest: `/sign-in`,
+    error: "/sign-in",
   },
   theme: {
     colorScheme: "auto",

@@ -36,7 +36,7 @@ const UserSettingsPop: React.FC<Props> = ({ email }) => {
   return (
     <>
       <DropdownItem title>
-        SignIn as {email}
+        Signed in as {email}
       </DropdownItem>
       <DropdownItem>
         <NextLink href="/account" passHref>
@@ -117,10 +117,9 @@ const UserSettingsPop: React.FC<Props> = ({ email }) => {
 }
 
 const Controls: React.FC<unknown> = React.memo(() => {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const theme = useTheme()
   const { t } = useTranslation('common')
-  const { data: user, isValidating } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
 
   return (
     <div className="wrapper">
@@ -129,14 +128,14 @@ const Controls: React.FC<unknown> = React.memo(() => {
         command
         font="12px"
         className="shortcuts"
-        title={t('Command + K to search.')}>
+        title={t('search title')}>
         K
       </Keyboard>
       <Spacer w={0.75} />
-      { user && (
-        <Dropdown content={<UserSettingsPop email={user.email} />} portalClassName="user-settings__popover">
+      { session && session.user && (
+        <Dropdown content={<UserSettingsPop email={session.user.email} />} portalClassName="user-settings__popover">
           <button className="user-settings__button">
-            <Avatar src={user.image} text={user.name} />
+            <Avatar src={session.user.image} text={session.user.name} />
           </button>
         </Dropdown>
       )}

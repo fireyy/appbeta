@@ -52,7 +52,7 @@ const PackageItems: React.FC<Props> = ({ slug, appId, lastPkgId }) => {
     <>
       <div className="card-box">
         {
-          (isLoading ? [{}, {}, {}] : packages).map(p => (
+          (isLoading ? [{id:0}, {id:1}, {id:2}] : packages).map(p => (
             <Card key={p.id} onClick={() => handleDetail(p.id)} className={p.id === lastId ? 'default' : ''}>
               <Grid.Container gap={2} alignItems="center">
                 <Grid xs={12} direction="column">

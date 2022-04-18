@@ -17,17 +17,24 @@ const AccountPage: NextPage = () => {
   const { setToast } = useToasts()
   const { t } = useTranslation('common')
 
-  // const { data: user } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
+  const { data: user, mutate } = useSWR(session?.user.id && `/api/account/${session.user.id}`)
 
-  const { state: name, setState: setName, bindings: bindName } = useInput(session?.user?.name)
-  const { state: email, setState: setEmail, bindings: bindEmail } = useInput(session?.user?.email)
+  const { state: name, setState: setName, bindings: bindName } = useInput('')
+  const { state: email, setState: setEmail, bindings: bindEmail } = useInput('')
 
   useEffect(() => {
-    if (session && session.user) {
+    if (session) {
       setName(session.user.name)
       setEmail(session.user.email)
     }
   }, [session])
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name)
+      setEmail(user.email)
+    }
+  }, [user])
 
   const handleSaveName = () => handleSave('name', name)
 
@@ -43,6 +50,7 @@ const AccountPage: NextPage = () => {
       })
     })
     setLoading(false)
+    mutate()
     setToast({
       text: t('Updated successfully', {
         msg: `user ${type}`

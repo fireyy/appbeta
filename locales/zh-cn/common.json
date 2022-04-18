@@ -15,7 +15,7 @@
   "Light": "明亮",
   "Dark": "暗黑",
   "Logout": "登出",
-  "Command + K to search.": "按 Command + K 搜索",
+  "search title": "按 Command + K 搜索",
   "Search an app": "搜索应用",
   "activity-message": "{{appName}} 上传了一个新包 {{version}}({{buildVersion}}), 容量：{{size}}",
   "New": "新增",
